@@ -56,7 +56,8 @@ NAME                                                  TITLE
 ```
 
 ### Detect text in a local image
-Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
+* [vision-ocr](https://cloud.google.com/vision/docs/ocr)
+* Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
 
 * Check which is the current project
 ```
