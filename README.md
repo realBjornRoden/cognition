@@ -11,6 +11,13 @@
 * FIRST [before-you-begin](https://cloud.google.com/vision/docs/before-you-begin)
 * SECOND [enable-api-for-project]()
 ### APIs
+* List API services
+```
+$ gcloud services list --available
+NAME                                                  TITLE
+...
+```
+
 |NAME                                                  |TITLE|
 |---|---|
 |automl.googleapis.com                                 |Cloud AutoML API|
@@ -24,6 +31,28 @@
 |translate.googleapis.com                              |Cloud Translation API|
 |videointelligence.googleapis.com                      |Cloud Video Intelligence API|
 |vision.googleapis.com                                 |Cloud Vision API|
+
+* API is not enabled error message
+```
+{
+  "error": {
+    "code": 403,
+    "message": "Cloud Vision API has not been used in project 711533833686 before or it is disabled. Enable it by visiting https://console.cloud.google.com/apis/api/vision.googleapis.com/overview?project=711533833686 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Google Cloud Console API activation",
+            "url": "https://console.cloud.google.com/apis/api/vision.googleapis.com/overview?project=711533833686"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
 
 
 ### Detect text in a local image
@@ -52,33 +81,6 @@ cognitive-254305
 
 gcloud services enable vision.googleapis.com
 
-* API is not enabled error message
-```
-{
-  "error": {
-    "code": 403,
-    "message": "Cloud Vision API has not been used in project 711533833686 before or it is disabled. Enable it by visiting https://console.cloud.google.com/apis/api/vision.googleapis.com/overview?project=711533833686 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
-    "status": "PERMISSION_DENIED",
-    "details": [
-      {
-        "@type": "type.googleapis.com/google.rpc.Help",
-        "links": [
-          {
-            "description": "Google Cloud Console API activation",
-            "url": "https://console.cloud.google.com/apis/api/vision.googleapis.com/overview?project=711533833686"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-* List services
-```
-/Users/bjro/code/cloudactions/cognition/gcp: gcloud services list --available
-NAME                                                  TITLE
-...
-```
 
 ## AWS (Amazon Web Services)
 
