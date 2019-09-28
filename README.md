@@ -130,9 +130,9 @@ researcher from the Technical University of Munich also created another called
 FaceForensics++. The trouble is technical solutions like these can only go so
 far because synthetic media could soon become indistinguishable from reality
 Read more here.
-""Google is using deepfakes to fight deepfakes. With the 2020 US presidential\nelection approaching, the race is on to figure out how to prevent widespread\ndeepfake disinformation. On Tuesday, Google offered the latest contribution: an\nopen-source database containing 3,000 original manipulated videos. The goal\nis to help train and test automated detection tools. The company compiled the\ndata by working with 28 actors to record videos of them speaking, making\ncommon expressions, and doing mundane tasks. It then used publicly available\ndeepfake algorithms to alter their faces.\nGoogle isn't the first to take this approach. As we covered in The Algorithm\nearlier this month, Facebook announced that it would be releasing a similar\ndatabase near the end of the year. In January, an academic team led by a\nresearcher from the Technical University of Munich also created another called\nFaceForensics++. The trouble is technical solutions like these can only go so\nfar because synthetic media could soon become indistinguishable from reality\nRead more here.\n"
-
 ```
+
+### 
 
 ## AWS (Amazon Web Services)
 
