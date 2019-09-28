@@ -18,6 +18,7 @@ NAME                                                  TITLE
 ...
 ```
 * Cognitive APIs
+
 |NAME                                                  |TITLE|
 |---|---|
 |automl.googleapis.com                                 |Cloud AutoML API|
