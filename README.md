@@ -11,7 +11,7 @@
 1. Detect text in images
 1. Detect handwriting in images
 1. Detect text in files
-1. Detect Faces in images
+1. Detect faces in images
 1. ...
 
 ***
@@ -99,7 +99,7 @@ Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished success
 ```
 * Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
 ```
-$ ./pre-request.sh annotate ../data/image1.png
+$ ./pre-request.sh annotate ../data/texttyped1.png
 request.json
 
 $ grep content request.json|cut -f2 -d:|wc -c
@@ -166,7 +166,7 @@ Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished success
 ```
 * Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
 ```
-$ ./pre-request.sh annotate2 ../data/detect_handwriting_OCR-detect-handwriting_SMALL.png
+$ ./pre-request.sh annotate2 ../data/texthandwriting1.png
 request.json
 
 $ cat request.json
