@@ -7,11 +7,12 @@
 
 ***
 
-### Use cases
+## Use Cases
 1. Detect text in a local image
 1. Detect handwriting in a local image
 1. Detect text in files
 
+***
 
 ## GCP (Google Cloud Platform)
 * FIRST [before-you-begin](https://cloud.google.com/vision/docs/before-you-begin)
