@@ -56,7 +56,7 @@ NAME                                                  TITLE
 ```
 
 ### Detect text in a local image
-Pprovide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
+Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
 
 * Check which is the current project
 ```
@@ -83,7 +83,7 @@ Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished success
 ```
 * Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
 ```
-$ ./preprequest.sh  image1.png
+$ ./pre-request.sh image1.png
 
 $ grep content request.json|cut -f2 -d:|wc -c
   248720
@@ -107,33 +107,30 @@ $ cat request.json
   ]
 }
 ```
-* Perform (input: JSON file "request.json")
+* Perform (input: JSON file "request.json"; output: JSON file "result$RANDOM.json)
 ```
-$ ./runrequest.sh
-
-$ grep -v ^# runrequest.sh
-AUTH=$(gcloud auth application-default print-access-token 2>/dev/null)
-REQ=request.json
-
-[[ -z "$AUTH" ]] && { echo "***ENOAUTH"; exit 1; }
-[[ -f "$REQ" ]]  || { echo "***ENOREQ"; exit 1; }
-
-OUTPUT=result$RANDOM.json
-
-URL=https://vision.googleapis.com/v1/images:annotate
-
-curl -s -X POST \
--H "Authorization: Bearer "$AUTH \
--H "Content-Type: application/json; charset=utf-8" \
--d @$REQ \
-$URL > $OUTPUT
-[[ $? ]] || { echo "***EPOST"; exit 1; }
-echo $OUTPUT
+$ ./runrequest.sh request.json
+result31008.json
 ```
 * Review
 ```
-$ jq ".responses[].textAnnotations[0].description" result5236.json 
-"Google is using deepfakes to fight deepfakes. With the 2020 US presidential\nelection approaching, the race is on to figure out how to prevent widespread\ndeepfake disinformation. On Tuesday, Google offered the latest contribution: an\nopen-source database containing 3,000 original manipulated videos. The goal\nis to help train and test automated detection tools. The company compiled the\ndata by working with 28 actors to record videos of them speaking, making\ncommon expressions, and doing mundane tasks. It then used publicly available\ndeepfake algorithms to alter their faces.\nGoogle isn't the first to take this approach. As we covered in The Algorithm\nearlier this month, Facebook announced that it would be releasing a similar\ndatabase near the end of the year. In January, an academic team led by a\nresearcher from the Technical University of Munich also created another called\nFaceForensics++. The trouble is technical solutions like these can only go so\nfar because synthetic media could soon become indistinguishable from reality\nRead more here.\n"
+$ ./post-request.sh result31008.json --output printf
+"Google is using deepfakes to fight deepfakes. With the 2020 US presidential
+election approaching, the race is on to figure out how to prevent widespread
+deepfake disinformation. On Tuesday, Google offered the latest contribution: an
+open-source database containing 3,000 original manipulated videos. The goal
+is to help train and test automated detection tools. The company compiled the
+data by working with 28 actors to record videos of them speaking, making
+common expressions, and doing mundane tasks. It then used publicly available
+deepfake algorithms to alter their faces.
+Google isn't the first to take this approach. As we covered in The Algorithm
+earlier this month, Facebook announced that it would be releasing a similar
+database near the end of the year. In January, an academic team led by a
+researcher from the Technical University of Munich also created another called
+FaceForensics++. The trouble is technical solutions like these can only go so
+far because synthetic media could soon become indistinguishable from reality
+Read more here.
+""Google is using deepfakes to fight deepfakes. With the 2020 US presidential\nelection approaching, the race is on to figure out how to prevent widespread\ndeepfake disinformation. On Tuesday, Google offered the latest contribution: an\nopen-source database containing 3,000 original manipulated videos. The goal\nis to help train and test automated detection tools. The company compiled the\ndata by working with 28 actors to record videos of them speaking, making\ncommon expressions, and doing mundane tasks. It then used publicly available\ndeepfake algorithms to alter their faces.\nGoogle isn't the first to take this approach. As we covered in The Algorithm\nearlier this month, Facebook announced that it would be releasing a similar\ndatabase near the end of the year. In January, an academic team led by a\nresearcher from the Technical University of Munich also created another called\nFaceForensics++. The trouble is technical solutions like these can only go so\nfar because synthetic media could soon become indistinguishable from reality\nRead more here.\n"
 
 ```
 
