@@ -32,7 +32,7 @@ OUTPUT=result$RANDOM.json
 
 case $1 in
 
-annotate|annotate2)
+annotate*)
 URL=https://vision.googleapis.com/v1/images:annotate
 
 curl -s -X POST \

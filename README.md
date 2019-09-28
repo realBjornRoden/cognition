@@ -8,9 +8,11 @@
 ***
 
 ## Use Cases
-1. Detect text in a local image
-1. Detect handwriting in a local image
+1. Detect text in images
+1. Detect handwriting in images
 1. Detect text in files
+1. Detect Faces in images
+1. ...
 
 ***
 
@@ -83,7 +85,7 @@ cognitive-254305
 
 ***
 
-### Detect text in a local image
+### Detect text in images
 * [Detect text in a local image](https://cloud.google.com/vision/docs/ocr)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
 
@@ -150,7 +152,7 @@ Read more here.
 
 ***
 
-### Detect handwriting in a local image
+### Detect handwriting images
 * [Detect handwriting in a local image](https://cloud.google.com/vision/docs/handwriting)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
 
@@ -166,12 +168,6 @@ Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished success
 ```
 $ ./pre-request.sh annotate2 ../data/detect_handwriting_OCR-detect-handwriting_SMALL.png
 request.json
-
-$ grep content request.json|cut -f2 -d:|wc -c
-  248720
-
-$ grep -v content request.json|wc -c
-     145
 
 $ cat request.json
 {
@@ -205,7 +201,7 @@ Platform
 
 ***
 
-### Detect text in files (PDF)
+### Detect text in files
 * [Detect text in files](https://cloud.google.com/vision/docs/pdf)
 * Check if the required API is enabled, if not enable it
 ```
@@ -323,6 +319,58 @@ venenatis, cras sit id in vestibulum felis in, sed ligula.
 Sincerely yours,
 Urna Semper
 ```
+
+### Detect Faces in images
+* [Detect Faces in a local image](https://cloud.google.com/vision/docs/detecting-faces)
+* Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
+
+* Check if the required API is enabled, if not enable it
+```
+$ gcloud services list |grep vision.googleapis.com
+vision.googleapis.com             Cloud Vision API
+
+$ gcloud services enable vision.googleapis.com
+Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished successfully.
+```
+* Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
+```
+$ ./pre-request.sh annotate3 ../data/faces1.jpg
+request.json
+
+$ cat request.json
+{
+  "requests": [
+    {
+      "image": {
+      "content": "<...removed...>"
+      },
+      "features": [
+        {
+          "maxResults": 10,
+          "type": "FACE_DETECTION"
+        }
+      ]
+    }
+  ]
+}
+```
+* Perform (input: JSON file "request.json"; output: JSON file "result$RANDOM.json)
+```
+$ ./run-request.sh annotate3 request.json
+result12945.json
+```
+* Review (text from output JSON)
+```
+$ jq '.responses[].faceAnnotations[].detectionConfidence' result12945.json
+0.7988144
+0.99993396
+0.85146695
+0.8147049
+0.7686665
+0.6784521
+```
+
+***
 
 
 

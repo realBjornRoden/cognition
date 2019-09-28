@@ -32,6 +32,11 @@ annotate|annotate2)
 	printf "$STRING"
 ;;
 
+annotate3)
+	STRING=$(jq ".responses[].textAnnotations[0].description" $2)
+	printf "$STRING"
+;;
+
 asyncBatchAnnotate|*)
 	STRING=$(jq '.responses[].fullTextAnnotation["text"]' $2)
 	printf "$STRING"

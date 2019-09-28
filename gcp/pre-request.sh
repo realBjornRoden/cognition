@@ -123,4 +123,34 @@ EOD
 echo $REQ
 ;;
 
+annotate3)
+[[ -f "$2" ]] ||  { echo "***ENOFILE"; exit 1; }
+INPUT=$2
+
+B64=base64.tmp
+base64 -i $INPUT -o $B64
+[[ -f "$B64" ]] ||  { echo "***ENOBASE64"; exit 1; }
+
+cat <<EOD > $REQ
+{
+  "requests": [
+    {
+      "image": {
+        "content": "$(<$B64)"
+      },
+      "features": [
+        {
+          "maxResults": 10,
+          "type": "FACE_DETECTION"
+        }
+      ]
+    }
+  ]
+}
+EOD
+[[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
+rm -f $B64
+echo $REQ
+;;
+
 esac
