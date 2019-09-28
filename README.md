@@ -32,7 +32,7 @@ NAME                                                  TITLE
 |videointelligence.googleapis.com                      |Cloud Video Intelligence API|
 |vision.googleapis.com                                 |Cloud Vision API|
 
-* API services is not enabled error message
+* Specific API service is not enabled error message
 ```
 {
   "error": {
@@ -75,9 +75,11 @@ Updated property [core/project].
 $ gcloud config get-value project 
 cognitive-254305
 ```
-* Enable API
-
+* Enable the specific API
+```
 gcloud services enable vision.googleapis.com
+Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished successfully.
+```
 
 
 ## AWS (Amazon Web Services)
