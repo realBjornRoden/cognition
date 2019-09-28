@@ -52,7 +52,7 @@ cat <<EOD > $REQ
 EOD
 [[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
 rm -f $B64
-echo $OUTPUT
+echo $REQ
 ;;
 
 annotate2)
@@ -81,7 +81,7 @@ cat <<EOD > $REQ
 EOD
 [[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
 rm -f $B64
-echo $OUTPUT
+echo $REQ
 ;;
 
 asyncBatchAnnotate)
@@ -120,7 +120,7 @@ cat <<EOD > $REQ
 }
 EOD
 [[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
-echo $OUTPUT
+echo $REQ
 ;;
 
 esac
