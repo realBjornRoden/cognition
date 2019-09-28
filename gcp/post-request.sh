@@ -26,12 +26,15 @@
 [[ -f "$2" ]] ||  { echo "***ENOFILE"; exit 1; }
 
 case $1 in
-annotate)
-STRING=$(jq ".responses[].textAnnotations[0].description" $2)
-printf "$STRING"
-;;
-asyncBatchAnnotate|*)
 
-jq ".responses[].textAnnotations[0].description" $2
+annotate)
+	STRING=$(jq ".responses[].textAnnotations[0].description" $2)
+	printf "$STRING"
 ;;
+
+asyncBatchAnnotate|*)
+	STRING=$(jq '.responses[].fullTextAnnotation["text"]' $2)
+	printf "$STRING"
+;;
+
 esac
