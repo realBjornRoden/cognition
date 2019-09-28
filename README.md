@@ -83,7 +83,7 @@ Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished success
 ```
 * Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
 ```
-$ ./pre-request.sh image1.png
+$ ./pre-request.sh ../images/image1.png
 
 $ grep content request.json|cut -f2 -d:|wc -c
   248720
