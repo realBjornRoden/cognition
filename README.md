@@ -8,6 +8,7 @@
 ***
 
 ## GCP (Google Cloud Platform)
+* [before-you-begin](https://cloud.google.com/vision/docs/before-you-begin)
 
 ## AWS (Amazon Web Services)
 
