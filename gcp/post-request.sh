@@ -22,16 +22,16 @@
 # SOFTWARE.
 # 
 
-[[ -f "$1" ]] ||  { echo "***ENOFILE"; exit 1; }
+[[ -z "$1" ]] &&  { echo "***ENOARG"; exit 1; }
+[[ -f "$2" ]] ||  { echo "***ENOFILE"; exit 1; }
 
-STRING=$(jq ".responses[].textAnnotations[0].description" $1)
+case $1 in
+annotate)
+STRING=$(jq ".responses[].textAnnotations[0].description" $2)
+printf "$STRING"
+;;
+asyncBatchAnnotate|*)
 
-shift ## add optget for --output <format>
-case $2 in
-echo)
-	echo "$STRING"
-	;;
-printf|*)
-	printf "$STRING"
-	;;
+jq ".responses[].textAnnotations[0].description" $2
+;;
 esac

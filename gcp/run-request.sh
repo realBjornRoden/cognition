@@ -31,10 +31,11 @@ REQ=${1:-request.json}
 OUTPUT=result$RANDOM.json
 
 case $2 in
-*)
+
+annotate)
 URL=https://vision.googleapis.com/v1/images:annotate
 
-echo curl -s -X POST \
+curl -s -X POST \
 -H "Authorization: Bearer "$AUTH \
 -H "Content-Type: application/json; charset=utf-8" \
 -d @$REQ \
@@ -42,4 +43,18 @@ $URL > $OUTPUT
 [[ $? ]] || { echo "***EPOST"; exit 1; }
 echo $OUTPUT
 ;;
+
+asyncBatchAnnotate|*)
+URL=https://vision.googleapis.com/v1/files:asyncBatchAnnotate
+
+curl -s -X POST \
+-H "Authorization: Bearer "$AUTH \
+-H "Content-Type: application/json; charset=utf-8" \
+-d @$REQ \
+$URL > $OUTPUT
+[[ $? ]] || { echo "***EPOST"; exit 1; }
+echo $OUTPUT
+jq '.name' $OUTPUT
+;;
+
 esac

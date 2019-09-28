@@ -34,7 +34,7 @@ NAME                                                  TITLE
 |vision.googleapis.com                                 |Cloud Vision API|
 
 * Enable the specific API with `gcloud services enable <API>`
-   * NB. <i>Error message if the specific API service is not enabled when requesting</i>
+   * <i>NB.  Error message if the specific API service is not enabled when requesting</i>
    ```
    {
      "error": {
@@ -78,7 +78,7 @@ cognitive-254305
 * [Detect text in a local image](https://cloud.google.com/vision/docs/ocr)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
 
-* Enable the specific API
+* Enable the required API
 ```
 $ gcloud services enable vision.googleapis.com
 Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished successfully.
@@ -114,9 +114,10 @@ $ cat request.json
 $ ./run-request.sh request.json
 result31008.json
 ```
-* Review
+* Review (text from output JSON)
 ```
-$ ./post-request.sh result31008.json --output printf
+$ printf $(jq ".responses[].textAnnotations[0].description" result31008.json)
+
 "Google is using deepfakes to fight deepfakes. With the 2020 US presidential
 election approaching, the race is on to figure out how to prevent widespread
 deepfake disinformation. On Tuesday, Google offered the latest contribution: an
@@ -134,7 +135,97 @@ far because synthetic media could soon become indistinguishable from reality
 Read more here.
 ```
 
-### 
+### Detect text in files
+* [Detect text in files](https://cloud.google.com/vision/docs/pdf)
+* Check if the required API is enabled
+```
+$ gcloud services list |grep vision.googleapis.com
+vision.googleapis.com             Cloud Vision API
+```
+* Create Google Cloud Storage Bucket
+```
+$ gcloud config get-value project 
+cognitive-254305
+
+$ gsutil mb gs://cognitive-254305
+Creating gs://cognitive-254305/...
+
+```
+* Copy data to the Google Cloud Storage Bucket
+```
+$ gsutil cp data/letter1.pdf gs://$(gcloud config get-value project)
+Copying file://data/letter1.pdf [Content-Type=application/pdf]...
+- [1 files][ 21.1 KiB/ 21.1 KiB]                                                
+Operation completed over 1 objects/21.1 KiB.                                     
+
+$ gsutil ls -l gs://$(gcloud config get-value project)
+     21578  2019-09-28T10:15:36Z  gs://cognitive-254305/letter1.pdf
+TOTAL: 1 objects, 21578 bytes (21.07 KiB)
+
+$ ls -l data/letter1.pdf 
+-rw-r--r--@ 1 bjro  staff  21578 Sep 28 14:06 data/letter1.pdf
+```
+* Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
+```
+$ gsutil cp data/letter1.pdf gs://$(gcloud config get-value project)
+
+$ ./pre-request.sh  letter1.pdf
+```
+* Perform (input: JSON file "request.json"; output: JSON file "result$RANDOM.json)
+```
+$ ./run-request.sh  
+result10350.json
+"projects/cognitive-254305/operations/5c7fc871d25e65b8"
+```
+* Review (check job; copy output JSON to local storage; extract text from output JSON)
+```
+$ jq '.name' result6909.json
+"projects/cognitive-254305/operations/5c7fc871d25e65b8"
+
+$ gsutil ls gs://$(gcloud config get-value project)/
+gs://cognitive-254305/letter1.pdf
+gs://cognitive-254305/output-1-to-1.json
+
+$ gsutil cp gs://$(gcloud config get-value project)/output-1-to-1.json .
+Copying gs://cognitive-254305/output-1-to-1.json...
+- [1 files][179.5 KiB/179.5 KiB]                                                
+Operation completed over 1 objects/179.5 KiB.        
+
+$ STRING=$(jq '.responses[].fullTextAnnotation["text"]' output-1-to-1.json)
+
+$ printf "$STRING"
+"Urna Semper
+1234 Main Street
+Anytown, State ZIP
+123-456-7890
+no_reply@example.com
+September 28, 2019
+Trenz Pruca
+4321 First Street
+Anytown, State ZIP
+Dear Trenz,
+Lorem ipsum dolor sit amet, ligula suspendisse nulla pretium, rhoncus tempor
+fermentum, enim integer ad vestibulum volutpat. Nisl rhoncus turpis est, vel elit,
+congue wisi enim nunc ultricies sit, magna tincidunt. Maecenas aliquam maecenas
+ligula nostra, accumsan taciti. Sociis mauris in integer, a dolor netus non dui aliquet,
+sagittis felis sodales, dolor sociis mauris, vel eu libero cras. Faucibus at. Arcu habitasse
+elementum est, ipsum purus pede porttitor class.
+Ac dolor ac adipiscing amet bibendum nullam, lacus molestie ut libero nec, diam et,
+pharetra sodales, feugiat ullamcorper id tempor id vitae. Mauris pretium aliquet,
+lectus tincidunt. Porttitor mollis imperdiet libero senectus pulvinar. Etiam molestie
+mauris ligula laoreet, vehicula eleifend. Repellat orci erat et, sem cum, ultricies
+sollicitudin amet eleifend dolor.
+Consectetuer arcu ipsum ornare pellentesque vehicula, in vehicula diam, ornare
+magna erat felis wisi a risus. Justo fermentum id. Malesuada eleifend, tortor molestie,
+a a vel et. Mauris at suspendisse, neque aliquam faucibus adipiscing, vivamus in. Wisi
+mattis leo suscipit nec amet, nisl fermentum tempor ac a, augue in eleifend in
+venenatis, cras sit id in vestibulum felis in, sed ligula.
+Sincerely yours,
+Urna Semper
+```
+
+
+
 
 ## AWS (Amazon Web Services)
 

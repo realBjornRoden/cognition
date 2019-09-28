@@ -22,14 +22,17 @@
 # SOFTWARE.
 # 
 
+REQ=request.json
+
+case $2 in
+
+annotate)
 [[ -f "$1" ]] ||  { echo "***ENOFILE"; exit 1; }
 INPUT=$1
 
-B64=base64.txt
+B64=base64.tmp
 base64 -i $INPUT -o $B64
 [[ -f "$B64" ]] ||  { echo "***ENOBASE64"; exit 1; }
-
-REQ=request.json
 
 cat <<EOD > $REQ
 {
@@ -47,7 +50,45 @@ cat <<EOD > $REQ
   ]
 }
 EOD
-
 [[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
-
 rm -f $B64
+;;
+
+asyncBatchAnnotate|*)
+[[ -z "$1" ]] &&  { echo "***ENOFILE"; exit 1; }
+INPUT=$1
+GSBUCKET="gs://$(gcloud config get-value project)"
+GSFILE="$GSBUCKET/$INPUT"
+[[ $? ]] || { echo "***EGSUTIL1"; exit 1; }
+gsutil ls $GSFILE >/dev/null 2>&1
+[[ $? ]] || { echo "***EGSUTIL2"; exit 1; }
+
+cat <<EOD > $REQ
+{
+  "requests":[
+    {
+      "inputConfig": {
+        "gcsSource": {
+          "uri": "$GSFILE"
+        },
+        "mimeType": "application/pdf"
+      },
+      "features": [
+        {
+          "type": "DOCUMENT_TEXT_DETECTION"
+        }
+      ],
+      "outputConfig": {
+        "gcsDestination": {
+          "uri": "$GSBUCKET/"
+        },
+        "batchSize": 1
+      }
+    }
+  ]
+}
+EOD
+[[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
+;;
+
+esac
