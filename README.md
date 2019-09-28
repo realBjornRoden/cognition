@@ -55,10 +55,9 @@ NAME                                                  TITLE
 ```
 
 ### Detect text in a local image
-Pprovide image data to the Vision API by specifying the URI path to the image, or by sending the image data as base64-encoded text.
-* [Base64 Encoding](https://cloud.google.com/vision/docs/base64)
+Pprovide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
 
-* Check current project
+* Check which is the current project
 ```
 $ gcloud config get-value project 
 bungabunga-123456
