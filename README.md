@@ -1,9 +1,9 @@
 # Cognitive Artificial Intelligence
 
 
-* [Amazon](https://aws.amazon.com/machine-learning/)
-* [Google](https://cloud.google.com/products/ai/)
-* [Microsoft](https://azure.microsoft.com/services/cognitive-services/)
+* [Amazon (AWS)](https://aws.amazon.com/machine-learning/)
+* [Google (GCP)](https://cloud.google.com/products/ai/)
+* [Microsoft (Azure)](https://azure.microsoft.com/services/cognitive-services/)
 
 ***
 
