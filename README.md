@@ -109,7 +109,7 @@ $ cat request.json
 ```
 * Perform (input: JSON file "request.json"; output: JSON file "result$RANDOM.json)
 ```
-$ ./runrequest.sh request.json
+$ ./run-request.sh request.json
 result31008.json
 ```
 * Review
