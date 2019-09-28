@@ -17,7 +17,7 @@ $ gcloud services list --available
 NAME                                                  TITLE
 ...
 ```
-
+* Cognitive APIs
 |NAME                                                  |TITLE|
 |---|---|
 |automl.googleapis.com                                 |Cloud AutoML API|
@@ -32,7 +32,7 @@ NAME                                                  TITLE
 |videointelligence.googleapis.com                      |Cloud Video Intelligence API|
 |vision.googleapis.com                                 |Cloud Vision API|
 
-* API is not enabled error message
+* API services is not enabled error message
 ```
 {
   "error": {
@@ -53,7 +53,6 @@ NAME                                                  TITLE
   }
 }
 ```
-
 
 ### Detect text in a local image
 Pprovide image data to the Vision API by specifying the URI path to the image, or by sending the image data as base64-encoded text.
