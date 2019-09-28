@@ -33,38 +33,34 @@ NAME                                                  TITLE
 |videointelligence.googleapis.com                      |Cloud Video Intelligence API|
 |vision.googleapis.com                                 |Cloud Vision API|
 
-* Specific API service is not enabled error message
-```
-{
-  "error": {
-    "code": 403,
-    "message": "Cloud Vision API has not been used in project 711533833686 before or it is disabled. Enable it by visiting https://console.cloud.google.com/apis/api/vision.googleapis.com/overview?project=711533833686 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
-    "status": "PERMISSION_DENIED",
-    "details": [
-      {
-        "@type": "type.googleapis.com/google.rpc.Help",
-        "links": [
-          {
-            "description": "Google Cloud Console API activation",
-            "url": "https://console.cloud.google.com/apis/api/vision.googleapis.com/overview?project=711533833686"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-### Detect text in a local image
-* [vision-ocr](https://cloud.google.com/vision/docs/ocr)
-* Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
-
-* Check which is the current project
+* Enable the specific API with `gcloud services enable <API>`
+   * NB. <i>Error message if the specific API service is not enabled when requesting</i>
+   ```
+   {
+     "error": {
+       "code": 403,
+       "message": "Cloud Vision API has not been used in project 711533833686 before or it is disabled. Enable it by visiting https://console.cloud.google.com/apis/api/vision.googleapis.com/overview?project=711533833686 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+       "status": "PERMISSION_DENIED",
+       "details": [
+         {
+           "@type": "type.googleapis.com/google.rpc.Help",
+           "links": [
+             {
+               "description": "Google Cloud Console API activation",
+               "url": "https://console.cloud.google.com/apis/api/vision.googleapis.com/overview?project=711533833686"
+             }
+           ]
+         }
+       ]
+     }
+   }
+   ```
+* Check the currently active project
 ```
 $ gcloud config get-value project 
 bungabunga-123456
 ```
-* Set the project
+* Set the current project
 ```
 $ gcloud projects list
 PROJECT_ID          NAME                PROJECT_NUMBER
@@ -77,6 +73,11 @@ Updated property [core/project].
 $ gcloud config get-value project 
 cognitive-254305
 ```
+
+### Detect text in a local image
+* [Detect text in a local image](https://cloud.google.com/vision/docs/ocr)
+* Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
+
 * Enable the specific API
 ```
 $ gcloud services enable vision.googleapis.com
