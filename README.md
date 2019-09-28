@@ -7,6 +7,12 @@
 
 ***
 
+### Use cases
+1. Detect text in a local image
+1. Detect handwriting in a local image
+1. Detect text in files
+
+
 ## GCP (Google Cloud Platform)
 * FIRST [before-you-begin](https://cloud.google.com/vision/docs/before-you-begin)
 * SECOND [enable-api-for-project]()
@@ -74,18 +80,24 @@ $ gcloud config get-value project
 cognitive-254305
 ```
 
+***
+
 ### Detect text in a local image
 * [Detect text in a local image](https://cloud.google.com/vision/docs/ocr)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
 
-* Enable the required API
+* Check if the required API is enabled, if not enable it
 ```
+$ gcloud services list |grep vision.googleapis.com
+vision.googleapis.com             Cloud Vision API
+
 $ gcloud services enable vision.googleapis.com
 Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished successfully.
 ```
 * Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
 ```
-$ ./pre-request.sh ../data/image1.png
+$ ./pre-request.sh annotate ../data/image1.png
+request.json
 
 $ grep content request.json|cut -f2 -d:|wc -c
   248720
@@ -111,7 +123,7 @@ $ cat request.json
 ```
 * Perform (input: JSON file "request.json"; output: JSON file "result$RANDOM.json)
 ```
-$ ./run-request.sh request.json
+$ ./run-request.sh annotate request.json
 result31008.json
 ```
 * Review (text from output JSON)
@@ -135,12 +147,72 @@ far because synthetic media could soon become indistinguishable from reality
 Read more here.
 ```
 
-### Detect text in files
-* [Detect text in files](https://cloud.google.com/vision/docs/pdf)
-* Check if the required API is enabled
+***
+
+### Detect handwriting in a local image
+* [Detect handwriting in a local image](https://cloud.google.com/vision/docs/handwriting)
+* Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
+
+* Check if the required API is enabled, if not enable it
 ```
 $ gcloud services list |grep vision.googleapis.com
 vision.googleapis.com             Cloud Vision API
+
+$ gcloud services enable vision.googleapis.com
+Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished successfully.
+```
+* Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
+```
+$ ./pre-request.sh annotate2 ../data/detect_handwriting_OCR-detect-handwriting_SMALL.png
+request.json
+
+$ grep content request.json|cut -f2 -d:|wc -c
+  248720
+
+$ grep -v content request.json|wc -c
+     145
+
+$ cat request.json
+{
+  "requests": [
+    {
+      "image": {
+      "content": "<...removed...>"
+      },
+      "features": [
+        {
+          "type": "DOCUMENT_TEXT_DETECTION"
+        }
+      ]
+    }
+  ]
+}
+```
+* Perform (input: JSON file "request.json"; output: JSON file "result$RANDOM.json)
+```
+$ ./run-request.sh annotate2 request.json
+result11184.json
+```
+* Review (text from output JSON)
+```
+$ printf "$(jq '.responses[].textAnnotations[0].description' result11184.json)"
+
+"Cloud
+Google
+Platform
+```
+
+***
+
+### Detect text in files (PDF)
+* [Detect text in files](https://cloud.google.com/vision/docs/pdf)
+* Check if the required API is enabled, if not enable it
+```
+$ gcloud services list |grep vision.googleapis.com
+vision.googleapis.com             Cloud Vision API
+
+$ gcloud services enable vision.googleapis.com
+Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished successfully.
 ```
 * Create Google Cloud Storage Bucket
 ```
@@ -169,11 +241,37 @@ $ ls -l data/letter1.pdf
 ```
 $ gsutil cp data/letter1.pdf gs://$(gcloud config get-value project)
 
-$ ./pre-request.sh  letter1.pdf
+$ ./pre-request.sh asyncBatchAnnotate letter1.pdf
+request.json
+
+$ cat request.json
+{
+  "requests":[
+    {
+      "inputConfig": {
+        "gcsSource": {
+          "uri": "gs://cognitive-254305/letter1.pdf"
+        },
+        "mimeType": "application/pdf"
+      },
+      "features": [
+        {
+          "type": "DOCUMENT_TEXT_DETECTION"
+        }
+      ],
+      "outputConfig": {
+        "gcsDestination": {
+          "uri": "gs://cognitive-254305/"
+        },
+        "batchSize": 1
+      }
+    }
+  ]
+}
 ```
 * Perform (input: JSON file "request.json"; output: JSON file "result$RANDOM.json)
 ```
-$ ./run-request.sh  
+$ ./run-request.sh asyncBatchAnnotate
 result10350.json
 "projects/cognitive-254305/operations/5c7fc871d25e65b8"
 ```
@@ -194,6 +292,7 @@ Operation completed over 1 objects/179.5 KiB.
 $ STRING=$(jq '.responses[].fullTextAnnotation["text"]' output-1-to-1.json)
 
 $ printf "$STRING"
+
 "Urna Semper
 1234 Main Street
 Anytown, State ZIP

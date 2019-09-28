@@ -24,11 +24,11 @@
 
 REQ=request.json
 
-case $2 in
+case $1 in
 
 annotate)
-[[ -f "$1" ]] ||  { echo "***ENOFILE"; exit 1; }
-INPUT=$1
+[[ -f "$2" ]] ||  { echo "***ENOFILE"; exit 1; }
+INPUT=$2
 
 B64=base64.tmp
 base64 -i $INPUT -o $B64
@@ -52,11 +52,42 @@ cat <<EOD > $REQ
 EOD
 [[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
 rm -f $B64
+echo $OUTPUT
 ;;
 
-asyncBatchAnnotate|*)
-[[ -z "$1" ]] &&  { echo "***ENOFILE"; exit 1; }
-INPUT=$1
+annotate2)
+[[ -f "$2" ]] ||  { echo "***ENOFILE"; exit 1; }
+INPUT=$2
+
+B64=base64.tmp
+base64 -i $INPUT -o $B64
+[[ -f "$B64" ]] ||  { echo "***ENOBASE64"; exit 1; }
+
+cat <<EOD > $REQ
+{
+  "requests": [
+    {
+      "image": {
+        "content": "$(<$B64)"
+      },
+      "features": [
+        {
+          "type": "DOCUMENT_TEXT_DETECTION"
+        }
+      ]
+    }
+  ]
+}
+EOD
+[[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
+rm -f $B64
+echo $OUTPUT
+;;
+
+asyncBatchAnnotate)
+[[ -z "$2" ]] &&  { echo "***ENOFILE"; exit 1; }
+INPUT=$2
+
 GSBUCKET="gs://$(gcloud config get-value project)"
 GSFILE="$GSBUCKET/$INPUT"
 [[ $? ]] || { echo "***EGSUTIL1"; exit 1; }
@@ -89,6 +120,7 @@ cat <<EOD > $REQ
 }
 EOD
 [[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
+echo $OUTPUT
 ;;
 
 esac

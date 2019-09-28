@@ -23,16 +23,16 @@
 # 
 
 AUTH=$(gcloud auth application-default print-access-token 2>/dev/null)
-REQ=${1:-request.json}
+REQ=${2:-request.json}
 
 [[ -z "$AUTH" ]] && { echo "***ENOAUTH"; exit 1; }
 [[ -f "$REQ" ]]  || { echo "***ENOREQ"; exit 1; }
 
 OUTPUT=result$RANDOM.json
 
-case $2 in
+case $1 in
 
-annotate)
+annotate|annotate2)
 URL=https://vision.googleapis.com/v1/images:annotate
 
 curl -s -X POST \
@@ -44,7 +44,7 @@ $URL > $OUTPUT
 echo $OUTPUT
 ;;
 
-asyncBatchAnnotate|*)
+asyncBatchAnnotate)
 URL=https://vision.googleapis.com/v1/files:asyncBatchAnnotate
 
 curl -s -X POST \

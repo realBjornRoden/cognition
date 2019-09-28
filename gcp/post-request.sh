@@ -27,7 +27,7 @@
 
 case $1 in
 
-annotate)
+annotate|annotate2)
 	STRING=$(jq ".responses[].textAnnotations[0].description" $2)
 	printf "$STRING"
 ;;
