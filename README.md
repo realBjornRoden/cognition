@@ -15,6 +15,7 @@
 1. Detect multiple objects in images
 1. Detect web references to an image
 1. Detect landmarks in images
+1. Detect landmarks in and web references of an image (combined)
 1. ...
 
 ***
@@ -557,7 +558,7 @@ St. Basil's Cathedral 0.90775275 {"latitude":55.752522899999995,"longitude":37.6
 Saint Basil's Cathedral 0.89397573 {"latitude":55.752912,"longitude":37.622315883636475}
 ```
 
-### Detect landmarks and web references of an image
+### Detect landmarks in and web references of an image (combined)
 * Add the types within the "features" brackets `[...]`
 ```
 { "requests": [ { "image": { "content": "$(<$B64)" }, "features": [ { "type": "LANDMARK_DETECTION" },{ "type": "WEB_DETECTION" } ] } ] }
