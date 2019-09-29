@@ -80,9 +80,15 @@ annotate*)
 			{ "requests": [ { "image": { "content": "$(<$B64)" }, "features": [ { "maxResults": $MAX, "type": "WEB_DETECTION" } ] } ] }
 		EOD
 	;;
-	annotate4)
+	annotate6)
 		cat <<-EOD > $REQ
-			{ "requests": [ { "image": { "content": "$(<$B64)" }, "features": [ { "maxResults": $MAX, "type": "OBJECT_LOCALIZATION" } ] } ] }
+			{ "requests": [ { "image": { "content": "$(<$B64)" }, "features": [ { "maxResults": $MAX, "type": "LANDMARK_DETECTION" } ] } ] }
+		EOD
+	;;
+
+	annotate-special)
+		cat <<-EOD > $REQ
+			{ "requests": [ { "image": { "content": "$(<$B64)" }, "features": [ { "type": "LANDMARK_DETECTION" },{ "type": "WEB_DETECTION" } ] } ] }
 		EOD
 	;;
 	esac

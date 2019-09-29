@@ -43,6 +43,25 @@ annotate5)
 	jq -r '.responses[].webDetection.fullMatchingImages[] |.url' $2
 ;;
 
+annotate6)
+	jq -r '.responses[].landmarkAnnotations[] | "\(.description) \(.score) \(.locations[].latLng)"' $2
+#          "locations": [
+#            {
+#              "latLng": {
+#                "latitude": 55.752912,
+#                "longitude": 37.622315883636475
+#              }
+#            }
+#          ]
+# curl https://maps.googleapis.com/maps/api/geocode/json?latlng=55.752912,37.622315883636475 #&key=YOUR_API_KEY
+#{
+#   "error_message" : "You must use an API key to authenticate each request to Google Maps Platform APIs. For additional information, please refer to http://g.co/dev/maps-no-account",
+#   "results" : [],
+#   "status" : "REQUEST_DENIED"
+#}
+
+;;
+
 asyncBatchAnnotate|*)
 	jq -r '.responses[].fullTextAnnotation["text"]' $2
 ;;

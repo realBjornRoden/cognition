@@ -14,6 +14,7 @@
 1. Detect faces in images
 1. Detect multiple objects in images
 1. Detect web references to an image
+1. Detect landmarks in images
 1. ...
 
 ***
@@ -507,7 +508,65 @@ $ wget --quiet --continue --timestamping --tries=1 --input-file=image.list
 
 ***
 
+### Detect landmarks in images
+* [Detect landmarks](https://cloud.google.com/vision/docs/detecting-landmarks)
+* [Reverse geocoding for Google Map API](https://developers.google.com/maps/documentation/geocoding/intro#ReverseGeocoding)
+* Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
 
+* Check project, credentials environment variable and if the required API is enabled
+```
+$ gcloud config get-value project 
+cognitive-254305
+
+$ export GOOGLE_APPLICATION_CREDENTIALS=$PWD/cognitive-aab254879251.json
+
+$ gcloud services list | grep vision.googleapis.com
+vision.googleapis.com             Cloud Vision API
+```
+* Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
+```
+$ ./pre-request.sh annotate6 ../data/landmark1.jpeg
+request.json
+
+$ cat request.json
+{
+  "requests": [
+    {
+      "image": {
+      "content": "<...removed...>"
+      },
+      "features": [
+        {
+          "maxResults": 10,
+          "type": "LANDMARK_DETECTION"
+        }
+      ]
+    }
+  ]
+}
+```
+* Perform (input: JSON file "request.json"; output: JSON file "result$RANDOM.json)
+```
+$ ./run-request.sh annotate6 request.json
+result12922.json
+```
+* Review (text from output JSON)
+```
+$ jq -r '.responses[].landmarkAnnotations[] | "\(.description) \(.score) \(.locations[].latLng)"' result12922.json
+St. Basil's Cathedral 0.90775275 {"latitude":55.752522899999995,"longitude":37.623086799999996}
+Saint Basil's Cathedral 0.89397573 {"latitude":55.752912,"longitude":37.622315883636475}
+```
+
+### Detect landmarks and web references of an image
+* Add the types within the "features" brackets `[...]`
+```
+{ "requests": [ { "image": { "content": "$(<$B64)" }, "features": [ { "type": "LANDMARK_DETECTION" },{ "type": "WEB_DETECTION" } ] } ] }
+```
+* Review (text from output JSON) 
+```
+$ jq -r '.responses[].landmarkAnnotations[] | "\(.description) \(.score) \(.locations[].latLng)"' google-output.json
+$ jq -r '.responses[].webDetection.fullMatchingImages[] |.url' google-output.json
+```
 
 
 ## AWS (Amazon Web Services)
