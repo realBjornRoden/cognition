@@ -24,133 +24,71 @@
 
 REQ=request.json
 
-case $1 in
-
-annotate)
-[[ -f "$2" ]] ||  { echo "***ENOFILE"; exit 1; }
-INPUT=$2
-
-B64=base64.tmp
-base64 -i $INPUT -o $B64
-[[ -f "$B64" ]] ||  { echo "***ENOBASE64"; exit 1; }
-
-cat <<EOD > $REQ
-{
-  "requests": [
-    {
-      "image": {
-        "content": "$(<$B64)"
-      },
-      "features": [
-        {
-          "type": "TEXT_DETECTION"
-        }
-      ]
-    }
-  ]
-}
-EOD
-[[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
-rm -f $B64
-echo $REQ
-;;
-
-annotate2)
-[[ -f "$2" ]] ||  { echo "***ENOFILE"; exit 1; }
-INPUT=$2
-
-B64=base64.tmp
-base64 -i $INPUT -o $B64
-[[ -f "$B64" ]] ||  { echo "***ENOBASE64"; exit 1; }
-
-cat <<EOD > $REQ
-{
-  "requests": [
-    {
-      "image": {
-        "content": "$(<$B64)"
-      },
-      "features": [
-        {
-          "type": "DOCUMENT_TEXT_DETECTION"
-        }
-      ]
-    }
-  ]
-}
-EOD
-[[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
-rm -f $B64
-echo $REQ
-;;
-
-asyncBatchAnnotate)
 [[ -z "$2" ]] &&  { echo "***ENOFILE"; exit 1; }
 INPUT=$2
 
-GSBUCKET="gs://$(gcloud config get-value project)"
-GSFILE="$GSBUCKET/$INPUT"
-[[ $? ]] || { echo "***EGSUTIL1"; exit 1; }
-gsutil ls $GSFILE >/dev/null 2>&1
-[[ $? ]] || { echo "***EGSUTIL2"; exit 1; }
+case $1 in
+asyncBatchAnnotate)
+	GSBUCKET="gs://$(gcloud config get-value project)"
+	GSFILE="$GSBUCKET/$INPUT"
+	[[ $? ]] || { echo "***EGSUTIL1"; exit 1; }
+	gsutil ls $GSFILE >/dev/null 2>&1
+	[[ $? ]] || { echo "***EGSUTIL2"; exit 1; }
 
-cat <<EOD > $REQ
-{
-  "requests":[
-    {
-      "inputConfig": {
-        "gcsSource": {
-          "uri": "$GSFILE"
-        },
-        "mimeType": "application/pdf"
-      },
-      "features": [
-        {
-          "type": "DOCUMENT_TEXT_DETECTION"
-        }
-      ],
-      "outputConfig": {
-        "gcsDestination": {
-          "uri": "$GSBUCKET/"
-        },
-        "batchSize": 1
-      }
-    }
-  ]
-}
-EOD
-[[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
-echo $REQ
+	cat <<-EOD > $REQ
+	{ "requests":[
+    		{ "inputConfig": { "gcsSource": { "uri": "$GSFILE" }, "mimeType": "application/pdf" },
+      		"features": [ { "type": "DOCUMENT_TEXT_DETECTION" } ],
+      		"outputConfig": { "gcsDestination": { "uri": "$GSBUCKET/" }, "batchSize": 1 } }
+  		]
+	}
+	EOD
+	[[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
+	echo $REQ
 ;;
+annotate*)
+	B64=base64.tmp
+	base64 -i $INPUT -o $B64
+	[[ -f "$B64" ]] ||  { echo "***ENOBASE64"; exit 1; }
 
-annotate3)
-[[ -f "$2" ]] ||  { echo "***ENOFILE"; exit 1; }
-INPUT=$2
+	MAX=0	# 0==unlimited
 
-B64=base64.tmp
-base64 -i $INPUT -o $B64
-[[ -f "$B64" ]] ||  { echo "***ENOBASE64"; exit 1; }
+	case $1 in
+	
+	annotate1)
+		cat <<-EOD > $REQ
+			{ "requests": [ { "image": { "content": "$(<$B64)" }, "features": [ { "type": "TEXT_DETECTION" } ] } ] }
+		EOD
+	;;
+	annotate2)
+		cat <<-EOD > $REQ
+			{ "requests": [ { "image": { "content": "$(<$B64)" }, "features": [ { "type": "DOCUMENT_TEXT_DETECTION" } ] } ] }
+		EOD
+	;;
+	annotate3)
+		cat <<-EOD > $REQ
+			{ "requests": [ { "image": { "content": "$(<$B64)" }, "features": [ { "maxResults": $MAX, "type": "FACE_DETECTION" } ] } ] }
+		EOD
+	;;
+	annotate4)
+		cat <<-EOD > $REQ
+			{ "requests": [ { "image": { "content": "$(<$B64)" }, "features": [ { "maxResults": $MAX, "type": "OBJECT_LOCALIZATION" } ] } ] }
+		EOD
+	;;
+	annotate5)
+		cat <<-EOD > $REQ
+			{ "requests": [ { "image": { "content": "$(<$B64)" }, "features": [ { "maxResults": $MAX, "type": "WEB_DETECTION" } ] } ] }
+		EOD
+	;;
+	annotate4)
+		cat <<-EOD > $REQ
+			{ "requests": [ { "image": { "content": "$(<$B64)" }, "features": [ { "maxResults": $MAX, "type": "OBJECT_LOCALIZATION" } ] } ] }
+		EOD
+	;;
+	esac
 
-cat <<EOD > $REQ
-{
-  "requests": [
-    {
-      "image": {
-        "content": "$(<$B64)"
-      },
-      "features": [
-        {
-          "maxResults": 10,
-          "type": "FACE_DETECTION"
-        }
-      ]
-    }
-  ]
-}
-EOD
-[[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
-rm -f $B64
-echo $REQ
+	[[ -f "$REQ" ]] ||  { echo "***ENOREQ"; exit 1; }
+	rm -f $B64
+	echo $REQ
 ;;
-
 esac

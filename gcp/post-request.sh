@@ -28,18 +28,23 @@
 case $1 in
 
 annotate|annotate2)
-	STRING=$(jq ".responses[].textAnnotations[0].description" $2)
-	printf "$STRING"
+	jq -r ".responses[].textAnnotations[0].description" $2
 ;;
 
 annotate3)
-	STRING=$(jq ".responses[].textAnnotations[0].description" $2)
-	printf "$STRING"
+	jq '.responses[].faceAnnotations[].detectionConfidence' $2
+;;
+
+annotate4)
+	jq -r '.responses[].localizedObjectAnnotations[] | "\(.name) \(.score)"' $2
+;;
+
+annotate5)
+	jq -r '.responses[].webDetection.fullMatchingImages[] |.url' $2
 ;;
 
 asyncBatchAnnotate|*)
-	STRING=$(jq '.responses[].fullTextAnnotation["text"]' $2)
-	printf "$STRING"
+	jq -r '.responses[].fullTextAnnotation["text"]' $2
 ;;
 
 esac

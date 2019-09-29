@@ -12,13 +12,41 @@
 1. Detect handwriting in images
 1. Detect text in files
 1. Detect faces in images
+1. Detect multiple objects in images
+1. Detect web references to an image
 1. ...
 
 ***
 
 ## GCP (Google Cloud Platform)
-* FIRST [before-you-begin](https://cloud.google.com/vision/docs/before-you-begin)
-* SECOND [enable-api-for-project]()
+
+*  Create project, service account, download service account key file and enable API [before-you-begin](https://cloud.google.com/vision/docs/before-you-begin)
+
+* Authenticate CLI session with `gcloud auth login`
+
+* Set the environment variable GOOGLE_APPLICATION_CREDENTIALS to point to the location of the service account key file
+```
+export GOOGLE_APPLICATION_CREDENTIALS=$PWD/cognitive-aab254879251.json
+```
+* Check the currently active project
+```
+$ gcloud config get-value project 
+bungabunga-123456
+```
+* Set the current project
+```
+$ gcloud projects list
+PROJECT_ID          NAME                PROJECT_NUMBER
+cognitive-254305    cognitive           711533833686
+bungabunga-123456   bungabunga          400688388535
+
+$ gcloud config set project cognitive-254305
+Updated property [core/project].
+
+$ gcloud config get-value project 
+cognitive-254305
+```
+
 ### APIs
 * List API services
 ```
@@ -42,6 +70,14 @@ NAME                                                  TITLE
 |videointelligence.googleapis.com                      |Cloud Video Intelligence API|
 |vision.googleapis.com                                 |Cloud Vision API|
 
+* [Enable API](https://cloud.google.com/endpoints/docs/openapi/enable-api)
+```
+$ gcloud services list | grep vision.googleapis.com
+vision.googleapis.com             Cloud Vision API
+
+$ gcloud services enable vision.googleapis.com
+Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished successfully.
+```
 * Enable the specific API with `gcloud services enable <API>`
    * <i>NB.  Error message if the specific API service is not enabled when requesting</i>
    ```
@@ -64,24 +100,6 @@ NAME                                                  TITLE
      }
    }
    ```
-* Check the currently active project
-```
-$ gcloud config get-value project 
-bungabunga-123456
-```
-* Set the current project
-```
-$ gcloud projects list
-PROJECT_ID          NAME                PROJECT_NUMBER
-cognitive-254305    cognitive           711533833686
-bungabunga-123456   bungabunga          400688388535
-
-$ gcloud config set project cognitive-254305
-Updated property [core/project].
-
-$ gcloud config get-value project 
-cognitive-254305
-```
 
 ***
 
@@ -89,17 +107,19 @@ cognitive-254305
 * [Detect text in a local image](https://cloud.google.com/vision/docs/ocr)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
 
-* Check if the required API is enabled, if not enable it
+* Check project, credentials environment variable and if the required API is enabled
 ```
-$ gcloud services list |grep vision.googleapis.com
-vision.googleapis.com             Cloud Vision API
+$ gcloud config get-value project 
+cognitive-254305
 
-$ gcloud services enable vision.googleapis.com
-Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished successfully.
+$ export GOOGLE_APPLICATION_CREDENTIALS=$PWD/cognitive-aab254879251.json
+
+$ gcloud services list | grep vision.googleapis.com
+vision.googleapis.com             Cloud Vision API
 ```
 * Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
 ```
-$ ./pre-request.sh annotate ../data/texttyped1.png
+$ ./pre-request.sh annotate1 ../data/texttyped1.png
 request.json
 
 $ grep content request.json|cut -f2 -d:|wc -c
@@ -131,9 +151,9 @@ result31008.json
 ```
 * Review (text from output JSON)
 ```
-$ printf $(jq ".responses[].textAnnotations[0].description" result31008.json)
+$ jq -r ".responses[].textAnnotations[0].description" result31008.json
 
-"Google is using deepfakes to fight deepfakes. With the 2020 US presidential
+Google is using deepfakes to fight deepfakes. With the 2020 US presidential
 election approaching, the race is on to figure out how to prevent widespread
 deepfake disinformation. On Tuesday, Google offered the latest contribution: an
 open-source database containing 3,000 original manipulated videos. The goal
@@ -156,13 +176,15 @@ Read more here.
 * [Detect handwriting in a local image](https://cloud.google.com/vision/docs/handwriting)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
 
-* Check if the required API is enabled, if not enable it
+* Check project, credentials environment variable and if the required API is enabled
 ```
-$ gcloud services list |grep vision.googleapis.com
-vision.googleapis.com             Cloud Vision API
+$ gcloud config get-value project 
+cognitive-254305
 
-$ gcloud services enable vision.googleapis.com
-Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished successfully.
+$ export GOOGLE_APPLICATION_CREDENTIALS=$PWD/cognitive-aab254879251.json
+
+$ gcloud services list | grep vision.googleapis.com
+vision.googleapis.com             Cloud Vision API
 ```
 * Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
 ```
@@ -192,9 +214,8 @@ result11184.json
 ```
 * Review (text from output JSON)
 ```
-$ printf "$(jq '.responses[].textAnnotations[0].description' result11184.json)"
-
-"Cloud
+$ jq -r '.responses[].textAnnotations[0].description' result11184.json
+Cloud
 Google
 Platform
 ```
@@ -203,13 +224,15 @@ Platform
 
 ### Detect text in files
 * [Detect text in files](https://cloud.google.com/vision/docs/pdf)
-* Check if the required API is enabled, if not enable it
+* Check project, credentials environment variable and if the required API is enabled
 ```
-$ gcloud services list |grep vision.googleapis.com
-vision.googleapis.com             Cloud Vision API
+$ gcloud config get-value project 
+cognitive-254305
 
-$ gcloud services enable vision.googleapis.com
-Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished successfully.
+$ export GOOGLE_APPLICATION_CREDENTIALS=$PWD/cognitive-aab254879251.json
+
+$ gcloud services list | grep vision.googleapis.com
+vision.googleapis.com             Cloud Vision API
 ```
 * Create Google Cloud Storage Bucket
 ```
@@ -286,11 +309,8 @@ Copying gs://cognitive-254305/output-1-to-1.json...
 - [1 files][179.5 KiB/179.5 KiB]                                                
 Operation completed over 1 objects/179.5 KiB.        
 
-$ STRING=$(jq '.responses[].fullTextAnnotation["text"]' output-1-to-1.json)
-
-$ printf "$STRING"
-
-"Urna Semper
+$ jq -r '.responses[].fullTextAnnotation["text"]' output-1-to-1.json
+Urna Semper
 1234 Main Street
 Anytown, State ZIP
 123-456-7890
@@ -324,13 +344,15 @@ Urna Semper
 * [Detect Faces in a local image](https://cloud.google.com/vision/docs/detecting-faces)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
 
-* Check if the required API is enabled, if not enable it
+* Check project, credentials environment variable and if the required API is enabled
 ```
-$ gcloud services list |grep vision.googleapis.com
-vision.googleapis.com             Cloud Vision API
+$ gcloud config get-value project 
+cognitive-254305
 
-$ gcloud services enable vision.googleapis.com
-Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished successfully.
+$ export GOOGLE_APPLICATION_CREDENTIALS=$PWD/cognitive-aab254879251.json
+
+$ gcloud services list | grep vision.googleapis.com
+vision.googleapis.com             Cloud Vision API
 ```
 * Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
 ```
@@ -368,6 +390,119 @@ $ jq '.responses[].faceAnnotations[].detectionConfidence' result12945.json
 0.8147049
 0.7686665
 0.6784521
+```
+
+### Detect multiple objects in images
+* [Detect multiple objects in images](https://cloud.google.com/vision/docs/object-localizer)
+* Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
+
+* Check project, credentials environment variable and if the required API is enabled
+```
+$ gcloud config get-value project 
+cognitive-254305
+
+$ export GOOGLE_APPLICATION_CREDENTIALS=$PWD/cognitive-aab254879251.json
+
+$ gcloud services list | grep vision.googleapis.com
+vision.googleapis.com             Cloud Vision API
+```
+* Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
+```
+$ ./pre-request.sh annotate4 ../data/multiple1.jpeg
+request.json
+
+$ cat request.json
+{
+  "requests": [
+    {
+      "image": {
+      "content": "<...removed...>"
+      },
+      "features": [
+        {
+          "maxResults": 10,
+          "type": "OBJECT_LOCALIZATION"
+        }
+      ]
+    }
+  ]
+}
+```
+* Perform (input: JSON file "request.json"; output: JSON file "result$RANDOM.json)
+```
+$ ./run-request.sh annotate4 request.json
+result31276.json
+```
+* Review (text from output JSON)
+```
+$ jq -r '.responses[].localizedObjectAnnotations[] | "\(.name) \(.score)"' result31276.json
+Bicycle wheel 0.93440825
+Bicycle wheel 0.9333072
+Bicycle 0.9044979
+Picture frame 0.6551748
+```
+
+### Detect web references to an image
+* [Detect Web entities and pages](https://cloud.google.com/vision/docs/detecting-web)
+* Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
+
+* Check project, credentials environment variable and if the required API is enabled
+```
+$ gcloud config get-value project 
+cognitive-254305
+
+$ export GOOGLE_APPLICATION_CREDENTIALS=$PWD/cognitive-aab254879251.json
+
+$ gcloud services list | grep vision.googleapis.com
+vision.googleapis.com             Cloud Vision API
+```
+* Prepare (input: PNG file "image1.png"; output: JSON file "request.json")
+```
+$ ./pre-request.sh annotate5 ../data/multiple1.jpeg
+request.json
+
+$ cat request.json
+{
+  "requests": [
+    {
+      "image": {
+      "content": "<...removed...>"
+      },
+      "features": [
+        {
+          "maxResults": 10,
+          "type": "WEB_DETECTION"
+        }
+      ]
+    }
+  ]
+}
+```
+* Perform (input: JSON file "request.json"; output: JSON file "result$RANDOM.json)
+```
+$ ./run-request.sh annotate5 request.json
+result23353.json
+```
+* Review (text from output JSON)
+```
+$ jq -r '.responses[].webDetection.fullMatchingImages[] |.url' result23353.json
+https://mosaicovero.co.za/wp-content/uploads/2018/03/MVG-550-Copenhagen-copy-2.jpg
+https://static1.squarespace.com/static/59d0a313be42d658b89bd39b/5b718b39c2241b31de2fd1bf/5c791b42652deaaa562e8b3d/1554359551823/bogdan-dada-279935-unsplash.jpg?format=2500w
+https://kapost.com/b/wp-content/uploads/sites/4/2018/02/street-cred-compressor.jpg
+http://www.dukefotografia.com/blog/wp-content/uploads/2018/03/photo-1496864137062-a12b5defe6be.jpg
+https://i0.wp.com/www.aviasales.ru/blog/wp-content/uploads/2018/01/photo-1496864137062-a12b5defe6be.jpeg?ssl=1
+https://cdn.shopify.com/s/files/1/0247/0717/0403/files/bogdan-dada-279935-unsplash_1400x.progressive.jpg?v=1555789235
+https://www.dom-comfort.kz/wp-content/uploads/2017/11/photo-1496864137062-a12b5defe6be.jpg
+https://868077240903148220.weebly.com/uploads/1/1/7/9/117963265/architecture-2562316-1920_2_orig.jpg
+http://elheraldoslp.com.mx/wp-content/uploads/2019/02/S3.jpg
+https://travelandleisure.mx/wp-content/uploads/2019/01/bogdan-dada-279935-unsplash.jpg
+```
+* Download each image to inspect further
+```
+$ mkdir tmp
+$ cd tmp
+$ jq -r '.responses[].webDetection.fullMatchingImages[] |.url' ../result23353.json > image.list
+$ wget --quiet --continue --timestamping --tries=1 --input-file=image.list
 ```
 
 ***
