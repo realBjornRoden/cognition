@@ -584,39 +584,35 @@ $ jq -r '.responses[].webDetection.fullMatchingImages[] |.url' google-output.jso
 * Prerequisites are to have a valid and activated Azure account and an Azure Cognitive Services subscription within a Azure Resource Group
 
 1. Sign in to Azure
-```
-$ az login
-Note, we have launched a browser for you to login. For old experience with device code, use "az login --use-device-code"
-You have logged in. Now let us find all the subscriptions to which you have access...
-[
-  {
-    "cloudName": "AzureCloud",
-    "id": "8e79d269-e904-4c8e-a3d8-5503f0e310e7",
-    "isDefault": true,
-    "name": "Free Trial",
-    "state": "Enabled",
-    "tenantId": "20a72884-3411-4054-a56e-18809a214004",
-    "user": {
-      "name": "realbjornroden@gmail.com",
-      "type": "user"
-    }
-  }
-]
-```
+   ```
+   $ az login
+   Note, we have launched a browser for you to login. For old experience with device code, use "az login --use-device-code"
+   You have logged in. Now let us find all the subscriptions to which you have access...
+   [
+     {
+       "cloudName": "AzureCloud",
+       "id": "8e79d269-e904-4c8e-a3d8-5503f0e310e7",
+       "isDefault": true,
+       "name": "Free Trial",
+       "state": "Enabled",
+       "tenantId": "20a72884-3411-4054-a56e-18809a214004",
+       "user": {
+         "name": "realbjornroden@gmail.com",
+         "type": "user"
+       }
+     }
+   ]
+   ```
 1. Choose resource group location
 
-|NAME                                                  |TITLE|
-|---|---|
-|automl.googleapis.com                                 |Cloud AutoML API|
-
-|INSTANCE    |TRANSACTIONS PER SECOND (TPS)    |FEATURES    |
-|---                 |---                                                             |---                  |
-|Free    |2 TPS    |Upload, training, and prediction transactions
-Up to 2 projects
-Up to 1 hour training per month|
-|||5,000 training images free per project
-10,000 predictions per month|
-
+   |INSTANCE    |TRANSACTIONS PER SECOND (TPS)    |FEATURES    |
+   |---                 |---                                                             |---                  |
+   |Free    |2 TPS    |Upload, training, and prediction transactions
+   |||Up to 2 projects
+   |||Up to 1 hour training per month|
+   |||5,000 training images free per project
+   |||10,000 predictions per month|
+   
    ```
    $ az account list-locations --query "[].{Region:name}" --out table|grep euro
    northeurope
