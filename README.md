@@ -569,17 +569,6 @@ $ jq -r '.responses[].webDetection.fullMatchingImages[] |.url' google-output.jso
 ```
 
 
-## AWS (Amazon Web Services)
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -615,131 +604,135 @@ You have logged in. Now let us find all the subscriptions to which you have acce
 ]
 ```
 1. Choose resource group location
-|INSTANCE    |TRANSACTIONS PER SECOND (TPS)    |FEATURES    |PRICE|
-|---                 |---                                                             |---                  |---|
+
+|NAME                                                  |TITLE|
+|---|---|
+|automl.googleapis.com                                 |Cloud AutoML API|
+
+|INSTANCE    |TRANSACTIONS PER SECOND (TPS)    |FEATURES    |
+|---                 |---                                                             |---                  |
 |Free    |2 TPS    |Upload, training, and prediction transactions
 Up to 2 projects
-Up to 1 hour training per month
-|5,000 training images free per project
+Up to 1 hour training per month|
+|||5,000 training images free per project
 10,000 predictions per month|
 
-```
-$ az account list-locations --query "[].{Region:name}" --out table|grep euro
-northeurope
-westeurope
+   ```
+   $ az account list-locations --query "[].{Region:name}" --out table|grep euro
+   northeurope
+   westeurope
 
-$ az account list-locations --query "[].{Region:name}" --out table|grep -E "us\$|us[0-9]\$"
-centralus
-eastus
-eastus2
-westus
-northcentralus
-southcentralus
-westcentralus
-westus2
-```
+   $ az account list-locations --query "[].{Region:name}" --out table|grep -E "us\$|us[0-9]\$"
+   centralus
+   eastus
+   eastus2
+   westus
+   northcentralus
+   southcentralus
+   westcentralus
+   westus2
+   ```
 1. Create a Azure Cognitive Services resource group
-```
-$ az group create --name cognitive-services-resource-group --location westus2
-{
-  "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group",
-  "location": "westus2",
-  "managedBy": null,
-  "name": "cognitive-services-resource-group",
-  "properties": {
-    "provisioningState": "Succeeded"
-  },
-  "tags": null,
-  "type": null
-}
+   ```
+   $ az group create --name cognitive-services-resource-group --location westus2
+   {
+      "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group",
+      "location": "westus2",
+      "managedBy": null,
+      "name": "cognitive-services-resource-group",
+      "properties": {
+        "provisioningState": "Succeeded"
+      },
+      "tags": null,
+      "type": null
+    }
 
-$ az group create --name cognitive-services-resource-group --location westus
-{
-  "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group",
-  "location": "westus",
-  "managedBy": null,
-  "name": "cognitive-services-resource-group",
-  "properties": {
-    "provisioningState": "Succeeded"
-  },
-  "tags": null,
-  "type": null
-}
-```
+    $ az group create --name cognitive-services-resource-group --location westus
+     {
+     "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group",
+     "location": "westus",
+     "managedBy": null,
+     "name": "cognitive-services-resource-group",
+     "properties": {
+     "provisioningState": "Succeeded"
+     },
+     "tags": null,
+     "type": null
+   }
+   ```
 1. Determine available Cognitive Service resources
-```
-$ az cognitiveservices account list-kinds --output table --subscription 8e79d269-e904-4c8e-a3d8-5503f0e310e7
-Result
------------------------
-AnomalyDetector
-Bing.Autosuggest.v7
-Bing.CustomSearch
-Bing.EntitySearch
-Bing.Search.v7
-Bing.SpellCheck.v7
-CognitiveServices
-ComputerVision
-ContentModerator
-CustomVision.Prediction
-CustomVision.Training
-Face
-ImmersiveReader
-InkRecognizer
-Internal.AllInOne
-LUIS
-LUIS.Authoring
-Personalizer
-QnAMaker
-SpeakerRecognition
-SpeechServices
-TextAnalytics
-TextTranslation
-```
+   ```
+   $ az cognitiveservices account list-kinds --output table --subscription 8e79d269-e904-4c8e-a3d8-5503f0e310e7
+   Result
+   -----------------------
+   AnomalyDetector
+   Bing.Autosuggest.v7
+   Bing.CustomSearch
+   Bing.EntitySearch
+   Bing.Search.v7
+   Bing.SpellCheck.v7
+   CognitiveServices
+   ComputerVision
+   ContentModerator
+   CustomVision.Prediction
+   CustomVision.Training
+   Face
+   ImmersiveReader
+   InkRecognizer
+   Internal.AllInOne
+   LUIS
+   LUIS.Authoring
+   Personalizer
+   QnAMaker
+   SpeakerRecognition
+   SpeechServices
+   TextAnalytics
+   TextTranslation
+   ```
 1. Add a Cognitive Service resource to the resource group (F0 free)
-```
-$ az cognitiveservices account create --name computer-vision --kind ComputerVision --resource-group cognitive-services-resource-group --sku F0 --location westus2 --yes
-{
-  "customSubDomainName": null,
-  "endpoint": "https://westus2.api.cognitive.microsoft.com/",
-  "etag": "\"0b0026c1-0000-0800-0000-5d92d59d0000\"",
-  "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group/providers/Microsoft.CognitiveServices/accounts/computer-vision",
-  "internalId": "61e4499a5739424698825e2192e2ed00",
-  "kind": "ComputerVision",
-  "location": "westus2",
-  "name": "computer-vision",
-  "networkAcls": null,
-  "provisioningState": "Succeeded",
-  "resourceGroup": "cognitive-services-resource-group",
-  "sku": {
-    "name": "F0",
-    "tier": null
-  },
-  "tags": null,
-  "type": "Microsoft.CognitiveServices/accounts"
-}
+   ```
+   $ az cognitiveservices account create --name computer-vision --kind ComputerVision --resource-group cognitive-services-resource-group --sku F0 --location westus2 --yes
+   {
+     "customSubDomainName": null,
+     "endpoint": "https://westus2.api.cognitive.microsoft.com/",
+     "etag": "\"0b0026c1-0000-0800-0000-5d92d59d0000\"",
+     "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group/providers/Microsoft.CognitiveServices/accounts/computer-vision",
+      "internalId": "61e4499a5739424698825e2192e2ed00",
+     "kind": "ComputerVision",
+     "location": "westus2",
+     "name": "computer-vision",
+     "networkAcls": null,
+     "provisioningState": "Succeeded",
+     "resourceGroup": "cognitive-services-resource-group",
+    "sku": {
+       "name": "F0",
+       "tier": null
+     },
+     "tags": null,
+     "type": "Microsoft.CognitiveServices/accounts"
+    }
 
-$ az cognitiveservices account create --name face-api --kind Face --resource-group cognitive-services-resource-group --sku F0 --location westus2 --yes
-{
-  "customSubDomainName": null,
-  "endpoint": "https://westus2.api.cognitive.microsoft.com/face/v1.0",
-  "etag": "\"0b00c5d1-0000-0800-0000-5d9306f80000\"",
-  "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group/providers/Microsoft.CognitiveServices/accounts/face-api",
-  "internalId": "e7fa540f5239498da16b3d615bfbf430",
-  "kind": "Face",
-  "location": "westus2",
-  "name": "face-api",
-  "networkAcls": null,
-  "provisioningState": "Succeeded",
-  "resourceGroup": "cognitive-services-resource-group",
-  "sku": {
-    "name": "F0",
-    "tier": null
-  },
-  "tags": null,
-  "type": "Microsoft.CognitiveServices/accounts"
-}
-
-```
+   $ az cognitiveservices account create --name face-api --kind Face --resource-group cognitive-services-resource-group --sku F0 --location westus2 --yes
+   {
+     "customSubDomainName": null,
+     "endpoint": "https://westus2.api.cognitive.microsoft.com/face/v1.0",
+     "etag": "\"0b00c5d1-0000-0800-0000-5d9306f80000\"",
+     "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group/providers/Microsoft.CognitiveServices/accounts/face-api",
+     "internalId": "e7fa540f5239498da16b3d615bfbf430",
+     "kind": "Face",
+     "location": "westus2",
+     "name": "face-api",
+     "networkAcls": null,
+     "provisioningState": "Succeeded",
+     "resourceGroup": "cognitive-services-resource-group",
+     "sku": {
+        "name": "F0",
+        "tier": null
+     },
+     "tags": null,
+     "type": "Microsoft.CognitiveServices/accounts"
+   }
+   ```
    * If the required service is not added, a similar error message will be returned when requesting use of the service
       ```
       {
@@ -750,28 +743,28 @@ $ az cognitiveservices account create --name face-api --kind Face --resource-gro
       }
       ```
 1. Get the keys for the Cognitive Service resource.
-```
-$ az cognitiveservices account keys list --name computer-vision --resource-group cognitive-services-resource-group
-{
-  "key1": "1a6944a93e5f4bd5a22501aff861d411",
-  "key2": "1302f8c87084476a9b898d6cbe4fab54"
-}
+   ```
+   $ az cognitiveservices account keys list --name computer-vision --resource-group cognitive-services-resource-group
+   {
+     "key1": "1a6944a93e5f4bd5a22501aff861d411",
+     "key2": "1302f8c87084476a9b898d6cbe4fab54"
+   }
 
-$ az cognitiveservices account keys list --name face-api --resource-group cognitive-services-resource-group
-{
-  "key1": "633853e0acc1441e95017bb2a43a96a7",
-  "key2": "af2d63b3198d4e6590d1b70ec47b0145"
-}
-```
+   $ az cognitiveservices account keys list --name face-api --resource-group cognitive-services-resource-group
+   {
+     "key1": "633853e0acc1441e95017bb2a43a96a7",
+     "key2": "af2d63b3198d4e6590d1b70ec47b0145"
+   }
+   ```
 1. Set environment `COGNITIVE_SERVICE_KEY` variable with one of the keys for the resource
-```
-$ export COGNITIVE_SERVICE_KEY=1a6944a93e5f4bd5a22501aff861d411
-```
+    ```
+   $ export COGNITIVE_SERVICE_KEY=1a6944a93e5f4bd5a22501aff861d411
+   ```
 1. Cleanup (after temporary usage)
-```
-$ az group delete --name cognitive-services-resource-group
-Are you sure you want to perform this operation? (y/n): y
-```
+   ```
+   $ az group delete --name cognitive-services-resource-group
+   Are you sure you want to perform this operation? (y/n): y
+   ```
 
 ***
 
@@ -1148,3 +1141,16 @@ street 0.6894863247871399
 land vehicle 0.645155668258667
 vehicle 0.6149222254753113
 ```
+
+
+## AWS (Amazon Web Services)
+
+
+
+
+
+
+
+
+
+
