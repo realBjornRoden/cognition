@@ -27,24 +27,15 @@
 
 case $1 in
 
-annotate|annotate2)
-	jq -r ".responses[].textAnnotations[0].description" $2
-;;
+asyncBatchAnnotate)   jq -r '.responses[].fullTextAnnotation["text"]' $2 ;;
+annotate|annotate2)   jq -r ".responses[].textAnnotations[0].description" $2 ;;
+annotate3)            jq '.responses[].faceAnnotations[].detectionConfidence' $2 ;;
+annotate4)            jq -r '.responses[].localizedObjectAnnotations[] | "\(.name) \(.score)"' $2 ;;
+annotate5)            jq -r '.responses[].webDetection.fullMatchingImages[] |.url' $2 ;;
+annotate6)            jq -r '.responses[].landmarkAnnotations[] | "\(.description) \(.score) \(.locations[].latLng)"' $2 ;;
+*)                    jq . $2 ;;
+esac
 
-annotate3)
-	jq '.responses[].faceAnnotations[].detectionConfidence' $2
-;;
-
-annotate4)
-	jq -r '.responses[].localizedObjectAnnotations[] | "\(.name) \(.score)"' $2
-;;
-
-annotate5)
-	jq -r '.responses[].webDetection.fullMatchingImages[] |.url' $2
-;;
-
-annotate6)
-	jq -r '.responses[].landmarkAnnotations[] | "\(.description) \(.score) \(.locations[].latLng)"' $2
 #          "locations": [
 #            {
 #              "latLng": {
@@ -59,11 +50,3 @@ annotate6)
 #   "results" : [],
 #   "status" : "REQUEST_DENIED"
 #}
-
-;;
-
-asyncBatchAnnotate|*)
-	jq -r '.responses[].fullTextAnnotation["text"]' $2
-;;
-
-esac
