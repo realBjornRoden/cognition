@@ -591,13 +591,13 @@ $ jq -r '.responses[].webDetection.fullMatchingImages[] |.url' google-output.jso
    [
      {
        "cloudName": "AzureCloud",
-       "id": "8e79d269-e904-4c8e-a3d8-5503f0e310e7",
+       "id": "deadbeef-e904-4c8e-a3d8-5503f0e310e7",
        "isDefault": true,
        "name": "Free Trial",
        "state": "Enabled",
-       "tenantId": "20a72884-3411-4054-a56e-18809a214004",
+       "tenantId": "deadbeef-3411-4054-a56e-18809a214004",
        "user": {
-         "name": "realbjornroden@gmail.com",
+         "name": "USER@FQDN",
          "type": "user"
        }
      }
@@ -632,7 +632,7 @@ $ jq -r '.responses[].webDetection.fullMatchingImages[] |.url' google-output.jso
    ```
    $ az group create --name cognitive-services-resource-group --location westus2
    {
-      "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group",
+      "id": "/subscriptions/deadbeef-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group",
       "location": "westus2",
       "managedBy": null,
       "name": "cognitive-services-resource-group",
@@ -645,7 +645,7 @@ $ jq -r '.responses[].webDetection.fullMatchingImages[] |.url' google-output.jso
 
     $ az group create --name cognitive-services-resource-group --location westus
      {
-     "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group",
+     "id": "/subscriptions/deadbeef-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group",
      "location": "westus",
      "managedBy": null,
      "name": "cognitive-services-resource-group",
@@ -658,7 +658,7 @@ $ jq -r '.responses[].webDetection.fullMatchingImages[] |.url' google-output.jso
    ```
 1. Determine available Cognitive Service resources
    ```
-   $ az cognitiveservices account list-kinds --output table --subscription 8e79d269-e904-4c8e-a3d8-5503f0e310e7
+   $ az cognitiveservices account list-kinds --output table --subscription deadbeef-e904-4c8e-a3d8-5503f0e310e7
    Result
    -----------------------
    AnomalyDetector
@@ -692,8 +692,8 @@ $ jq -r '.responses[].webDetection.fullMatchingImages[] |.url' google-output.jso
      "customSubDomainName": null,
      "endpoint": "https://westus2.api.cognitive.microsoft.com/",
      "etag": "\"0b0026c1-0000-0800-0000-5d92d59d0000\"",
-     "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group/providers/Microsoft.CognitiveServices/accounts/computer-vision",
-      "internalId": "61e4499a5739424698825e2192e2ed00",
+     "id": "/subscriptions/deadbeef-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group/providers/Microsoft.CognitiveServices/accounts/computer-vision",
+      "internalId": "deadbeef5739424698825e2192e2ed00",
      "kind": "ComputerVision",
      "location": "westus2",
      "name": "computer-vision",
@@ -713,8 +713,8 @@ $ jq -r '.responses[].webDetection.fullMatchingImages[] |.url' google-output.jso
      "customSubDomainName": null,
      "endpoint": "https://westus2.api.cognitive.microsoft.com/face/v1.0",
      "etag": "\"0b00c5d1-0000-0800-0000-5d9306f80000\"",
-     "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group/providers/Microsoft.CognitiveServices/accounts/face-api",
-     "internalId": "e7fa540f5239498da16b3d615bfbf430",
+     "id": "/subscriptions/deadbeef-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group/providers/Microsoft.CognitiveServices/accounts/face-api",
+     "internalId": "deadbeef5239498da16b3d615bfbf430",
      "kind": "Face",
      "location": "westus2",
      "name": "face-api",
@@ -742,19 +742,19 @@ $ jq -r '.responses[].webDetection.fullMatchingImages[] |.url' google-output.jso
    ```
    $ az cognitiveservices account keys list --name computer-vision --resource-group cognitive-services-resource-group
    {
-     "key1": "1a6944a93e5f4bd5a22501aff861d411",
-     "key2": "1302f8c87084476a9b898d6cbe4fab54"
+     "key1": "deadbeef3e5f4bd5a22501aff861d411",
+     "key2": "deadbeef7084476a9b898d6cbe4fab54"
    }
 
    $ az cognitiveservices account keys list --name face-api --resource-group cognitive-services-resource-group
    {
-     "key1": "633853e0acc1441e95017bb2a43a96a7",
-     "key2": "af2d63b3198d4e6590d1b70ec47b0145"
+     "key1": "deadbeef0acc1441e95017bb2a43a96a7",
+     "key2": "deadbeef198d4e6590d1b70ec47b0145"
    }
    ```
 1. Set environment `COGNITIVE_SERVICE_KEY` variable with one of the keys for the resource
     ```
-   $ export COGNITIVE_SERVICE_KEY=1a6944a93e5f4bd5a22501aff861d411
+   $ export COGNITIVE_SERVICE_KEY=deadbeef3e5f4bd5a22501aff861d411
    ```
 1. Cleanup (after temporary usage)
    ```
@@ -826,10 +826,10 @@ $ jq . request.json
 * Perform (input: JSON file "request.json"; 1st output: "Operation-Location"; 2nd output: JSON file "result$RANDOM.json)
 ```
 $ ./run-request.sh vision-pdf request.json
-***OCRBATCH  Operation-Location: d6fd65d4-37ee-419f-8709-007bf64a0c8a
+***OCRBATCH  Operation-Location: deadbeef-37ee-419f-8709-007bf64a0c8a
 
-$ ./run-request.sh vision-readop request.json d6fd65d4-37ee-419f-8709-007bf64a0c8a
-***READOP Operation-Location: d6fd65d4-37ee-419f-8709-007bf64a0c8a
+$ ./run-request.sh vision-readop request.json deadbeef-37ee-419f-8709-007bf64a0c8a
+***READOP Operation-Location: deadbeef-37ee-419f-8709-007bf64a0c8a
 result16131.json
 ```
 * Review (text from output JSON)
@@ -983,6 +983,7 @@ $ cat result5214.json # jq . result5214.json
 ***
 
 ### Detect Faces in images and details (Face API)
+
 * The stored face features will expire and be deleted 24 hours after the original detection call.
 * Optional parameters include faceId, landmarks, and attributes. Besides face rectangles and landmarks, the face detection API can analyze several conceptual attributes of a face. Attributes include age, gender, headPose, smile, facialHair, glasses, emotion, hair, makeup, occlusion, accessories, blur, exposure and noise. Some of the results returned for specific attributes may not be highly accurate.
 * [Face detection and attributes](https://docs.microsoft.com/en-us/azure/cognitive-services/face/concepts/face-detection#attributes)
