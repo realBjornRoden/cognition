@@ -21,6 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 # 
+VERBOSE=-v
 
 AUTH=$(gcloud auth application-default print-access-token 2>/dev/null)
 REQ=${2:-request.json}
@@ -39,7 +40,7 @@ asyncBatchAnnotate)
 	;;
 esac
 
-curl -s -X POST \
+curl $VERBOSE -s -X POST \
 -H "Authorization: Bearer "$AUTH \
 -H "Content-Type: application/json; charset=utf-8" \
 -d @$REQ \
