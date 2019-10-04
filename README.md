@@ -1527,7 +1527,7 @@ Monument 55.30182647705078
 * [compare-faces](https://docs.aws.amazon.com/cli/latest/reference/rekognition/compare-faces.html)
 * Target image
 <br><img src="https://www.nih.gov/sites/default/files/news-events/research-matters/2014/20140428-attention.jpg" width="50%" /><br>
-* Source image (to find in the target image)
+* Source image (to find in the target image (show as downsampled to 2kb from original 4kb)
 <br><img src="https://github.com/realBjornRoden/cognition/blob/master/data/face2match2kb.jpg" /><br>
 
 * Verify that the files are in the S3 Bucket
