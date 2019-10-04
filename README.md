@@ -1312,8 +1312,9 @@ oople CLoud 0 gle P fatform oople gle CLoud 0 P fatform
 
 <br><img src="https://docs.aws.amazon.com/en_pv/textract/latest/dg/images/asynchronous.png" /><br>
 
-<p>Example
+<p>Example>/p>
 
+|---|---|
 |SQS ARN:                   |arn:aws:sqs:us-east-2:deadbeef7898:SNStopic123|
 |SQS URL:                   |https://sqs.us-east-2.amazonaws.com/deadbeef7898/SNStopic123|
 |SNS Topic ARN:             |arn:aws:sns:us-east-2:deadbeef7898:topic123|
