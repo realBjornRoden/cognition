@@ -1305,7 +1305,7 @@ oople CLoud 0 gle P fatform oople gle CLoud 0 P fatform
 
 * Multi-step process:
 1. Setup SQS to receive SNS status notification [aws-sqs](https://docs.aws.amazon.com/cli/latest/reference/sqs/index.html)
-   * Add Permissions for Principal to the Queue, such as "Everybody (*)" with "SQS:AddPermission", "SQS:DeleteMessage" and "SQS:ReceiveMessage"
+   * Add Operaiton Permissions for Principal to the Queue, such as for "Everybody (*)"
 1. Setup SNS Topic and Subscription to recieve notification from StartDocumentTextDetection [aws-sns](https://docs.aws.amazon.com/cli/latest/reference/sns/index.html)
 1. Create IAM Role to allow Textract to publish to SNS, with the `AmazonTextractServiceRole` Policy
 1. StartDocumentTextDetection operation to submit the OCR operation, returns a job identifier (JobId) for the next step [aws-textract](https://docs.aws.amazon.com/cli/latest/reference/textract/start-document-text-detection.html)
@@ -1319,6 +1319,7 @@ oople CLoud 0 gle P fatform oople gle CLoud 0 P fatform
 |---|---|
 |SQS ARN                   |`arn:aws:sqs:us-east-2:deadbeef7898:SNStopic123`|
 |SQS URL                   |`https://sqs.us-east-2.amazonaws.com/deadbeef7898/SNStopic123`|
+|SQS Principal Operation Permissions |`SQS:AddPermission`, `SQS:DeleteMessage` and `SQS:ReceiveMessage`|
 |SNS Topic ARN             |`arn:aws:sns:us-east-2:deadbeef7898:topic123`|
 |SNS Subscription ARN      |`arn:aws:sns:us-east-2:deadbeef7898:topic123:deadbeef-9863-41e8-b283-78290f63d316`|
 |SNS Subscription Endpoint |`arn:aws:sqs:us-east-2:deadbeef7898:SNStopic123`|
