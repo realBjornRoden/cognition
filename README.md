@@ -1303,7 +1303,7 @@ oople CLoud 0 gle P fatform oople gle CLoud 0 P fatform
 * NB. Here using  `AmazonTextractFullAccess` Policy, not `AmazonRekognitionFullAccess`
 * NB. Here using `AmazonSNSFullAccess` for SNS  and `AmazonSQSFullAccess` for SQS and `IAMFullAccess` for IAM
 
-* Three step process:
+* Multi-step process:
 1. Setup SQS to receive SNS status notification [aws-sqs](https://docs.aws.amazon.com/cli/latest/reference/sqs/index.html)
    * Add Permissions for Principal to the Queue, such as "Everybody (*)" with "SQS:AddPermission", "SQS:DeleteMessage" and "SQS:ReceiveMessage"
 1. Setup SNS Topic and Subscription to recieve notification from StartDocumentTextDetection [aws-sns](https://docs.aws.amazon.com/cli/latest/reference/sns/index.html)
