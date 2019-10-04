@@ -1304,14 +1304,13 @@ oople CLoud 0 gle P fatform oople gle CLoud 0 P fatform
 * NB. Here using `AmazonSNSFullAccess` for SNS  and `AmazonSQSFullAccess` for SQS and `IAMFullAccess` for IAM
 
 * Multi-step process:
-1. Setup SQS to receive SNS status notification [aws-sqs](https://docs.aws.amazon.com/cli/latest/reference/sqs/index.html)
-   * Add Operaiton Permissions for Principal to the Queue, such as for "Everybody (*)"
-1. Setup SNS Topic and Subscription to recieve notification from StartDocumentTextDetection [aws-sns](https://docs.aws.amazon.com/cli/latest/reference/sns/index.html)
-1. Create IAM Role to allow Textract to publish to SNS, with the `AmazonTextractServiceRole` Policy
-1. StartDocumentTextDetection operation to submit the OCR operation, returns a job identifier (JobId) for the next step [aws-textract](https://docs.aws.amazon.com/cli/latest/reference/textract/start-document-text-detection.html)
-1. Check completion status queued in SQS from SNS
-1. GetDocumentTextDetection with job identifier (JobId) to access the OCR results in JSON output format [aws-textract](https://docs.aws.amazon.com/cli/latest/reference/textract/get-document-text-detection.html)
-
+   1. Setup SQS to receive SNS status notification [aws-sqs](https://docs.aws.amazon.com/cli/latest/reference/sqs/index.html)
+      * Add Operaiton Permissions for Principal to the Queue, such as for "Everybody (*)"
+   1. Setup SNS Topic and Subscription to recieve notification from StartDocumentTextDetection [aws-sns](https://docs.aws.amazon.com/cli/latest/reference/sns/index.html)
+   1. Create IAM Role to allow Textract to publish to SNS, with the `AmazonTextractServiceRole` Policy
+   1. StartDocumentTextDetection operation to submit the OCR operation, returns a job identifier (JobId) for the next step [aws-textract](https://docs.aws.amazon.com/cli/latest/reference/textract/start-document-text-detection.html)
+   1. Check completion status queued in SQS from SNS
+   1. GetDocumentTextDetection with job identifier (JobId) to access the OCR results in JSON output format [aws-textract](https://docs.aws.amazon.com/cli/latest/reference/textract/get-document-text-detection.html)
 
 * Example
 
