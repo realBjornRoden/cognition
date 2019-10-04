@@ -1298,6 +1298,8 @@ oople CLoud 0 gle P fatform oople gle CLoud 0 P fatform
 
 * [Detecting and Analyzing Text in Multipage Documents](https://docs.aws.amazon.com/en_pv/textract/latest/dg/async.html)
 * [Calling Amazon Textract Asynchronous Operations](https://docs.aws.amazon.com/en_pv/textract/latest/dg/api-async.html)
+<br><img src="https://docs.aws.amazon.com/en_pv/textract/latest/dg/images/asynchronous.png" alt="DocumentTextDetection" width="50%"/><br>
+
 * NB. Here using  `AmazonTextractFullAccess` Policy, not `AmazonRekognitionFullAccess`
 * NB. Here using `AmazonSNSFullAccess` for SNS  and `AmazonSQSFullAccess` for SQS and `IAMFullAccess` for IAM
 
@@ -1310,7 +1312,6 @@ oople CLoud 0 gle P fatform oople gle CLoud 0 P fatform
 1. Check completion status queued in SQS from SNS
 1. GetDocumentTextDetection with job identifier (JobId) to access the OCR results in JSON output format [aws-textract](https://docs.aws.amazon.com/cli/latest/reference/textract/get-document-text-detection.html)
 
-<br><img src="https://docs.aws.amazon.com/en_pv/textract/latest/dg/images/asynchronous.png" alt="DocumentTextDetection" width="50%"/><br>
 
 * Example
 
