@@ -1331,6 +1331,7 @@ $ aws sqs list-queues --region us-east-2
         "https://us-east-2.queue.amazonaws.com/deadbeef7898/SNStopic123"
     ]
 }
+
 $ aws sns list-topics --region us-east-2
 {
     "Topics": [
@@ -1339,6 +1340,7 @@ $ aws sns list-topics --region us-east-2
         }
     ]
 }
+
 $ aws sns list-subscriptions --region us-east-2
 {
     "Subscriptions": [
@@ -1376,7 +1378,6 @@ $ aws iam list-roles | jq '.Roles[]|select(.RoleName=="Textract2SNS")'
   "MaxSessionDuration": 3600
 }
 
-
 $ aws textract start-document-text-detection --document '{"S3Object":{"Bucket":"blobbucket","Name":"sample.pdf"}}' --notification-channel '{"SNSTopicArn":"arn:aws:sns:us-east-2:deadbeef7898:topic123","RoleArn":"arn:aws:iam::deadbeef7898:role/Textract2SNS"}' --region us-east-2
 {
     "JobId": "6014e9101702c9da1c505a4acdbd2e5675d630155dfa8da9205f77c34981b9b8"
@@ -1387,7 +1388,6 @@ $ aws sqs receive-message --queue-url https://us-east-2.queue.amazonaws.com/dead
 $ aws textract get-document-text-detection --job-id "6014e9101702c9da1c505a4acdbd2e5675d630155dfa8da9205f77c34981b9b8" --region us-east-2 > textract-output-sample.json
 
 $ jq -r '.Blocks[]|select(.BlockType=="LINE")|.Text' textract-output-sample.json | tr '\n' ' '; echo
-
 A Simple PDF File This is a small demonstration .pdf file -- just for use in the Virtual Mechanics tutorials. More text. And more text. And more text. And more text. And more text. And more text. And more text. And more text. And more text. And more text. And more text. Boring, ZZZZZ. And more text. And more text. And more text. And more text. And more text. And more text. And more text. And more text. And more text. And more text. And more text. And more text. And more text. And more text. And more text. And more text. Even more. Continued on page 2 Simple PDF File 2 .continued from page 1. Yet more text And more text. And more text. And more text. And more text. And more text. And more text. And more text. Oh, how boring typing this stuff. But not as boring as watching paint dry. And more text And more text. And more text. And more text. Boring. More, a little more text. The end, and just as well. 
 ```
 
