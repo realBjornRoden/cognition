@@ -15,7 +15,6 @@
 1. Detect multiple objects in images
 1. Detect web references to an image
 1. Detect landmarks in images
-1. Detect landmarks in and web references of an image (combined)
 1. ...
 
 ***
@@ -344,6 +343,7 @@ Urna Semper
 ### Detect Faces in images
 * [Detect Faces in a local image](https://cloud.google.com/vision/docs/detecting-faces)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
+<br><img src="https://www.nih.gov/sites/default/files/news-events/research-matters/2014/20140428-attention.jpg" width="50%" /><br>
 
 * Check project, credentials environment variable and if the required API is enabled
 ```
@@ -842,6 +842,8 @@ A Simple PDF File This is a small demonstration .pdf file - just for use in the 
 
 ### Detect Faces in images (Vision with visualFeatures for Faces API)
 
+<br><img src="https://cloud.google.com/vision/docs/images/faces.png" width="50%" /><br>
+
 * Prepare (input: PNG file "URL/faces.png"; output: JSON file "request.json")
 ```
 $ ./pre-request.sh vision-face-identify https://cloud.google.com/vision/docs/images/faces.png
@@ -902,6 +904,7 @@ $ jq '.faces[],.metadata' result21321.json
 ### Detect Faces in images (Face API)
 * The stored face features will expire and be deleted 24 hours after the original detection call.
 * [Get face detection data](https://docs.microsoft.com/en-us/azure/cognitive-services/face/face-api-how-to-topics/howtodetectfacesinimage)
+<br><img src="https://www.nih.gov/sites/default/files/news-events/research-matters/2014/20140428-attention.jpg" width="50%" /><br>
 
 * Prepare (input: PNG file "URL/faces.png"; output: JSON file "request.json")
 ```
@@ -956,6 +959,7 @@ jq . result2306.json # cat result2306.json
 
 ### Detect Faces in images (Face API)
 * The stored face features will expire and be deleted 24 hours after the original detection call.
+<br><img src="https://www.nih.gov/sites/default/files/news-events/research-matters/2014/20140428-attention.jpg" width="50%" /><br>
 
 * Prepare (input: PNG file "URL/faces.png"; output: JSON file "request.json")
 ```
@@ -1514,4 +1518,28 @@ Human 73.4709701538086
 Church 59.03559494018555
 Cathedral 59.03559494018555
 Monument 55.30182647705078
+```
+
+***
+
+### Recognition of Face in images
+
+* [compare-faces](https://docs.aws.amazon.com/cli/latest/reference/rekognition/compare-faces.html)
+
+* Verify that the files are in the S3 Bucket
+```
+$ aws s3 ls s3://blobbucket/face2match.jpeg
+2019-10-04 11:08:08       3859 face2match.jpeg
+
+$ aws s3 ls s3://blobbucket/faces1.jpeg
+2019-10-02 11:06:19      26107 faces1.jpeg
+```
+* Perform output: JSON file "facematch.json
+```
+$ aws rekognition compare-faces --target-image '{"S3Object":{"Bucket":"blobbucket","Name":"faces1.jpeg"}}' --source-image '{"S3Object":{"Bucket":"blobbucket","Name":"face2match.jpeg"}}' > facematch.out
+```
+* Review (text from output JSON) - for expanded view use `jq . <file>` or `cat <file>`
+```
+$ jq -r '.FaceMatches[]| "Similarity: \(.Similarity) Face.Confidence: \(.Face.Confidence)"' facematch.out
+Similarity: 99.99290466308594 Face.Confidence: 99.98178100585938
 ```
