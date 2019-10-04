@@ -21,7 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 # 
-VERBOSE=-v
+##VERBOSE=--debug
 
 REQ=${2:-request.json}
 [[ -f "$REQ" ]] || { echo "***ENOREQ"; exit 1; }
@@ -29,9 +29,14 @@ REQ=${2:-request.json}
 OUTPUT=result$RANDOM.json
 
 case $1 in
-detect-text)
-	aws rekognition $1 --image "$(<$REQ)" --region us-east-2 > $OUTPUT
-	;;
+detect-labels)                    aws $VERBOSE rekognition $1 --image "$(<$REQ)" --region us-east-2 > $OUTPUT ;;
+detect-faces)                     aws $VERBOSE rekognition $1 --image "$(<$REQ)" --region us-east-2 > $OUTPUT ;;
+detect-text)                      aws $VERBOSE rekognition $1 --image "$(<$REQ)" --region us-east-2 > $OUTPUT ;;
+detect-document-text)             aws $VERBOSE textract $1 --document "$(<$REQ)" --region us-east-2 > $OUTPUT ;;
+
+#start-document-text-detection)    #aws textract $1 --document "$(<$REQ)" --notification-channel "$SNS" --region us-east-2 > $OUTPUT ;;
+#get-document-text-detection)      #aws textract $1 --job-id "$JOBID" --region us-east-2 > $OUTPUT ;;
+#status-document-text-detection) echo TODO ;;
 *)
 	echo "***ENOOP"; exit -1;;
 esac

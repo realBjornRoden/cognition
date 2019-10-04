@@ -46,6 +46,6 @@ curl $VERBOSE -s -X POST \
 -d @$REQ \
 $URL > $OUTPUT
 
-[[ $? ]] || { echo "***EPOST"; exit 1; }
+[[ $? -ne 0 ]] && { echo "***EFAILED"; exit 1; }
 
 echo $OUTPUT

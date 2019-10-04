@@ -146,6 +146,6 @@ pdf1)
 	;;
 esac
 
-[[ $? ]] || { echo "***EPOST"; exit 1; }
+[[ $? -ne 0 ]] && { echo "***EFAILED"; exit 1; }
  
 echo $OUTPUT

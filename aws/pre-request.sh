@@ -30,9 +30,15 @@ INPUT=$2
 
 aws s3 ls s3://$BUCKET/$INPUT
 [[ $? -ne 0 ]] && { echo "***ENOFILE"; exit 1; }
+# aws s3 cp $INPUT s3://$BUCKET/
 
 case $1 in
-detect-text)
+detect-text|detect-document-text|detect-faces|detect-labels)
+	cat <<-EOD > $REQ
+	{"S3Object":{"Bucket":"$BUCKET","Name":"$INPUT"}}
+	EOD
+	;;
+start-document-text-detection)
 	cat <<-EOD > $REQ
 	{"S3Object":{"Bucket":"$BUCKET","Name":"$INPUT"}}
 	EOD

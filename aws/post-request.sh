@@ -26,6 +26,10 @@
 [[ -f "$2" ]] ||  { echo "***ENOFILE"; exit 1; }
 
 case $1 in
-detect-text)     jq -r '.TextDetections[].DetectedText' $2 | tr '\n' ' ' ; echo ;;
-*)               jq -r "." $2 ;;
+detect-labels)            jq -r '.Labels[]| "\(.Name) \(.Confidence)"' $2 ;;
+detect-faces)             jq -r '.FaceDetails[].Confidence' $2 ;;
+detect-text)              jq -r '.TextDetections[].DetectedText' $2 | tr '\n' ' ' ; echo ;;
+detect-document-text)     jq -r '.Blocks[]|select(.BlockType=="LINE")|.Text' $2 | tr '\n' ' '; echo;;
+document-text-detection)  jq -r '.Blocks[]|select(.BlockType=="LINE")|.Text' $2 | tr '\n' ' '; echo;;
+*)                        jq -r "." $2 ;;
 esac
