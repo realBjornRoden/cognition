@@ -1316,12 +1316,12 @@ oople CLoud 0 gle P fatform oople gle CLoud 0 P fatform
 
 |SERVICE                                                  |ARN|
 |---|---|
-|SQS ARN:                   |arn:aws:sqs:us-east-2:deadbeef7898:SNStopic123|
-|SQS URL:                   |https://sqs.us-east-2.amazonaws.com/deadbeef7898/SNStopic123|
-|SNS Topic ARN:             |arn:aws:sns:us-east-2:deadbeef7898:topic123|
-|SNS Subscription ARN:      |arn:aws:sns:us-east-2:deadbeef7898:topic123:b39a91fc-9863-41e8-b283-78290f63d316|
-|SNS Subscription Endpoint: |arn:aws:sqs:us-east-2:deadbeef7898:SNStopic123|
-|Textract ARN Role:         |arn:aws:sqs:us-east-2:deadbeef7898:SNStopic123|
+|SQS ARN                   |`arn:aws:sqs:us-east-2:deadbeef7898:SNStopic123`|
+|SQS URL                   |`https://sqs.us-east-2.amazonaws.com/deadbeef7898/SNStopic123`|
+|SNS Topic ARN             |`arn:aws:sns:us-east-2:deadbeef7898:topic123`|
+|SNS Subscription ARN      |`arn:aws:sns:us-east-2:deadbeef7898:topic123:b39a91fc-9863-41e8-b283-78290f63d316`|
+|SNS Subscription Endpoint |`arn:aws:sqs:us-east-2:deadbeef7898:SNStopic123`|
+|Textract ARN Role         |`arn:aws:sqs:us-east-2:deadbeef7898:SNStopic123`|
 
 ```
 $ aws sqs list-queues --region us-east-2
