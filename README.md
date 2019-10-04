@@ -988,9 +988,9 @@ $ cat result5214.json # jq . result5214.json
 * Optional parameters include faceId, landmarks, and attributes. Besides face rectangles and landmarks, the face detection API can analyze several conceptual attributes of a face. Attributes include age, gender, headPose, smile, facialHair, glasses, emotion, hair, makeup, occlusion, accessories, blur, exposure and noise. Some of the results returned for specific attributes may not be highly accurate.
 * [Face detection and attributes](https://docs.microsoft.com/en-us/azure/cognitive-services/face/concepts/face-detection#attributes)
 * [Face landmarks](https://docs.microsoft.com/en-us/azure/cognitive-services/face/images/landmarks.1.jpg)
-<br><img src="https://docs.microsoft.com/en-us/azure/cognitive-services/face/images/landmarks.1.jpg" /><br>
+<br><img src="https://docs.microsoft.com/en-us/azure/cognitive-services/face/images/landmarks.1.jpg" alt="Face Landmarks" width="50%"/><br>
 * [Head pose](https://docs.microsoft.com/en-us/azure/cognitive-services/face/images/headpose.1.jpg)
-<br><img src="https://docs.microsoft.com/en-us/azure/cognitive-services/face/images/headpose.1.jpg" /><br>
+<br><img src="https://docs.microsoft.com/en-us/azure/cognitive-services/face/images/headpose.1.jpg" alt="Head Pose" width="50%"/><br>
 
 * Prepare (input: PNG file "URL/faces.png"; output: JSON file "request.json")
 ```
@@ -1310,7 +1310,7 @@ oople CLoud 0 gle P fatform oople gle CLoud 0 P fatform
 1. Check completion status queued in SQS from SNS
 1. GetDocumentTextDetection with job identifier (JobId) to access the OCR results in JSON output format [aws-textract](https://docs.aws.amazon.com/cli/latest/reference/textract/get-document-text-detection.html)
 
-<br><img src="https://docs.aws.amazon.com/en_pv/textract/latest/dg/images/asynchronous.png" /><br>
+<br><img src="https://docs.aws.amazon.com/en_pv/textract/latest/dg/images/asynchronous.png" alt="DocumentTextDetection" width="50%"/><br>
 
 * Example
 
@@ -1319,7 +1319,7 @@ oople CLoud 0 gle P fatform oople gle CLoud 0 P fatform
 |SQS ARN                   |`arn:aws:sqs:us-east-2:deadbeef7898:SNStopic123`|
 |SQS URL                   |`https://sqs.us-east-2.amazonaws.com/deadbeef7898/SNStopic123`|
 |SNS Topic ARN             |`arn:aws:sns:us-east-2:deadbeef7898:topic123`|
-|SNS Subscription ARN      |`arn:aws:sns:us-east-2:deadbeef7898:topic123:b39a91fc-9863-41e8-b283-78290f63d316`|
+|SNS Subscription ARN      |`arn:aws:sns:us-east-2:deadbeef7898:topic123:deadbeef-9863-41e8-b283-78290f63d316`|
 |SNS Subscription Endpoint |`arn:aws:sqs:us-east-2:deadbeef7898:SNStopic123`|
 |Textract ARN Role         |`arn:aws:sqs:us-east-2:deadbeef7898:SNStopic123`|
 
@@ -1396,7 +1396,7 @@ A Simple PDF File This is a small demonstration .pdf file -- just for use in the
 
 * [Detecting Faces in an Image](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/faces-detect-images.html)
 * [detect-faces](https://docs.aws.amazon.com/cli/latest/reference/rekognition/detect-faces.html)
-<br><img src="https://docs.aws.amazon.com/rekognition/latest/dg/images/landmarkface.png" /><br>
+<br><img src="https://docs.aws.amazon.com/rekognition/latest/dg/images/landmarkface.png" alt="Face Landmarks" width="50%" /><br>
 
 
 * Verify that the file is in the S3 Bucket; create JSON request content file
