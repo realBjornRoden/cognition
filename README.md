@@ -15,7 +15,6 @@
 1. Detect multiple objects in images
 1. Detect web references to an image
 1. Detect landmarks in images
-1. ...
 
 ***
 
