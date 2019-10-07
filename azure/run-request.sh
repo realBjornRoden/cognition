@@ -1,5 +1,5 @@
 #
-# requests.sh
+# run-requests.sh
 #
 # Copyright (c) 2019 B.Roden
 # 

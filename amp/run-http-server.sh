@@ -21,7 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 # 
-trap '[[ -z "$PID" ]] || { echo "Terminating Server $PID"; kill $PID; }' INT QUIT TERM HUP
+trap '[[ -z "$PID" ]] || { echo "Terminating Server $PID"; kill $PID; }' INT QUIT TERM HUP EXIT
 
 python3 -m http.server &
 PID=$!
