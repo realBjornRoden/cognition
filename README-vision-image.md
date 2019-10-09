@@ -1,4 +1,4 @@
-# Cognitive Artificial Intelligence - Image
+# Cognitive Artificial Intelligence - Vision Image
 
 
 * [Amazon (AWS)](https://aws.amazon.com/machine-learning/)
