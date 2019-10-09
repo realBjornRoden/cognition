@@ -11,6 +11,6 @@
 
 ***
 
-* [opencv.org] (https://opencv.org/)
+* [opencv.org](https://opencv.org/)
 * [pypi.org](https://pypi.org/project/SpeechRecognition/)
 * [comma.ai](https://github.com/commaai)
