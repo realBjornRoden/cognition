@@ -2,3 +2,15 @@
 1. README-audio.md
 1. README-vision-video.md
 1. README-language.md
+
+***
+
+* [Amazon (AWS)](https://aws.amazon.com/machine-learning/)
+* [Google (GCP)](https://cloud.google.com/products/ai/)
+* [Microsoft (Azure)](https://azure.microsoft.com/services/cognitive-services/)
+
+***
+
+* [opencv.org] (https://opencv.org/)
+* [pypi.org](https://pypi.org/project/SpeechRecognition/)
+* [comma.ai](https://github.com/commaai)
