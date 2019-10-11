@@ -165,7 +165,7 @@ $ gcloud ml speech recognize audio2.wav --language-code='en-US' | tee result$RAN
   ]
 }
 ```
-1. Extract the results from the JSON output file
+1. Review the results from the JSON output file
 ```
 $ jq -r '.results[].alternatives[]|.confidence,.transcript' result26358.json
 0.96501887
@@ -188,7 +188,6 @@ Check operation [operations/5263634183516942311] for status.
 {
   "name": "5263634183516942311"
 }
-```
 ```
 1. Check when ready with `gcloud ml speech operations wait`
 ```
