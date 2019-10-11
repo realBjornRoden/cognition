@@ -285,6 +285,8 @@ checking in with another show for HP are in the car on my way to a clients can b
 
 ### Diarization 
 * [multiple-voices](https://cloud.google.com/speech-to-text/docs/multiple-voices)
+* [supported-features-languages](https://cloud.google.com/speech-to-text/docs/supported-features-languages)
+* "<i>Cloud Speech-to-Text only supports speaker diarization for transcribing phone calls</i>"
 
 1. Transfer the audio file to GCP bucket
 ```
@@ -299,15 +301,10 @@ Operation completed over 1 objects/5.0 MiB.
 ```
 1. Run  `curl` to access the API
 ```
-$ curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" -d @request.json https://speech.googleapis.com/v1p1beta1/speech:recognize | tee result$RANDOM.json
-{
-  "results": [
-    {
-      "alternatives": [
-        { "transcript": "checking in with another show for HP are in the car on my way to a clients can be a short show on think I'm going to be there in 10 minutes but I want to do you know should something up the flagpole here to talk about the state of podcast in these days these days I sound old because in podcasting terms I am I've been around since 2004 to 2000 started producing shows since 2005 and have been listening to podcast daily since 2004 I came across my own archive from show that I used to download back then and listen to which I had burnt to a CD and I put them on mine and I started screaming them while at work the last couple of weeks and listening to Old Podcast episode",
-          "confidence": 0.94958663
-        }
-      ],
+$ curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" -d @request.json https://speech.googleapis.com/v1p1beta1/speech:recognize > result$RANDOM.json
+
+$ ls -ltr|tail -1
+-rw-r--r--    1 bjro  staff   43322 Oct 11 14:58 result28054.json
 ```
 1. Review the results from the JSON output file
 ```
