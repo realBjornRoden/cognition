@@ -189,6 +189,7 @@ Check operation [operations/5263634183516942311] for status.
   "name": "5263634183516942311"
 }
 ```
+
 1. Check when ready with `gcloud ml speech operations wait`
 ```
 $ gcloud ml speech operations wait "5263634183516942311" | tee result$RANDOM.json
