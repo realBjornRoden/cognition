@@ -10,10 +10,8 @@
 
 ## Use Cases
 1. Transcription
-1. Language Detection
 1. Diarization
-1. Recognition
-1. Noise Separation
+1. Language Detection
 
 ***
 
@@ -306,7 +304,7 @@ Operation completed over 1 objects/5.0 MiB.
 1. Create JSON formatted request file (request.json)
    * <i>diarizationSpeakerCount (optional) If set, specifies the estimated number of speakers in the conversation. If not set, defaults to '2'.</i>
 ```
-{ "config": { "encoding":"LINEAR16", "languageCode": "en-US", "enableSpeakerDiarization": true, "model": "phone_call" }, "audio": { "uri":"$(gcloud config get-value project)/audio2.wav" } }
+{ "config": { "encoding":"LINEAR16", "languageCode": "en-US", "diarizationConfig": { "enableSpeakerDiarization": true }, "model": "phone_call" }, "audio": { "uri":"$(gcloud config get-value project)/audio2.wav" } }
 ```
 1. Run  `curl` to access the API
 ```
@@ -323,91 +321,6 @@ checking in with another show for HP are in the car on my way to a client's goin
 $ jq -r '.results[].alternatives[].words[]|select(.speakerTag==2)|.word' result28054.json |tr '\n' ' '; echo
 podcasting days day 80 since and listen to which I had burn to a CD and I put them on my nose and I've started screaming them while at work the last couple of weeks and I've had up Paul 
 ```
-
-
-
-### Recognition
-* [xxx](xxx)
-1. Transfer the audio file to GCP bucket
-```
-$ gsutil cp data/audio2.wav gs://$(gcloud config get-value project) 
-Copying file://data/audio2.wav [Content-Type=audio/x-wav]...
-| [1 files][  5.0 MiB/  5.0 MiB]  383.4 KiB/s                                   
-Operation completed over 1 objects/5.0 MiB.                                      
-```
-1. Create JSON formatted request file (request.json)
-```
-
-```
-1. Run  `curl` to access the API
-```
-$ curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" -d @request.json https://speech.googleapis.com/v1p1beta1/speech:recognize | tee result$RANDOM.json
-```
-1. Review the results from the JSON output file
-```
-```
-
-
-
-### Noise Separation
-* [xxx](xxx)
-1. Transfer the audio file to GCP bucket
-```
-$ gsutil cp data/audio2.wav gs://$(gcloud config get-value project) 
-Copying file://data/audio2.wav [Content-Type=audio/x-wav]...
-| [1 files][  5.0 MiB/  5.0 MiB]  383.4 KiB/s                                   
-Operation completed over 1 objects/5.0 MiB.                                      
-```
-1. Create JSON formatted request file (request.json)
-```
-
-```
-1. Run  `curl` to access the API
-```
-$ curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" -d @request.json https://speech.googleapis.com/v1p1beta1/speech:recognize | tee result$RANDOM.json
-```
-1. Review the results from the JSON output file
-```
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
