@@ -208,10 +208,10 @@ Waiting for operation [operations/5263634183516942311] to complete...done.
   ]
 }
 ```
+
 1. Check the outcome with `gcloud ml speech operations describe`
 ```
 $ gcloud ml speech operations describe "5263634183516942311" | tee result$RANDOM.json
-```
 {
   "done": true,
   "metadata": {
@@ -236,6 +236,7 @@ $ gcloud ml speech operations describe "5263634183516942311" | tee result$RANDOM
   }
 }
 ```
+
 1. Review the results from the JSON output file
 ```
 $ jq -r '.response.results[].alternatives[]|.confidence,.transcript' result25359.json
