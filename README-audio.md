@@ -343,8 +343,7 @@ checking in with another show for HP are in the car on my way to a clients can b
 
 
 
-<p><p><p>
-
+<!--
 
 ## Azure (Microsoft Azure Cloud)
 
