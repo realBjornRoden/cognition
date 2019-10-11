@@ -9,10 +9,10 @@
 ***
 
 ## Use Cases
-1. Transcription
-1. Diarization
-1. Recognition
+1. Language Transcription
 1. Language Detection
+1. Language Diarization
+1. Language Recognition
 1. Noise Separation
 
 ***
@@ -69,7 +69,7 @@ texttospeech.googleapis.com  Cloud Text-to-Speech API
 
 ***
 
-### Transcription (short/sync)
+### Language Transcription (short/sync)
 * [Transcribing short audio files (less than a minute)](https://cloud.google.com/speech-to-text/docs/sync-recognize)
 * "<i>An asynchronous Speech-to-Text API request to the LongRunningRecognize method is identical in form to a synchronous Speech-to-Text API request.</i>"
 * The payload size limit: 10485760 bytes.
@@ -172,7 +172,7 @@ $ jq -r '.results[].alternatives[]|.confidence,.transcript' result26358.json
 checking in with another show for HPR in the car on my way to a client's going to be a short show I'm think I'm going to be there in 10 minutes but I want to do you know shoot something up the flagpole you're wanted to talk about the state of podcasting these days these days I sound old because in podcasting terms I am I've been around since 2004 mm started producing show since 2005 and have been listening to podcast daily since 2004 I came across my archives from shows that I used to download back then and listen to which I had burned to a CD and put them on my nose and I've started streaming them while at work the last couple of weeks and I've had a ball listening to old podcast episodes
 ```
 
-### Transcription (long/async)
+### Language Transcription (long/async)
 * [Transcribing longer audio files (more than a minute)](https://cloud.google.com/speech-to-text/docs/async-recognize)
 1. Transfer the audio file to GCP bucket
 ```
@@ -241,13 +241,6 @@ $ jq -r '.response.results[].alternatives[]|.confidence,.transcript' result25359
 checking in with another show for HPR in the car on my way to a client's going to be a short show I'm think I'm going to be there in 10 minutes but I want to do you know shoot something up the flagpole you wanted to talk about the state of podcasting these days these days I sound old because in podcasting terms I am I've been around since 2004 mm started producing show since 2005 and have been listening to podcast daily since 2004 I came across my archives from shows that I used to download back then and listen to which I had burned to a CD and put them on my nose and I've started streaming them while at work the last couple of weeks and I've had a ball listening to old podcast episodes
 ```
 
-
-
-1. Diarization
-1. Recognition
-1. Noise Separation
-
-
 ### Language Detection
 * [multiple-languages](https://cloud.google.com/speech-to-text/docs/multiple-languages)
 * [v1p1beta1/RecognitionConfig](https://cloud.google.com/speech-to-text/docs/reference/rest/v1p1beta1/RecognitionConfig)
@@ -291,6 +284,9 @@ checking in with another show for HP are in the car on my way to a clients can b
 ```
 
 
+1. Language Diarization
+1. Language Recognition
+1. Noise Separation
 
 
 
@@ -315,6 +311,39 @@ checking in with another show for HP are in the car on my way to a clients can b
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><p><p>
 
 
 ## Azure (Microsoft Azure Cloud)
