@@ -304,8 +304,9 @@ Copying file://data/audio2.wav [Content-Type=audio/x-wav]...
 Operation completed over 1 objects/5.0 MiB.                                      
 ```
 1. Create JSON formatted request file (request.json)
+   * <i>diarizationSpeakerCount (optional) If set, specifies the estimated number of speakers in the conversation. If not set, defaults to '2'.</i>
 ```
-{ "config": { "encoding":"LINEAR16", "languageCode": "en-US", "enableSpeakerDiarization": true, "diarizationSpeakerCount": 2, "model": "phone_call" }, "audio": { "uri":"$(gcloud config get-value project)/audio2.wav" } }
+{ "config": { "encoding":"LINEAR16", "languageCode": "en-US", "enableSpeakerDiarization": true, "model": "phone_call" }, "audio": { "uri":"$(gcloud config get-value project)/audio2.wav" } }
 ```
 1. Run  `curl` to access the API
 ```
