@@ -31,7 +31,6 @@ case $1 in
 asyncBatchAnnotate)
 	GSBUCKET="gs://$(gcloud config get-value project)"
 	GSFILE="$GSBUCKET/$INPUT"
-	[[ $? ]] || { echo "***EGSUTIL1"; exit 1; }
 	gsutil ls $GSFILE >/dev/null 2>&1
 	[[ $? ]] || { echo "***EGSUTIL2"; exit 1; }
 
