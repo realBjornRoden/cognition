@@ -9,10 +9,10 @@
 ***
 
 ## Use Cases
-1. Language Transcription
+1. Transcription
 1. Language Detection
-1. Language Diarization
-1. Language Recognition
+1. Diarization
+1. Recognition
 1. Noise Separation
 
 ***
@@ -69,7 +69,7 @@ texttospeech.googleapis.com  Cloud Text-to-Speech API
 
 ***
 
-### Language Transcription (short/sync)
+### Transcription (short/sync)
 * [Transcribing short audio files (less than a minute)](https://cloud.google.com/speech-to-text/docs/sync-recognize)
 * "<i>An asynchronous Speech-to-Text API request to the LongRunningRecognize method is identical in form to a synchronous Speech-to-Text API request.</i>"
 * The payload size limit: 10485760 bytes.
@@ -172,7 +172,7 @@ $ jq -r '.results[].alternatives[]|.confidence,.transcript' result26358.json
 checking in with another show for HPR in the car on my way to a client's going to be a short show I'm think I'm going to be there in 10 minutes but I want to do you know shoot something up the flagpole you're wanted to talk about the state of podcasting these days these days I sound old because in podcasting terms I am I've been around since 2004 mm started producing show since 2005 and have been listening to podcast daily since 2004 I came across my archives from shows that I used to download back then and listen to which I had burned to a CD and put them on my nose and I've started streaming them while at work the last couple of weeks and I've had a ball listening to old podcast episodes
 ```
 
-### Language Transcription (long/async)
+### Transcription (long/async)
 * [Transcribing longer audio files (more than a minute)](https://cloud.google.com/speech-to-text/docs/async-recognize)
 1. Transfer the audio file to GCP bucket
 ```
@@ -257,15 +257,14 @@ Operation completed over 2 objects/10.3 MiB.
 ```
 { "config": { "encoding":"LINEAR16", "languageCode": "en-US", "alternativeLanguageCodes": [ "en-AU", "en-GB", "en-IE" ], "model": "command_and_search" }, "audio": { "uri":"$(gcloud config get-value project)/audio2.wav" } }
 ```
-1. Run  `curl` to access
+1. Run  `curl` to access the API
 ```
 $ curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" -d @request.json https://speech.googleapis.com/v1p1beta1/speech:recognize | tee result$RANDOM.json
 {
   "results": [
     {
       "alternatives": [
-        {
-          "transcript": "checking in with another show for HP are in the car on my way to a clients can be a short show on think I'm going to be there in 10 minutes but I want to do you know should something up the flagpole here to talk about the state of podcast in these days these days I sound old because in podcasting terms I am I've been around since 2004 to 2000 started producing shows since 2005 and have been listening to podcast daily since 2004 I came across my own archive from show that I used to download back then and listen to which I had burnt to a CD and I put them on mine and I started screaming them while at work the last couple of weeks and listening to Old Podcast episode",
+        { "transcript": "checking in with another show for HP are in the car on my way to a clients can be a short show on think I'm going to be there in 10 minutes but I want to do you know should something up the flagpole here to talk about the state of podcast in these days these days I sound old because in podcasting terms I am I've been around since 2004 to 2000 started producing shows since 2005 and have been listening to podcast daily since 2004 I came across my own archive from show that I used to download back then and listen to which I had burnt to a CD and I put them on mine and I started screaming them while at work the last couple of weeks and listening to Old Podcast episode",
           "confidence": 0.94958663
         }
       ],
@@ -284,9 +283,87 @@ checking in with another show for HP are in the car on my way to a clients can b
 ```
 
 
-1. Language Diarization
-1. Language Recognition
-1. Noise Separation
+### Diarization 
+* [multiple-voices](https://cloud.google.com/speech-to-text/docs/multiple-voices)
+
+1. Transfer the audio file to GCP bucket
+```
+$ gsutil cp data/audio2.wav gs://$(gcloud config get-value project) 
+Copying file://data/audio2.wav [Content-Type=audio/x-wav]...
+| [1 files][  5.0 MiB/  5.0 MiB]  383.4 KiB/s                                   
+Operation completed over 1 objects/5.0 MiB.                                      
+```
+1. Create JSON formatted request file (request.json)
+```
+{ "config": { "encoding":"LINEAR16", "languageCode": "en-US", "enableSpeakerDiarization": true, "diarizationSpeakerCount": 2, "model": "phone_call" }, "audio": { "uri":"$(gcloud config get-value project)/audio2.wav" } }
+```
+1. Run  `curl` to access the API
+```
+$ curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" -d @request.json https://speech.googleapis.com/v1p1beta1/speech:recognize | tee result$RANDOM.json
+{
+  "results": [
+    {
+      "alternatives": [
+        { "transcript": "checking in with another show for HP are in the car on my way to a clients can be a short show on think I'm going to be there in 10 minutes but I want to do you know should something up the flagpole here to talk about the state of podcast in these days these days I sound old because in podcasting terms I am I've been around since 2004 to 2000 started producing shows since 2005 and have been listening to podcast daily since 2004 I came across my own archive from show that I used to download back then and listen to which I had burnt to a CD and I put them on mine and I started screaming them while at work the last couple of weeks and listening to Old Podcast episode",
+          "confidence": 0.94958663
+        }
+      ],
+```
+1. Review the results from the JSON output file
+```
+$ jq -r '.results[].alternatives[].words[]|select(.speakerTag==1)|.word' result28054.json |tr '\n' ' '; echo
+checking in with another show for HP are in the car on my way to a client's going to be a short show I'm think I'm going to be there in 10 minutes but I wanted to you know shoot something up the flag pole here wanted to talk about the state of these days I found old because in podcasting terms I am I've been around since 2004 2000 started producing show since 2005 and a big listing to podcast and 2004 and I came across my own archive from shows that I used to download back then listening to old podcast episodes of 
+
+$ jq -r '.results[].alternatives[].words[]|select(.speakerTag==2)|.word' result28054.json |tr '\n' ' '; echo
+podcasting days day 80 since and listen to which I had burn to a CD and I put them on my nose and I've started screaming them while at work the last couple of weeks and I've had up Paul 
+```
+
+
+
+### Recognition
+* [xxx](xxx)
+1. Transfer the audio file to GCP bucket
+```
+$ gsutil cp data/audio2.wav gs://$(gcloud config get-value project) 
+Copying file://data/audio2.wav [Content-Type=audio/x-wav]...
+| [1 files][  5.0 MiB/  5.0 MiB]  383.4 KiB/s                                   
+Operation completed over 1 objects/5.0 MiB.                                      
+```
+1. Create JSON formatted request file (request.json)
+```
+
+```
+1. Run  `curl` to access the API
+```
+$ curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" -d @request.json https://speech.googleapis.com/v1p1beta1/speech:recognize | tee result$RANDOM.json
+```
+1. Review the results from the JSON output file
+```
+```
+
+
+
+### Noise Separation
+* [xxx](xxx)
+1. Transfer the audio file to GCP bucket
+```
+$ gsutil cp data/audio2.wav gs://$(gcloud config get-value project) 
+Copying file://data/audio2.wav [Content-Type=audio/x-wav]...
+| [1 files][  5.0 MiB/  5.0 MiB]  383.4 KiB/s                                   
+Operation completed over 1 objects/5.0 MiB.                                      
+```
+1. Create JSON formatted request file (request.json)
+```
+
+```
+1. Run  `curl` to access the API
+```
+$ curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" -d @request.json https://speech.googleapis.com/v1p1beta1/speech:recognize | tee result$RANDOM.json
+```
+1. Review the results from the JSON output file
+```
+```
+
 
 
 
