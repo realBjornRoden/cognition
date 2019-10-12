@@ -587,12 +587,12 @@ $ aws transcribe start-transcription-job --region us-east-2 --cli-input-json fil
 }
 ```
 
-* Check progress on the Job
+* Check progress of the Job
 ```
 $ aws transcribe list-transcription-jobs --region us-east-2 --status IN_PROGRESS | tee result-list-$JOBNO.json
 ```
 
-* Get details from the Job
+* Get details about the Job
 ```
 $ aws transcribe get-transcription-job --region us-east-2 --transcription-job-name "job26816" | tee result-get-$JOBNO.json
 {
@@ -617,7 +617,7 @@ $ aws transcribe get-transcription-job --region us-east-2 --transcription-job-na
 }
 ```
 
-* Retrieve the resulting JSON output from the Job
+* Retrieve the JSON output file from the Job
 ```
 $ wget $(jq -r '.TranscriptionJob.Transcript.TranscriptFileUri' results-get-job26816.json)  --output-document=results-output-job26816.json
 ```
