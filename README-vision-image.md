@@ -22,6 +22,8 @@
 
 *  Create project, service account, download service account key file and enable API [before-you-begin](https://cloud.google.com/vision/docs/before-you-begin)
 
+***
+
 * Authenticate CLI session with `gcloud auth login`
 
 * Set the environment variable GOOGLE_APPLICATION_CREDENTIALS to point to the location of the service account key file
@@ -1150,8 +1152,9 @@ vehicle 0.6149222254753113
 ## AWS (Amazon Web Services)
 
 * [Amazon Rekognition](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/what-is.html)
-
 * Prerequisites are to have a valid and activated AWS account and permissions to use "Rekognition" cognitive services
+
+***
 
 1. Prepare to configure AWS CLI
    <br><i>NB. Do not use the AWS account root user access key. The access key for the AWS account root user gives full access to all resources for all AWS services, including billing information. The permissions cannot be reduce for the AWS account root user access key.</i>

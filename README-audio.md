@@ -12,6 +12,7 @@
 1. Transcription
 1. Diarization
 1. Language Detection
+1. Translate
 
 ***
 
@@ -177,7 +178,13 @@ $ jq -r '.results[].alternatives[]|.confidence,.transcript' result26358.json
 0.96501887
 checking in with another show for HPR in the car on my way to a client's going to be a short show I'm think I'm going to be there in 10 minutes but I want to do you know shoot something up the flagpole you're wanted to talk about the state of podcasting these days these days I sound old because in podcasting terms I am I've been around since 2004 mm started producing show since 2005 and have been listening to podcast daily since 2004 I came across my archives from shows that I used to download back then and listen to which I had burned to a CD and put them on my nose and I've started streaming them while at work the last couple of weeks and I've had a ball listening to old podcast episodes
 ```
-
+<!--
+$ ./run-audio.sh audio-transcription ../data/audio2.wav
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 6777k  100  1557  100 6776k      6  28523  0:04:19  0:04:03  0:00:16   331
+result6083.json
+-->
 ### Transcription (long/async)
 * [Transcribing longer audio files (more than a minute)](https://cloud.google.com/speech-to-text/docs/async-recognize)
 1. Transfer the audio file to GCP bucket
@@ -322,18 +329,19 @@ $ jq -r '.results[].alternatives[].words[]|select(.speakerTag==2)|.word' result2
 podcasting days day 80 since and listen to which I had burn to a CD and I put them on my nose and I've started screaming them while at work the last couple of weeks and I've had up Paul 
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
+1. Translate
+* [xxx](xxx)
+1. Transfer the audio file to GCP bucket
+```
+$ gsutil cp ../data/audio[12].wav gs://$(gcloud config get-value project)
+Copying file://../data/audio1.wav [Content-Type=audio/x-wav]...
+Copying file://../data/audio2.wav [Content-Type=audio/x-wav]...
+\ [2 files][ 10.3 MiB/ 10.3 MiB]
+Operation completed over 2 objects/10.3 MiB.
+```
+1. Create JSON formatted request file (request.json)
+1. Run  `curl` to access the API
+1. Review the results from the JSON output file
 
 
 
@@ -342,8 +350,6 @@ podcasting days day 80 since and listen to which I had burn to a CD and I put th
 <!--
 
 ## Azure (Microsoft Azure Cloud)
-
-***
 
 * Prerequisites are to have a valid and activated Azure account and an Azure Cognitive Services subscription within a Azure Resource Group
 
@@ -473,20 +479,28 @@ podcasting days day 80 since and listen to which I had burn to a CD and I put th
 
 ***
 
-### Detect text in images
+### Transcription
 * [XXXX](XXXX)
 
+### Diarization
+* [XXXX](XXXX)
 
+### Language Detection
+* [XXXX](XXXX)
+
+### Translate
+* [XXXX](XXXX)
+
+-->
 
 ## AWS (Amazon Web Services)
 
-* [Amazon Rekognition](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/what-is.html)
-
-* Prerequisites are to have a valid and activated AWS account and permissions to use "Rekognition" cognitive services
+* [Amazon Transcribe](https://docs.aws.amazon.com/transcribe/index.html)
+* Prerequisites are to have a valid and activated AWS account and permissions to use "Transcribe" cognitive services
 
 1. Prepare to configure AWS CLI
    <br><i>NB. Do not use the AWS account root user access key. The access key for the AWS account root user gives full access to all resources for all AWS services, including billing information. The permissions cannot be reduce for the AWS account root user access key.</i>
-   1. Create a GROUP in the Console, such as `cognitive`, and assign `AmazonRekognitionFullAccess` and `AmazonS3FullAccess` as Policy [create-admin-group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
+   1. Create a GROUP in the Console, such as `cognitive`, and assign `AmazonTranscribeFullAccess` and `AmazonS3FullAccess` as Policy [create-admin-group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
    <br>Select one or more policies to attach. Each group can have up to 10 policies attached.
    1. Create a USER in the Console, such as `aiuser`, assign it to the GROUP, and save the `credentials.csv` file (store and keep it secret) [create-admin-user](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
    1. Set a PASSWORD for the user [aws-password](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_admin-change-user.html)
@@ -535,6 +549,114 @@ podcasting days day 80 since and listen to which I had burn to a CD and I put th
 
 ***
 
-### Detect text in images
+### Transcription
+* [transcribe](https://docs.aws.amazon.com/en_pv/transcribe/latest/dg/what-is-transcribe.html)
+* [transcribe-input](https://docs.aws.amazon.com/en_pv/transcribe/latest/dg/input.html)
+   * <i>FLAC, MP3, MP4, or WAV file format</i>
+* [API_StartTranscriptionJob](https://docs.aws.amazon.com/transcribe/latest/dg/API_StartTranscriptionJob.html)
+
+* Verify (that the file is in the S3 Bucket, if not copy it there; create JSON request content file)
+```
+$ aws s3 ls s3://blobbucket/audio2.wav || aws s3 cp ../data/audio2.wav s3://blobbucket/audio2.wav
+upload: ../data/audio2.wav to s3://blobbucket/audio2.wav         
+
+$ JOBNO=$RANDOM
+
+$ cat <<-EOD > request.json
+	{ "TranscriptionJobName": "job$JOBNO", "LanguageCode": "en-US", "MediaFormat": "wav", "Media": { "MediaFileUri": "s3://blobbucket/audio2.wav" } }
+EOD
+
+$ cat request.json
+{ "TranscriptionJobName": "job26816", "LanguageCode": "en-US", "MediaFormat": "wav", "Media": { "MediaFileUri": "s3://blobbucket/audio2.wav" } }
+```
+
+* Submit the transaltion job (input: JSON file "request.json"; output: JSON file "result$JOBNO.json)
+```
+$ aws transcribe start-transcription-job --region us-east-2 --cli-input-json file://request.json | tee result-start-$JOBNO.json
+{
+    "TranscriptionJob": {
+        "TranscriptionJobName": "job26816",
+        "TranscriptionJobStatus": "IN_PROGRESS",
+        "LanguageCode": "en-US",
+        "MediaFormat": "wav",
+        "Media": {
+            "MediaFileUri": "s3://blobbucket/audio2.wav"
+        },
+        "CreationTime": 1570858854.632
+    }
+}
+```
+
+* Check progress on the Job
+```
+$ aws transcribe list-transcription-jobs --region us-east-2 --status IN_PROGRESS | tee result-list-$JOBNO.json
+```
+
+* Get details from the Job
+```
+$ aws transcribe get-transcription-job --region us-east-2 --transcription-job-name "job26816" | tee result-get-$JOBNO.json
+{
+    "TranscriptionJob": {
+        "TranscriptionJobName": "job26816",
+        "TranscriptionJobStatus": "COMPLETED",
+        "LanguageCode": "en-US",
+        "MediaSampleRateHertz": 44100,
+        "MediaFormat": "wav",
+        "Media": {
+            "MediaFileUri": "s3://blobbucket/audio2.wav"
+        },
+        "Transcript": {
+            "TranscriptFileUri": "https://s3.us-east-2.amazonaws.com/aws-transcribe-us-east-2-prod/598691507898/job26816/92e124ae-d054-480f-a850-72d68a61bbc0/asrOutput.json?X-Amz-Security-Token=AgoJb3JpZ2luX2VjEPz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMiJHMEUCIQC%2FU4Y2jp7gWkaTY8JQztfwfXxeSNIcQdQOMFxl4IVFhgIgdfv%2FtLHAXXgOYGjwZdVsAngpjlpRWGIV0sfEbwbfVq4q4wMI5v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARABGgwyNDYzNjEzMjI3NTIiDPMx2qiU32KAOSeN%2Byq3A8o1hjejbXr%2B0odnwNNLleH2ve9oqLvb3k8HBQIDr0Oh2X9h277vD%2BoXI6ZgfL2NF2rPw3NtFaj25OYBbWdcRYfHNel6uJD8wq49a8oGGPh8GblmvfgpW9kqzP82L1NJaTxOoKOYpHi9aIo16G7ygMjwqqeQgNk3JOuIm4J6YMzNs3Gyp7aLOd180JGGTjgzkJ%2BWFD%2BCj5EG%2BZjjDO%2BWz7G7jqdk7Md498bWa%2BVjkEo3a2Kytc9v5W3X2tpJT%2ByqS3o%2FuoFUJj2f%2FbVhOV%2BoPvch7UWwz9spi0kO1pqp%2FivmZ%2B2e3VxYrTTUwMIfssW7r%2FZe755sRlUcjcMNDZk0UTJHA7VIv63VGLpI7VtCt0nXLylq8Hre1Y479Y83mz4ZF3PvQ%2B4ms3HSm62XNlDxjqfXnqhXxU69YZlMHf%2FysaAqQZWAUrecIDaGgsDUm0g5yLOKTsEDIMpmCp9e4fsiWTI44gQo2fKoxgyaSRW9nTx%2B%2FcMCQiN2Iutpl7A%2BRXjFu5qJVxg1wr%2Bh5aOSaIq%2FLsFUBFLtTpWnggmLerbP3Hdv%2BnFTJkAYTkxbU79FbIkkCL91FTQn5fwwgauF7QU6tAGjF8Oe7uXrvHiac3gSGKNbpB2GKa%2FzGdbXMmIbCnkENx0aoRSaB2kqq3oVGeNF70XJoa1xvLzLrml2YYmLpUKFyeEH6segX%2F0hkhF0d2Haegw27do4rLyoLFRnub58M0zQCWLc5aYoDo2R9fYoxwR%2BOFdmJJk7%2BoI6R44vURaLnhoR%2FD1C3wkq0kfqnMIZ7i3TQVl%2BlaSPX6XTqJxHNqgYuypw6tPXiP9MQvTGNhbIuVFh1zo%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191012T055032Z&X-Amz-SignedHeaders=host&X-Amz-Expires=899&X-Amz-Credential=ASIATSXCHOUAOYARCSPL%2F20191012%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Signature=0ffe7b88113dacb547f1861105c21fcebbf3022f70dc831f6a1193c544a4d732"
+        },
+        "CreationTime": 1570858854.632,
+        "CompletionTime": 1570858902.423,
+        "Settings": {
+            "ChannelIdentification": false
+        }
+    }
+}
+```
+
+* Retrieve the resulting JSON output from the Job
+```
+$ wget $(jq -r '.TranscriptionJob.Transcript.TranscriptFileUri' results-get-job26816.json)  --output-document=results-output-job26816.json
+```
+
+* Review the translation result from the Job
+```
+$ jq -r '.jobName,.status,.results.transcripts[0].transcript' results-output-job26816.json
+job26816
+COMPLETED
+checking in with another show for H p. R. Um, In the car on my way to a client's gonna be a short show. I'm think I'm gonna be there in 10 minutes, but I want to do, you know, shoot something up the flagpole here, uh, wanted to talk about the state of podcasting these days. These days, I I sound old because in podcasting terms, I am. I've been around since 4 4000 Started producing shows since 2005. Have been listening to podcasts and daily since 2004. I came across, um, my own archives from shows that I used to download back then and listen to which I had burned to a CD, and I've put them on my nads. And I've started streaming them while at work the last couple of weeks and I've had a ball listening to old podcast episodes of
+```
+
+
+<!--
+
+
+### Diarization
+* [diarization](https://docs.aws.amazon.com/en_pv/transcribe/latest/dg/how-diarization)
+
+
+### Language Detection
 * [XXXX](XXXX)
 
+
+### Translate
+* [translate](https://docs.aws.amazon.com/translate/latest/dg/what-is.html)
+
+
+* Verify (that the file is in the S3 Bucket; create JSON request content file)
+```
+$ ./pre-audio.sh transcribe audio2.mp3
+```
+* Perform (input: JSON file "request.json"; output: JSON file "result$RANDOM.json)
+```
+./run-audio.sh detect-labels request.json
+```
+* Review (text from output JSON) - for expanded view use `jq . <output JSON filename>`
+```
+$ jq -r . resultXXXX.json
+```
+
+-->
