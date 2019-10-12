@@ -570,7 +570,7 @@ $ cat request.json
 { "TranscriptionJobName": "job26816", "LanguageCode": "en-US", "MediaFormat": "wav", "Media": { "MediaFileUri": "s3://blobbucket/audio2.wav" } }
 ```
 
-* Submit the transaltion job (input: JSON file "request.json"; output: JSON file "result$JOBNO.json)
+* Submit the translation job (input: JSON file "request.json"; output: JSON file "result$JOBNO.json)
 ```
 $ aws transcribe start-transcription-job --region us-east-2 --cli-input-json file://request.json | tee result-start-$JOBNO.json
 {
