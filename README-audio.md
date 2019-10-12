@@ -515,7 +515,7 @@ Operation completed over 2 objects/10.3 MiB.
    secret_key     ****************nEac shared-credentials-file    
        region                <not set>             None    None
    ```
-1. [Creae S3 Bucket](https://docs.aws.amazon.com/cli/latest/reference/s3api/create-bucket.html)
+1. [Create S3 Bucket](https://docs.aws.amazon.com/cli/latest/reference/s3api/create-bucket.html)
    * In this case the bucket is named `blobbucket` and set to `private`, with LocationConstraint set to the specified region
    ```
    $ aws s3api create-bucket --bucket blobbucket --acl private --region us-east-2 --create-bucket-configuration LocationConstraint=us-east-2
