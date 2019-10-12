@@ -590,6 +590,24 @@ $ aws transcribe start-transcription-job --region us-east-2 --cli-input-json fil
 * Check progress of the Job
 ```
 $ aws transcribe list-transcription-jobs --region us-east-2 --status IN_PROGRESS | tee result-list-$JOBNO.json
+{
+    "Status": "IN_PROGRESS",
+    "TranscriptionJobSummaries": [
+        {
+            "TranscriptionJobName": "job26816",
+            "CreationTime": 1570871217.434,
+            "LanguageCode": "en-US",
+            "TranscriptionJobStatus": "IN_PROGRESS",
+            "OutputLocationType": "SERVICE_BUCKET"
+        }
+    ]
+}
+
+$ aws transcribe list-transcription-jobs --region us-east-2 --status IN_PROGRESS | tee result-list-$JOBNO.json
+{
+    "Status": "IN_PROGRESS",
+    "TranscriptionJobSummaries": []
+}
 ```
 
 * Get details about the Job
@@ -630,12 +648,126 @@ COMPLETED
 checking in with another show for H p. R. Um, In the car on my way to a client's gonna be a short show. I'm think I'm gonna be there in 10 minutes, but I want to do, you know, shoot something up the flagpole here, uh, wanted to talk about the state of podcasting these days. These days, I I sound old because in podcasting terms, I am. I've been around since 4 4000 Started producing shows since 2005. Have been listening to podcasts and daily since 2004. I came across, um, my own archives from shows that I used to download back then and listen to which I had burned to a CD, and I've put them on my nads. And I've started streaming them while at work the last couple of weeks and I've had a ball listening to old podcast episodes of
 ```
 
+### Diarization
+
+* [diarization](https://docs.aws.amazon.com/en_pv/transcribe/latest/dg/how-diarization)
+* [API_StartTranscriptionJob](https://docs.aws.amazon.com/transcribe/latest/dg/API_StartTranscriptionJob.html)
+* <i>To turn on speaker identification, set the `MaxSpeakerLabels` and `ShowSpeakerLabels` field of the Settings field when you make a call to the StartTranscriptionJob operation.</i>
+
+* Verify (that the file is in the S3 Bucket, if not copy it there; create JSON request content file)
+```
+$ aws s3 ls s3://blobbucket/audio2.wav || aws s3 cp ../data/audio2.wav s3://blobbucket/audio2.wav
+upload: ../data/audio2.wav to s3://blobbucket/audio2.wav         
+
+$ JOBNO=28912
+
+$ cat <<-EOD > request.json
+{ "TranscriptionJobName": "job28912", "LanguageCode": "en-US", "Settings": { "MaxSpeakerLabels": 2, "ShowSpeakerLabels": true }, "MediaFormat": "wav", "Media": { "MediaFileUri": "s3://blobbucket/audio2.wav" } }
+EOD
+
+```
+
+* Submit the translation job (input: JSON file "request.json"; output: JSON file "result$JOBNO.json)
+```
+$ aws transcribe start-transcription-job --region us-east-2 --cli-input-json file://request.json | tee result-start-$JOBNO.json
+{
+    "TranscriptionJob": {
+        "TranscriptionJobName": "job28912",
+        "TranscriptionJobStatus": "IN_PROGRESS",
+        "LanguageCode": "en-US",
+        "MediaFormat": "wav",
+        "Media": {
+            "MediaFileUri": "s3://blobbucket/audio2.wav"
+        },
+        "CreationTime": 1570871217.434,
+        "Settings": {
+            "ShowSpeakerLabels": true,
+            "MaxSpeakerLabels": 2
+        }
+    }
+}
+```
+
+* Check progress of the Job
+```
+$ aws transcribe list-transcription-jobs --region us-east-2 --status IN_PROGRESS | tee result-list-$JOBNO.json
+{
+    "Status": "IN_PROGRESS",
+    "TranscriptionJobSummaries": [
+        {
+            "TranscriptionJobName": "job28912",
+            "CreationTime": 1570871217.434,
+            "LanguageCode": "en-US",
+            "TranscriptionJobStatus": "IN_PROGRESS",
+            "OutputLocationType": "SERVICE_BUCKET"
+        }
+    ]
+}
+
+$ aws transcribe list-transcription-jobs --region us-east-2 --status IN_PROGRESS | tee result-list-$JOBNO.json
+{
+    "Status": "IN_PROGRESS",
+    "TranscriptionJobSummaries": []
+}
+```
+
+* Get details about the Job
+```
+$ aws transcribe get-transcription-job --region us-east-2 --transcription-job-name "job28912" | tee result-get-$JOBNO.json
+{
+    "TranscriptionJob": {
+        "TranscriptionJobName": "job28912",
+        "TranscriptionJobStatus": "COMPLETED",
+        "LanguageCode": "en-US",
+        "MediaSampleRateHertz": 44100,
+        "MediaFormat": "wav",
+        "Media": {
+            "MediaFileUri": "s3://blobbucket/audio2.wav"
+        },
+        "Transcript": {
+            "TranscriptFileUri": "https://s3.us-east-2.amazonaws.com/aws-transcribe-us-east-2-prod/598691507898/job28912/d18357e9-b7f8-419e-b6c8-c37516a66f8f/asrOutput.json?X-Amz-Security-Token=AgoJb3JpZ2luX2VjEAEaCXVzLWVhc3QtMiJGMEQCIFc8TsgswisbjUbQEAkddBvqUCfu%2BjBl%2B9o30RWxKZwhAiAqYZWg9g%2BxAMXw2yzI2JLABe4h%2BlS4Xc%2B%2B4jQvSFZvRyrjAwjq%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAEaDDI0NjM2MTMyMjc1MiIM7gm%2FH9KjxBU60vG2KrcDJFfi1ztE13grWZYWJStMu%2BotR%2FSk%2FlD%2Fqi0%2BCxyjnIx9oYKG2LCARSPZKprNpXZloFI0A7i6%2FBXrnGf6P%2F9zbTNzeWZE3rxr3GTUjq067HMpNOoZnx3kLDnjRk1NE90CN7XS3VcHKha8eFiBdhtTiMvBmN7rpS%2BdiWpQH6cD3UGAyXkr17jswn3hsV8yc9DkrEZ5sRzVqDEaWHuRp8JczkHV07wGIPKlbFF%2F%2Blw%2Fs401PWKJKncqtVhYuwG97rzhloifNAdVEgs7u5Lip4SfBpFV1Lr%2B3%2FKTT2azj%2FJDKSEfVJLnzGwmDcL34Z88efajRyTobFTbrSufkA7v0fPLBxSURD87YgN7bQh%2B3WB3pxWl4rkKcw8r6QJgKHgBskSMWC2uHWjfUVji5RcRsAuSeedJLcrUdQ1NSsEI13Vkzr7oR8WYsiHz3rPmVsKCLfMgfifPMmU0MNqAcPBZhi3UlCJ0bh5nM7Bb2m9nMiTHk7kRdg1mbra8eckKFXUcHwFtdIcQwxTPdiuxkiM5eMc%2BsWCyaDLUZ7VZE2w%2BfOv6PyMXYj%2BVQKax9c%2F4V9Jirlv7MtfbiB41czC8oYbtBTq1ARgc5qb%2ByLnlbtOCr7yYRsUorkH0iz5WHepFpB73AHDcttA%2BtN2Irkz2FPWfV%2BBUrKMU7G012niqsDu8qXBZeIxQ2ZA7z0sCdaZBaJqODywo4o5CeH173FKhmy00YFvfXXTtSZHOy3XYxuf%2BEDFix1q6bfiRe18eNA5mCR%2BPwLoFSEUdB5eLiJFvFpM6MXAUrWpEal3%2FAvIzXcEqqb0RPAb6YZid1%2BDV%2FzjBO%2B7W9JzVUrgKKdI%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191012T092107Z&X-Amz-SignedHeaders=host&X-Amz-Expires=900&X-Amz-Credential=ASIATSXCHOUAPLLBLSNZ%2F20191012%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Signature=ee56417aac64d5428616d74a93bd82bd6c7ec48bb77eec4a2611637203daaf48"
+        },
+        "CreationTime": 1570871217.434,
+        "CompletionTime": 1570871343.764,
+        "Settings": {
+            "ShowSpeakerLabels": true,
+            "MaxSpeakerLabels": 2,
+            "ChannelIdentification": false
+        }
+    }
+}
+```
+
+* Retrieve the JSON output file from the Job
+```
+$ wget $(jq -r '.TranscriptionJob.Transcript.TranscriptFileUri' results-get-job28912.json) --output-document=results-output-job28912.json
+--2019-10-12 13:22:20--  https://s3.us-east-2.amazonaws.com/aws-transcribe-us-east-2-prod/598691507898/job28912/d18357e9-b7f8-419e-b6c8-c37516a66f8f/asrOutput.json?X-Amz-Security-Token=AgoJb3JpZ2luX2VjEAEaCXVzLWVhc3QtMiJGMEQCIFc8TsgswisbjUbQEAkddBvqUCfu%2BjBl%2B9o30RWxKZwhAiAqYZWg9g%2BxAMXw2yzI2JLABe4h%2BlS4Xc%2B%2B4jQvSFZvRyrjAwjq%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAEaDDI0NjM2MTMyMjc1MiIM7gm%2FH9KjxBU60vG2KrcDJFfi1ztE13grWZYWJStMu%2BotR%2FSk%2FlD%2Fqi0%2BCxyjnIx9oYKG2LCARSPZKprNpXZloFI0A7i6%2FBXrnGf6P%2F9zbTNzeWZE3rxr3GTUjq067HMpNOoZnx3kLDnjRk1NE90CN7XS3VcHKha8eFiBdhtTiMvBmN7rpS%2BdiWpQH6cD3UGAyXkr17jswn3hsV8yc9DkrEZ5sRzVqDEaWHuRp8JczkHV07wGIPKlbFF%2F%2Blw%2Fs401PWKJKncqtVhYuwG97rzhloifNAdVEgs7u5Lip4SfBpFV1Lr%2B3%2FKTT2azj%2FJDKSEfVJLnzGwmDcL34Z88efajRyTobFTbrSufkA7v0fPLBxSURD87YgN7bQh%2B3WB3pxWl4rkKcw8r6QJgKHgBskSMWC2uHWjfUVji5RcRsAuSeedJLcrUdQ1NSsEI13Vkzr7oR8WYsiHz3rPmVsKCLfMgfifPMmU0MNqAcPBZhi3UlCJ0bh5nM7Bb2m9nMiTHk7kRdg1mbra8eckKFXUcHwFtdIcQwxTPdiuxkiM5eMc%2BsWCyaDLUZ7VZE2w%2BfOv6PyMXYj%2BVQKax9c%2F4V9Jirlv7MtfbiB41czC8oYbtBTq1ARgc5qb%2ByLnlbtOCr7yYRsUorkH0iz5WHepFpB73AHDcttA%2BtN2Irkz2FPWfV%2BBUrKMU7G012niqsDu8qXBZeIxQ2ZA7z0sCdaZBaJqODywo4o5CeH173FKhmy00YFvfXXTtSZHOy3XYxuf%2BEDFix1q6bfiRe18eNA5mCR%2BPwLoFSEUdB5eLiJFvFpM6MXAUrWpEal3%2FAvIzXcEqqb0RPAb6YZid1%2BDV%2FzjBO%2B7W9JzVUrgKKdI%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191012T092107Z&X-Amz-SignedHeaders=host&X-Amz-Expires=900&X-Amz-Credential=ASIATSXCHOUAPLLBLSNZ%2F20191012%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Signature=ee56417aac64d5428616d74a93bd82bd6c7ec48bb77eec4a2611637203daaf48
+Resolving s3.us-east-2.amazonaws.com (s3.us-east-2.amazonaws.com)... 52.219.104.114
+Connecting to s3.us-east-2.amazonaws.com (s3.us-east-2.amazonaws.com)|52.219.104.114|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 30007 (29K) [application/octet-stream]
+Saving to: 'results-output-job28912.json'
+
+results-output-job28912.json                  100%[==============================================================================================>]  29.30K   143KB/s    in 0.2s    
+
+2019-10-12 13:22:22 (143 KB/s) - 'results-output-job28912.json' saved [30007/30007]
+```
+
+* Review the translation result from the Job
+```
+$ jq -r '.jobName,.status,.results.speaker_labels.speakers,.results.transcripts[0].transcript' results-output-job28912.json
+job28912
+COMPLETED
+1
+checking in with another show for H p. R. Um, In the car on my way to a client's gonna be a short show. I'm think I'm gonna be there in 10 minutes, but I want to do, you know, shoot something up the flagpole here, uh, wanted to talk about the state of podcasting these days. These days, I I sound old because in podcasting terms, I am. I've been around since 4 4000 Started producing shows since 2005. Have been listening to podcasts and daily since 2004. I came across, um, my own archives from shows that I used to download back then and listen to which I had burned to a CD, and I've put them on my nads. And I've started streaming them while at work the last couple of weeks and I've had a ball listening to old podcast episodes of
+```
+
+### Language Detection
+N/A
+
 
 <!--
 
-
-### Diarization
-* [diarization](https://docs.aws.amazon.com/en_pv/transcribe/latest/dg/how-diarization)
 
 
 ### Language Detection
@@ -660,3 +792,4 @@ $ jq -r . resultXXXX.json
 ```
 
 -->
+

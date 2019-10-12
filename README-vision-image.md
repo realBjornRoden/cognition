@@ -1049,7 +1049,7 @@ Wheel 0.533
 
 ***
 ### Detect web references to an image
-NOOP
+N/A
 
 ***
 
@@ -1484,7 +1484,7 @@ Housing 55.82354736328125
 ***
 
 ### Detect web references to an image
-NOOP
+N/A
 
 ***
 
