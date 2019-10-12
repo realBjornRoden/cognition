@@ -332,8 +332,9 @@ $ jq -r '.results[].alternatives[].words[]|select(.speakerTag==2)|.word' result2
 podcasting days day 80 since and listen to which I had burn to a CD and I put them on my nose and I've started screaming them while at work the last couple of weeks and I've had up Paul 
 ```
 
-1. Translate
+### Translate
 * [xxx](xxx)
+
 1. Transfer the audio file to GCP bucket
 ```
 $ gsutil cp ../data/audio[12].wav gs://$(gcloud config get-value project)
