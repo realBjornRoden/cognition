@@ -185,6 +185,9 @@ $ ./run-audio.sh audio-transcription ../data/audio2.wav
 100 6777k  100  1557  100 6776k      6  28523  0:04:19  0:04:03  0:00:16   331
 result6083.json
 -->
+
+***
+
 ### Transcription (long/async)
 * [Transcribing longer audio files (more than a minute)](https://cloud.google.com/speech-to-text/docs/async-recognize)
 1. Transfer the audio file to GCP bucket
@@ -331,6 +334,8 @@ checking in with another show for HP are in the car on my way to a client's goin
 $ jq -r '.results[].alternatives[].words[]|select(.speakerTag==2)|.word' result28054.json |tr '\n' ' '; echo
 podcasting days day 80 since and listen to which I had burn to a CD and I put them on my nose and I've started screaming them while at work the last couple of weeks and I've had up Paul 
 ```
+
+***
 
 ### Translate
 * [xxx](xxx)
