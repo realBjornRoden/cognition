@@ -254,6 +254,8 @@ $ jq -r '.response.results[].alternatives[]|.confidence,.transcript' result25359
 checking in with another show for HPR in the car on my way to a client's going to be a short show I'm think I'm going to be there in 10 minutes but I want to do you know shoot something up the flagpole you wanted to talk about the state of podcasting these days these days I sound old because in podcasting terms I am I've been around since 2004 mm started producing show since 2005 and have been listening to podcast daily since 2004 I came across my archives from shows that I used to download back then and listen to which I had burned to a CD and put them on my nose and I've started streaming them while at work the last couple of weeks and I've had a ball listening to old podcast episodes
 ```
 
+***
+
 ### Language Detection
 * [multiple-languages](https://cloud.google.com/speech-to-text/docs/multiple-languages)
 * [v1p1beta1/RecognitionConfig](https://cloud.google.com/speech-to-text/docs/reference/rest/v1p1beta1/RecognitionConfig)
@@ -295,6 +297,7 @@ en-gb
 checking in with another show for HP are in the car on my way to a clients can be a short show on think I'm going to be there in 10 minutes but I want to do you know should something up the flagpole here to talk about the state of podcast in these days these days I sound old because in podcasting terms I am I've been around since 2004 to 2000 started producing shows since 2005 and have been listening to podcast daily since 2004 I came across my own archive from show that I used to download back then and listen to which I had burnt to a CD and I put them on mine and I started screaming them while at work the last couple of weeks and listening to Old Podcast episode
 ```
 
+***
 
 ### Diarization 
 * [multiple-voices](https://cloud.google.com/speech-to-text/docs/multiple-voices)
@@ -343,155 +346,7 @@ Operation completed over 2 objects/10.3 MiB.
 1. Run  `curl` to access the API
 1. Review the results from the JSON output file
 
-
-
-
-
-<!--
-
-## Azure (Microsoft Azure Cloud)
-
-* Prerequisites are to have a valid and activated Azure account and an Azure Cognitive Services subscription within a Azure Resource Group
-
-1. Sign in to Azure
-   ```
-   $ az login
-   Note, we have launched a browser for you to login. For old experience with device code, use "az login --use-device-code"
-   You have logged in. Now let us find all the subscriptions to which you have access...
-   [
-     {
-       "cloudName": "AzureCloud",
-       "id": "deadbeef-e904-4c8e-a3d8-5503f0e310e7",
-       "isDefault": true,
-       "name": "Free Trial",
-       "state": "Enabled",
-       "tenantId": "deadbeef-3411-4054-a56e-18809a214004",
-       "user": {
-         "name": "USER@FQDN",
-         "type": "user"
-       }
-     }
-   ]
-   ```
-1. Choose resource group location
-   ```
-   $ az account list-locations --query "[].{Region:name}" --out table|grep euro
-   northeurope
-   westeurope
-
-   $ az account list-locations --query "[].{Region:name}" --out table|grep -E "us\$|us[0-9]\$"
-   centralus
-   eastus
-   eastus2
-   westus
-   northcentralus
-   southcentralus
-   westcentralus
-   westus2
-   ```
-1. Create a Azure Cognitive Services resource group
-   ```
-   $ az group create --name cognitive-services-resource-group --location westus2
-   {
-      "id": "/subscriptions/deadbeef-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group",
-      "location": "westus2",
-      "managedBy": null,
-      "name": "cognitive-services-resource-group",
-      "properties": {
-        "provisioningState": "Succeeded"
-      },
-      "tags": null,
-      "type": null
-    }
-
-    $ az group create --name cognitive-services-resource-group --location westus
-     {
-     "id": "/subscriptions/deadbeef-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group",
-     "location": "westus",
-     "managedBy": null,
-     "name": "cognitive-services-resource-group",
-     "properties": {
-     "provisioningState": "Succeeded"
-     },
-     "tags": null,
-     "type": null
-   }
-   ```
-1. Determine available Cognitive Service resources
-   ```
-   $ az cognitiveservices account list-kinds --output table --subscription deadbeef-e904-4c8e-a3d8-5503f0e310e7
-   Result
-   -----------------------
-   AnomalyDetector
-   Bing.Autosuggest.v7
-   Bing.CustomSearch
-   Bing.EntitySearch
-   Bing.Search.v7
-   Bing.SpellCheck.v7
-   CognitiveServices
-   ComputerVision
-   ContentModerator
-   CustomVision.Prediction
-   CustomVision.Training
-   Face
-   ImmersiveReader
-   InkRecognizer
-   Internal.AllInOne
-   LUIS
-   LUIS.Authoring
-   Personalizer
-   QnAMaker
-   SpeakerRecognition
-   SpeechServices
-   TextAnalytics
-   TextTranslation
-   ```
-1. Add a Cognitive Service resource to the resource group (F0 free)
-   ```
-   $ az cognitiveservices account create --name computer-vision --kind ComputerVision --resource-group cognitive-services-resource-group --sku F0 --location westus2 --yes
-
-   $ az cognitiveservices account create --name face-api --kind Face --resource-group cognitive-services-resource-group --sku F0 --location westus2 --yes
-   ```
-   * If the required service is not added, a similar error message will be returned when requesting use of the service
-      ```
-      {
-        "error": {
-          "code": "401",
-          "message": "The Face - Detect Operation under Face API - V1.0 API is not supported with the current subscription key and pricing tier ComputerVision.F0."
-        }
-      }
-      ```
-1. Get the keys for the Cognitive Service resource.
-   ```
-   $ az cognitiveservices account keys list --name computer-vision --resource-group cognitive-services-resource-group
-
-   $ az cognitiveservices account keys list --name face-api --resource-group cognitive-services-resource-group
-   ```
-1. Set environment `COGNITIVE_SERVICE_KEY` variable with one of the keys for the resource
-    ```
-   $ export COGNITIVE_SERVICE_KEY=XXXXX
-   ```
-1. Cleanup (after temporary usage)
-   ```
-   $ az group delete --name cognitive-services-resource-group
-   Are you sure you want to perform this operation? (y/n): y
-   ```
-
 ***
-
-### Transcription
-* [XXXX](XXXX)
-
-### Diarization
-* [XXXX](XXXX)
-
-### Language Detection
-* [XXXX](XXXX)
-
-### Translate
-* [XXXX](XXXX)
-
--->
 
 ## AWS (Amazon Web Services)
 
@@ -648,6 +503,8 @@ COMPLETED
 checking in with another show for H p. R. Um, In the car on my way to a client's gonna be a short show. I'm think I'm gonna be there in 10 minutes, but I want to do, you know, shoot something up the flagpole here, uh, wanted to talk about the state of podcasting these days. These days, I I sound old because in podcasting terms, I am. I've been around since 4 4000 Started producing shows since 2005. Have been listening to podcasts and daily since 2004. I came across, um, my own archives from shows that I used to download back then and listen to which I had burned to a CD, and I've put them on my nads. And I've started streaming them while at work the last couple of weeks and I've had a ball listening to old podcast episodes of
 ```
 
+***
+
 ### Diarization
 
 * [diarization](https://docs.aws.amazon.com/en_pv/transcribe/latest/dg/how-diarization)
@@ -762,21 +619,164 @@ COMPLETED
 checking in with another show for H p. R. Um, In the car on my way to a client's gonna be a short show. I'm think I'm gonna be there in 10 minutes, but I want to do, you know, shoot something up the flagpole here, uh, wanted to talk about the state of podcasting these days. These days, I I sound old because in podcasting terms, I am. I've been around since 4 4000 Started producing shows since 2005. Have been listening to podcasts and daily since 2004. I came across, um, my own archives from shows that I used to download back then and listen to which I had burned to a CD, and I've put them on my nads. And I've started streaming them while at work the last couple of weeks and I've had a ball listening to old podcast episodes of
 ```
 
+***
+
 ### Language Detection
 N/A
+
+***
+
+### Translate
+* [translate](https://docs.aws.amazon.com/translate/latest/dg/what-is.html)
+* Require IAM `TranslateFullAccess`
+
+
+
 
 
 <!--
 
+## Azure (Microsoft Azure Cloud)
 
+* Prerequisites are to have a valid and activated Azure account and an Azure Cognitive Services subscription within a Azure Resource Group
+
+1. Sign in to Azure
+   ```
+   $ az login
+   Note, we have launched a browser for you to login. For old experience with device code, use "az login --use-device-code"
+   You have logged in. Now let us find all the subscriptions to which you have access...
+   [
+     {
+       "cloudName": "AzureCloud",
+       "id": "deadbeef-e904-4c8e-a3d8-5503f0e310e7",
+       "isDefault": true,
+       "name": "Free Trial",
+       "state": "Enabled",
+       "tenantId": "deadbeef-3411-4054-a56e-18809a214004",
+       "user": {
+         "name": "USER@FQDN",
+         "type": "user"
+       }
+     }
+   ]
+   ```
+1. Choose resource group location
+   ```
+   $ az account list-locations --query "[].{Region:name}" --out table|grep euro
+   northeurope
+   westeurope
+
+   $ az account list-locations --query "[].{Region:name}" --out table|grep -E "us\$|us[0-9]\$"
+   centralus
+   eastus
+   eastus2
+   westus
+   northcentralus
+   southcentralus
+   westcentralus
+   westus2
+   ```
+1. Create a Azure Cognitive Services resource group
+   ```
+   $ az group create --name cognitive-services-resource-group --location westus2
+   {
+      "id": "/subscriptions/deadbeef-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group",
+      "location": "westus2",
+      "managedBy": null,
+      "name": "cognitive-services-resource-group",
+      "properties": {
+        "provisioningState": "Succeeded"
+      },
+      "tags": null,
+      "type": null
+    }
+
+    $ az group create --name cognitive-services-resource-group --location westus
+     {
+     "id": "/subscriptions/deadbeef-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/cognitive-services-resource-group",
+     "location": "westus",
+     "managedBy": null,
+     "name": "cognitive-services-resource-group",
+     "properties": {
+     "provisioningState": "Succeeded"
+     },
+     "tags": null,
+     "type": null
+   }
+   ```
+1. Determine available Cognitive Service resources
+   ```
+   $ az cognitiveservices account list-kinds --output table --subscription deadbeef-e904-4c8e-a3d8-5503f0e310e7
+   Result
+   -----------------------
+   AnomalyDetector
+   Bing.Autosuggest.v7
+   Bing.CustomSearch
+   Bing.EntitySearch
+   Bing.Search.v7
+   Bing.SpellCheck.v7
+   CognitiveServices
+   ComputerVision
+   ContentModerator
+   CustomVision.Prediction
+   CustomVision.Training
+   Face
+   ImmersiveReader
+   InkRecognizer
+   Internal.AllInOne
+   LUIS
+   LUIS.Authoring
+   Personalizer
+   QnAMaker
+   SpeakerRecognition
+   SpeechServices
+   TextAnalytics
+   TextTranslation
+   ```
+1. Add a Cognitive Service resource to the resource group (F0 free)
+   ```
+   $ az cognitiveservices account create --name computer-vision --kind ComputerVision --resource-group cognitive-services-resource-group --sku F0 --location westus2 --yes
+
+   $ az cognitiveservices account create --name face-api --kind Face --resource-group cognitive-services-resource-group --sku F0 --location westus2 --yes
+   ```
+   * If the required service is not added, a similar error message will be returned when requesting use of the service
+      ```
+      {
+        "error": {
+          "code": "401",
+          "message": "The Face - Detect Operation under Face API - V1.0 API is not supported with the current subscription key and pricing tier ComputerVision.F0."
+        }
+      }
+      ```
+1. Get the keys for the Cognitive Service resource.
+   ```
+   $ az cognitiveservices account keys list --name computer-vision --resource-group cognitive-services-resource-group
+
+   $ az cognitiveservices account keys list --name face-api --resource-group cognitive-services-resource-group
+   ```
+1. Set environment `COGNITIVE_SERVICE_KEY` variable with one of the keys for the resource
+    ```
+   $ export COGNITIVE_SERVICE_KEY=XXXXX
+   ```
+1. Cleanup (after temporary usage)
+   ```
+   $ az group delete --name cognitive-services-resource-group
+   Are you sure you want to perform this operation? (y/n): y
+   ```
+
+***
+
+### Transcription
+* [XXXX](XXXX)
+
+### Diarization
+* [XXXX](XXXX)
 
 ### Language Detection
 * [XXXX](XXXX)
 
-
 ### Translate
-* [translate](https://docs.aws.amazon.com/translate/latest/dg/what-is.html)
-
+* [XXXX](XXXX)
 
 * Verify (that the file is in the S3 Bucket; create JSON request content file)
 ```
@@ -790,6 +790,4 @@ $ ./pre-audio.sh transcribe audio2.mp3
 ```
 $ jq -r . resultXXXX.json
 ```
-
 -->
-
