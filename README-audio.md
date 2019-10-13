@@ -80,9 +80,8 @@ texttospeech.googleapis.com  Cloud Text-to-Speech API
 * [Transcribing short audio files (less than a minute)](https://cloud.google.com/speech-to-text/docs/sync-recognize)
 * "<i>An asynchronous Speech-to-Text API request to the LongRunningRecognize method is identical in form to a synchronous Speech-to-Text API request.</i>"
 * The payload size limit: 10485760 bytes.
-***
 
-1. Get a sample audio file
+* Get a sample audio file
 ```
 $ wget https://ia803009.us.archive.org/29/items/hpr2798/hpr2798.wav
 --2019-10-10 18:19:50--  https://ia803009.us.archive.org/29/items/hpr2798/hpr2798.wav
@@ -96,7 +95,7 @@ hpr2798.wav                                   100%[=============================
 
 2019-10-10 18:21:43 (659 KB/s) - 'hpr2798.wav' saved [75388322/75388322]
 ```
-1. Check the audio file, such as for sampling rate
+* Check the audio file, such as for sampling rate
    * "<i>Sample rates between 8000 Hz and 48000 Hz are supported within Cloud Speech-to-Text.</i>"
    * In below, using `audio_metadata`
 ```
@@ -104,7 +103,7 @@ hpr2798.wav                                   100%[=============================
 Duration sec:	 854.7273015873016
 Sample rate:	 44100
 ```
-1. Cut the file to size from a specific starting point, and convert to WAV format with one audio channel excluding any video (if there was any)
+* Cut the file to size from a specific starting point, and convert to WAV format with one audio channel excluding any video (if there was any)
    * Audio options:
       -aframes number     set the number of audio frames to output
       -aq quality         set audio quality (codec-specific)
@@ -146,7 +145,7 @@ Output #0, wav, to 'audio2.wav':
 size=    5082kB time=00:00:59.00 bitrate= 705.6kbits/s speed=1.4e+03x    
 video:0kB audio:5082kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 0.006764%
 ```
-1. Check the converted audio file, such as for sampling rate
+* Check the converted audio file, such as for sampling rate
 ```
 $ hexdump -Cn 48 audio2.wav 
 00000000  52 49 46 46 b0 68 4f 00  57 41 56 45 66 6d 74 20  |RIFF.hO.WAVEfmt |
@@ -157,7 +156,7 @@ $ hexdump -Cn 48 audio2.wav
 Duration sec:	 59.0
 Sample rate:	 44100
 ```
-1. Run `gcloud ml speech recognize`; in this case US English, in other cases select the corresponding English (a dozen variants to select from)
+* Run `gcloud ml speech recognize`; in this case US English, in other cases select the corresponding English (a dozen variants to select from)
 ```
 $ gcloud ml speech recognize audio2.wav --language-code='en-US' | tee result$RANDOM.json
 {
@@ -173,7 +172,7 @@ $ gcloud ml speech recognize audio2.wav --language-code='en-US' | tee result$RAN
   ]
 }
 ```
-1. Review the results from the JSON output file
+* Review the results from the JSON output file
 ```
 $ jq -r '.results[].alternatives[]|.confidence,.transcript' result26358.json
 0.96501887
@@ -193,14 +192,14 @@ result6083.json
 * [Transcribing longer audio files (more than a minute)](https://cloud.google.com/speech-to-text/docs/async-recognize)
 ***
 
-1. Transfer the audio file to GCP bucket
+* Transfer the audio file to GCP bucket
 ```
 $ gsutil cp data/audio2.wav gs://$(gcloud config get-value project) 
 Copying file://data/audio2.wav [Content-Type=audio/x-wav]...
 | [1 files][  5.0 MiB/  5.0 MiB]  383.4 KiB/s                                   
 Operation completed over 1 objects/5.0 MiB.                                      
 ```
-1. Run `gcloud ml speech recognize-long-running`
+* Run `gcloud ml speech recognize-long-running`
 ```
 $ gcloud ml speech recognize-long-running gs://$(gcloud config get-value project)/audio2.wav --async --language-code='en-US'
 Check operation [operations/5263634183516942311] for status.
@@ -208,7 +207,7 @@ Check operation [operations/5263634183516942311] for status.
   "name": "5263634183516942311"
 }
 ```
-1. Check when ready with `gcloud ml speech operations wait`
+* Check when ready with `gcloud ml speech operations wait`
 ```
 $ gcloud ml speech operations wait "5263634183516942311" | tee result$RANDOM.json
 Waiting for operation [operations/5263634183516942311] to complete...done.                                                                                                          
@@ -226,7 +225,7 @@ Waiting for operation [operations/5263634183516942311] to complete...done.
   ]
 }
 ```
-1. Check the outcome with `gcloud ml speech operations describe`
+* Check the outcome with `gcloud ml speech operations describe`
 ```
 $ gcloud ml speech operations describe "5263634183516942311" | tee result$RANDOM.json
 {
@@ -253,7 +252,7 @@ $ gcloud ml speech operations describe "5263634183516942311" | tee result$RANDOM
   }
 }
 ```
-1. Review the results from the JSON output file
+* Review the results from the JSON output file
 ```
 $ jq -r '.response.results[].alternatives[]|.confidence,.transcript' result25359.json
 0.961879
@@ -268,7 +267,7 @@ checking in with another show for HPR in the car on my way to a client's going t
    * "<i>Optional A list of up to 3 additional BCP-47 language tags, listing possible alternative languages of the supplied audio</i>"
 ***
 
-1. Transfer the audio file to GCP bucket
+* Transfer the audio file to GCP bucket
 ```
 $ gsutil cp ../data/audio[12].wav gs://$(gcloud config get-value project)  
 Copying file://../data/audio1.wav [Content-Type=audio/x-wav]...
@@ -276,11 +275,11 @@ Copying file://../data/audio2.wav [Content-Type=audio/x-wav]...
 \ [2 files][ 10.3 MiB/ 10.3 MiB]                                                
 Operation completed over 2 objects/10.3 MiB.                                     
 ```
-1. Create JSON formatted request file (request.json)
+* Create JSON formatted request file (request.json)
 ```
 { "config": { "encoding":"LINEAR16", "languageCode": "en-US", "alternativeLanguageCodes": [ "en-AU", "en-GB", "en-IE" ], "model": "command_and_search" }, "audio": { "uri":"$(gcloud config get-value project)/audio2.wav" } }
 ```
-1. Run  `curl` to access the API
+* Run  `curl` to access the API
 ```
 $ curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" -d @request.json https://speech.googleapis.com/v1p1beta1/speech:recognize | tee result$RANDOM.json
 {
@@ -297,7 +296,7 @@ $ curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(gcloud
 }
 
 ```
-1. Review the results from the JSON output file
+* Review the results from the JSON output file
 ```
 $ jq -r '.results[]|.languageCode,.alternatives[].confidence,.alternatives[].transcript' result31483.json 
 en-gb
@@ -313,26 +312,26 @@ checking in with another show for HP are in the car on my way to a clients can b
 * "<i>Cloud Speech-to-Text only supports speaker diarization for transcribing phone calls</i>"
 ***
 
-1. Transfer the audio file to GCP bucket
+* Transfer the audio file to GCP bucket
 ```
 $ gsutil cp data/audio2.wav gs://$(gcloud config get-value project) 
 Copying file://data/audio2.wav [Content-Type=audio/x-wav]...
 | [1 files][  5.0 MiB/  5.0 MiB]  383.4 KiB/s                                   
 Operation completed over 1 objects/5.0 MiB.                                      
 ```
-1. Create JSON formatted request file (request.json)
+* Create JSON formatted request file (request.json)
    * <i>diarizationSpeakerCount (optional) If set, specifies the estimated number of speakers in the conversation. If not set, defaults to '2'.</i>
 ```
 { "config": { "encoding":"LINEAR16", "languageCode": "en-US", "diarizationConfig": { "enableSpeakerDiarization": true }, "model": "phone_call" }, "audio": { "uri":"$(gcloud config get-value project)/audio2.wav" } }
 ```
-1. Run  `curl` to access the API
+* Run  `curl` to access the API
 ```
 $ curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" -d @request.json https://speech.googleapis.com/v1p1beta1/speech:recognize > result$RANDOM.json
 
 $ ls -ltr|tail -1
 -rw-r--r--    1 bjro  staff   43322 Oct 11 14:58 result28054.json
 ```
-1. Review the results from the JSON output file
+* Review the results from the JSON output file
 ```
 $ jq -r '.results[].alternatives[].words[]|select(.speakerTag==1)|.word' result28054.json |tr '\n' ' '; echo
 checking in with another show for HP are in the car on my way to a client's going to be a short show I'm think I'm going to be there in 10 minutes but I wanted to you know shoot something up the flag pole here wanted to talk about the state of these days I found old because in podcasting terms I am I've been around since 2004 2000 started producing show since 2005 and a big listing to podcast and 2004 and I came across my own archive from shows that I used to download back then listening to old podcast episodes of 
@@ -347,7 +346,7 @@ podcasting days day 80 since and listen to which I had burn to a CD and I put th
 * [xxx](xxx)
 ***
 
-1. Transfer the audio file to GCP bucket
+* Transfer the audio file to GCP bucket
 ```
 $ gsutil cp ../data/audio[12].wav gs://$(gcloud config get-value project)
 Copying file://../data/audio1.wav [Content-Type=audio/x-wav]...
@@ -355,9 +354,9 @@ Copying file://../data/audio2.wav [Content-Type=audio/x-wav]...
 \ [2 files][ 10.3 MiB/ 10.3 MiB]
 Operation completed over 2 objects/10.3 MiB.
 ```
-1. Create JSON formatted request file (request.json)
-1. Run  `curl` to access the API
-1. Review the results from the JSON output file
+* Create JSON formatted request file (request.json)
+* Run  `curl` to access the API
+* Review the results from the JSON output file
 
 ***
 
@@ -383,7 +382,7 @@ Operation completed over 2 objects/10.3 MiB.
    secret_key     ****************nEac shared-credentials-file    
        region                <not set>             None    None
    ```
-1. [Create S3 Bucket](https://docs.aws.amazon.com/cli/latest/reference/s3api/create-bucket.html)
+* [Create S3 Bucket](https://docs.aws.amazon.com/cli/latest/reference/s3api/create-bucket.html)
    * In this case the bucket is named `blobbucket` and set to `private`, with LocationConstraint set to the specified region
    ```
    $ aws s3api create-bucket --bucket blobbucket --acl private --region us-east-2 --create-bucket-configuration LocationConstraint=us-east-2
@@ -430,7 +429,7 @@ $ aws s3 ls s3://blobbucket/audio2.wav || aws s3 cp ../data/audio2.wav s3://blob
 upload: ../data/audio2.wav to s3://blobbucket/audio2.wav         
 ```
 
-1. Create JSON formatted request file (request.json)
+* Create JSON formatted request file (request.json)
 ```
 $ JOBNO=$RANDOM
 
@@ -535,7 +534,7 @@ $ aws s3 ls s3://blobbucket/audio2.wav || aws s3 cp ../data/audio2.wav s3://blob
 upload: ../data/audio2.wav to s3://blobbucket/audio2.wav         
 ```
 
-1. Create JSON formatted request file (request.json)
+* Create JSON formatted request file (request.json)
 ```
 $ JOBNO=28912
 
@@ -652,7 +651,7 @@ N/A
 * Here using IAM `TranslateFullAccess`
 ***
 
-1. Shorter source text - Run `aws translate translate-text` directly
+* Shorter source text - Run `aws translate translate-text` directly
 ```
 $ aws translate translate-text --region us-east-2 --source-language-code "en" --target-language-code "ar" --text "Hello World" > result-1.json
 
@@ -672,7 +671,7 @@ $ jq -r '.TranslatedText' result-1.json | base64 --decode
 مرحبا وورلد
 ```
 
-1. Longer source text - Create JSON formatted request file (request.json)
+* Longer source text - Create JSON formatted request file (request.json)
 ```
 
 $ cat <<-EOD > request.json
