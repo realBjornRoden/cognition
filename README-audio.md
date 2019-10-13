@@ -343,20 +343,48 @@ podcasting days day 80 since and listen to which I had burn to a CD and I put th
 ***
 
 ### Translation
-* [xxx](xxx)
+* [translate-docs](https://cloud.google.com/translate/docs/)
+* Require `translate.googleapis.com` or `automl.googleapis.com`
 ***
 
-* Transfer the audio file to GCP bucket
+* [Enable API](https://cloud.google.com/endpoints/docs/openapi/enable-api)
+* Check if available, enable APIs and check if enabled, required: `texttospeech.googleapis.com` and `speech.googleapis.com`
 ```
-$ gsutil cp ../data/audio[12].wav gs://$(gcloud config get-value project)
-Copying file://../data/audio1.wav [Content-Type=audio/x-wav]...
-Copying file://../data/audio2.wav [Content-Type=audio/x-wav]...
-\ [2 files][ 10.3 MiB/ 10.3 MiB]
-Operation completed over 2 objects/10.3 MiB.
+$ gcloud services list --available --filter translate.googleapis.com
+NAME                      TITLE
+automl.googleapis.com     Cloud AutoML API
+translate.googleapis.com  Cloud Translation API
+
+$ gcloud services enable translate.googleapis.com
+Operation "operations/acf.6920dcef-ef0d-4c40-b22c-e559bef6c4f4" finished successfully.
+
+$ gcloud services list --enabled --filter translate.googleapis.com
+NAME                      TITLE
+translate.googleapis.com  Cloud Translation API
 ```
+
 * Create JSON formatted request file (request.json)
+```
+$ cat request.json 
+{ "q": "Ù…Ø±Ø­Ø¨Ø§ Ø¨Ø§Ù„Ø¹Ø§Ù„Ù…", "source": "ar", "target": "en", "format": "text" }
+```
+
 * Run  `curl` to access the API
+```
+$ curl -s -X POST -H "Authorization: Bearer ya29.c.Kl6bB_jYUEsWxlO6Dw-XpAfZi5XGHia39RvgKYaVXWcbAClsGihy9OpLAa62bE-5SO4kTKu5a1-QZ3R3KM8yPVJa4frdsnk2MuZhRR6KtMQPjDEENgOvbCemGBOic7Mb" -H "Content-Type: application/json" -d @request.json https://translation.googleapis.com/language/translate/v2
+```
+
 * Review the results from the JSON output file
+```
+$ jq '.data.translations[].translatedText' result26288.json
+"Hello World"
+```
+
+
+
+
+
+
 
 ***
 
