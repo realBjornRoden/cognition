@@ -80,6 +80,7 @@ texttospeech.googleapis.com  Cloud Text-to-Speech API
 * [Transcribing short audio files (less than a minute)](https://cloud.google.com/speech-to-text/docs/sync-recognize)
 * "<i>An asynchronous Speech-to-Text API request to the LongRunningRecognize method is identical in form to a synchronous Speech-to-Text API request.</i>"
 * The payload size limit: 10485760 bytes.
+***
 
 1. Get a sample audio file
 ```
@@ -190,6 +191,8 @@ result6083.json
 
 ### Transcription (long/async)
 * [Transcribing longer audio files (more than a minute)](https://cloud.google.com/speech-to-text/docs/async-recognize)
+***
+
 1. Transfer the audio file to GCP bucket
 ```
 $ gsutil cp data/audio2.wav gs://$(gcloud config get-value project) 
@@ -263,6 +266,7 @@ checking in with another show for HPR in the car on my way to a client's going t
 * [multiple-languages](https://cloud.google.com/speech-to-text/docs/multiple-languages)
 * [v1p1beta1/RecognitionConfig](https://cloud.google.com/speech-to-text/docs/reference/rest/v1p1beta1/RecognitionConfig)
    * "<i>Optional A list of up to 3 additional BCP-47 language tags, listing possible alternative languages of the supplied audio</i>"
+***
 
 1. Transfer the audio file to GCP bucket
 ```
@@ -307,6 +311,7 @@ checking in with another show for HP are in the car on my way to a clients can b
 * [multiple-voices](https://cloud.google.com/speech-to-text/docs/multiple-voices)
 * [supported-features-languages](https://cloud.google.com/speech-to-text/docs/supported-features-languages)
 * "<i>Cloud Speech-to-Text only supports speaker diarization for transcribing phone calls</i>"
+***
 
 1. Transfer the audio file to GCP bucket
 ```
@@ -340,6 +345,7 @@ podcasting days day 80 since and listen to which I had burn to a CD and I put th
 
 ### Translate
 * [xxx](xxx)
+***
 
 1. Transfer the audio file to GCP bucket
 ```
@@ -416,6 +422,7 @@ Operation completed over 2 objects/10.3 MiB.
 * [transcribe-input](https://docs.aws.amazon.com/en_pv/transcribe/latest/dg/input.html)
    * <i>FLAC, MP3, MP4, or WAV file format</i>
 * [API_StartTranscriptionJob](https://docs.aws.amazon.com/transcribe/latest/dg/API_StartTranscriptionJob.html)
+***
 
 * Verify (that the file is in the S3 Bucket, if not copy it there
 ```
@@ -520,6 +527,7 @@ checking in with another show for H p. R. Um, In the car on my way to a client's
 * [diarization](https://docs.aws.amazon.com/en_pv/transcribe/latest/dg/how-diarization)
 * [API_StartTranscriptionJob](https://docs.aws.amazon.com/transcribe/latest/dg/API_StartTranscriptionJob.html)
 * <i>To turn on speaker identification, set the `MaxSpeakerLabels` and `ShowSpeakerLabels` field of the Settings field when you make a call to the StartTranscriptionJob operation.</i>
+***
 
 * Verify (that the file is in the S3 Bucket, if not copy it there
 ```
@@ -642,6 +650,7 @@ N/A
 * [translate](https://docs.aws.amazon.com/translate/latest/dg/what-is.html)
 * [translate-limits](https://docs.aws.amazon.com/en_pv/translate/latest/dg/what-is-limits.html)
 * Here using IAM `TranslateFullAccess`
+***
 
 1. Shorter source text - Run `aws translate translate-text` directly
 ```
