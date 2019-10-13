@@ -27,27 +27,27 @@
 1. Authenticate CLI session with `gcloud auth login`
 
 1. Set the environment variable GOOGLE_APPLICATION_CREDENTIALS to point to the location of the service account key file
-```
-export GOOGLE_APPLICATION_CREDENTIALS=$PWD/cognitive-aab254879251.json
-```
+   ```
+   export GOOGLE_APPLICATION_CREDENTIALS=$PWD/cognitive-aab254879251.json
+   ```
 1. Check the currently active project
-```
-$ gcloud config get-value project 
-bungabunga-123456
-```
+   ```
+   $ gcloud config get-value project 
+   bungabunga-123456
+   ```
 1. Set the current project
-```
-$ gcloud projects list
-PROJECT_ID          NAME                PROJECT_NUMBER
-cognitive-254305    cognitive           711533833686
-bungabunga-123456   bungabunga          400688388535
+   ```
+   $ gcloud projects list
+   PROJECT_ID          NAME                PROJECT_NUMBER
+   cognitive-254305    cognitive           711533833686
+   bungabunga-123456   bungabunga          400688388535
 
-$ gcloud config set project cognitive-254305
-Updated property [core/project].
+   $ gcloud config set project cognitive-254305
+   Updated property [core/project].
 
-$ gcloud config get-value project 
-cognitive-254305
-```
+   $ gcloud config get-value project 
+   cognitive-254305
+   ```
 
 ### APIs
 * List API services
