@@ -643,7 +643,7 @@ N/A
 * [translate-limits](https://docs.aws.amazon.com/en_pv/translate/latest/dg/what-is-limits.html)
 * Here using IAM `TranslateFullAccess`
 
-1. Run `aws translate translate-text` directly - shorter source text
+1. Shorter source text - Run `aws translate translate-text` directly
 ```
 $ aws translate translate-text --region us-east-2 --source-language-code "en" --target-language-code "ar" --text "Hello World" > result-1.json
 
@@ -663,7 +663,7 @@ $ jq -r '.TranslatedText' result-1.json | base64 --decode
 مرحبا وورلد
 ```
 
-1. Create JSON formatted request file (request.json) - longer source text
+1. Longer source text - Create JSON formatted request file (request.json)
 ```
 
 $ cat <<-EOD > request.json
