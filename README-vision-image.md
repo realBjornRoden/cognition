@@ -24,18 +24,18 @@
 
 ***
 
-* Authenticate CLI session with `gcloud auth login`
+1. Authenticate CLI session with `gcloud auth login`
 
-* Set the environment variable GOOGLE_APPLICATION_CREDENTIALS to point to the location of the service account key file
+1. Set the environment variable GOOGLE_APPLICATION_CREDENTIALS to point to the location of the service account key file
 ```
 export GOOGLE_APPLICATION_CREDENTIALS=$PWD/cognitive-aab254879251.json
 ```
-* Check the currently active project
+1. Check the currently active project
 ```
 $ gcloud config get-value project 
 bungabunga-123456
 ```
-* Set the current project
+1. Set the current project
 ```
 $ gcloud projects list
 PROJECT_ID          NAME                PROJECT_NUMBER
@@ -108,6 +108,7 @@ Operation "operations/acf.7710a593-9a73-488d-81e4-1b6130afdab9" finished success
 ### Detect text in images
 * [Detect text in a local image](https://cloud.google.com/vision/docs/ocr)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
+***
 
 * Check project, credentials environment variable and if the required API is enabled
 ```
@@ -176,6 +177,7 @@ Read more here.
 ### Detect handwriting in images
 * [Detect handwriting in a local image](https://cloud.google.com/vision/docs/handwriting)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
+***
 
 * Check project, credentials environment variable and if the required API is enabled
 ```
@@ -225,6 +227,8 @@ Platform
 
 ### Detect text in files
 * [Detect text in files](https://cloud.google.com/vision/docs/pdf)
+***
+
 * Check project, credentials environment variable and if the required API is enabled
 ```
 $ gcloud config get-value project 
@@ -345,6 +349,7 @@ Urna Semper
 * [Detect Faces in a local image](https://cloud.google.com/vision/docs/detecting-faces)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
 <br><img src="https://www.nih.gov/sites/default/files/news-events/research-matters/2014/20140428-attention.jpg" width="50%" /><br>
+***
 
 * Check project, credentials environment variable and if the required API is enabled
 ```
@@ -397,6 +402,7 @@ $ jq '.responses[].faceAnnotations[].detectionConfidence' result12945.json
 ### Detect multiple objects in images
 * [Detect multiple objects in images](https://cloud.google.com/vision/docs/object-localizer)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
+***
 
 * Check project, credentials environment variable and if the required API is enabled
 ```
@@ -447,6 +453,7 @@ Picture frame 0.6551748
 ### Detect web references to an image
 * [Detect Web entities and pages](https://cloud.google.com/vision/docs/detecting-web)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
+***
 
 * Check project, credentials environment variable and if the required API is enabled
 ```
@@ -513,6 +520,7 @@ $ wget --quiet --continue --timestamping --tries=1 --input-file=image.list
 * [Detect landmarks](https://cloud.google.com/vision/docs/detecting-landmarks)
 * [Reverse geocoding for Google Map API](https://developers.google.com/maps/documentation/geocoding/intro#ReverseGeocoding)
 * Provide image data to the Vision API by specifying the URI path to the image, or by sending the image data as [base64-encoded text](https://cloud.google.com/vision/docs/base64).
+***
 
 * Check project, credentials environment variable and if the required API is enabled
 ```
@@ -559,6 +567,7 @@ Saint Basil's Cathedral 0.89397573 {"latitude":55.752912,"longitude":37.62231588
 ```
 
 ### Detect landmarks in and web references of an image (combined)
+***
 * Add the types within the "features" brackets `[...]`
 ```
 { "requests": [ { "image": { "content": "$(<$B64)" }, "features": [ { "type": "LANDMARK_DETECTION" },{ "type": "WEB_DETECTION" } ] } ] }
@@ -766,6 +775,7 @@ $ jq -r '.responses[].webDetection.fullMatchingImages[] |.url' google-output.jso
 ***
 
 ### Detect text in images
+***
 * Verify the file content type of the input file (that it is an image)
 ```
 $ file ../data/texttyped1.png 
@@ -785,6 +795,7 @@ Google is using deepfakes to fight deepfakes. With the 2020 US presidential elec
 ***
 
 ### Detect handwriting in images
+***
 
 * Verify the file content type of the input file (that it is an image)
 ```
@@ -810,6 +821,7 @@ $ jq . result22465.json
 ***
 
 ### Detect text in files
+***
 * Two step process:
    1. Batch Read File operation to submit the OCR operation, return "Operation-Location" with the URL for the next step 
    1. Get Read Operation Result operation to access OCR results
@@ -842,6 +854,7 @@ A Simple PDF File This is a small demonstration .pdf file - just for use in the 
 ***
 
 ### Detect Faces in images (Vision with visualFeatures for Faces API)
+***
 
 <br><img src="https://cloud.google.com/vision/docs/images/faces.png" width="50%" /><br>
 
@@ -906,6 +919,7 @@ $ jq '.faces[],.metadata' result21321.json
 * The stored face features will expire and be deleted 24 hours after the original detection call.
 * [Get face detection data](https://docs.microsoft.com/en-us/azure/cognitive-services/face/face-api-how-to-topics/howtodetectfacesinimage)
 <br><img src="https://www.nih.gov/sites/default/files/news-events/research-matters/2014/20140428-attention.jpg" width="50%" /><br>
+***
 
 * Prepare (input: PNG file "URL/faces.png"; output: JSON file "request.json")
 ```
@@ -961,6 +975,7 @@ jq . result2306.json # cat result2306.json
 ### Detect Faces in images (Face API)
 * The stored face features will expire and be deleted 24 hours after the original detection call.
 <br><img src="https://www.nih.gov/sites/default/files/news-events/research-matters/2014/20140428-attention.jpg" width="50%" /><br>
+***
 
 * Prepare (input: PNG file "URL/faces.png"; output: JSON file "request.json")
 ```
@@ -988,7 +1003,6 @@ $ cat result5214.json # jq . result5214.json
 ***
 
 ### Detect Faces in images and details (Face API)
-
 * The stored face features will expire and be deleted 24 hours after the original detection call.
 * Optional parameters include faceId, landmarks, and attributes. Besides face rectangles and landmarks, the face detection API can analyze several conceptual attributes of a face. Attributes include age, gender, headPose, smile, facialHair, glasses, emotion, hair, makeup, occlusion, accessories, blur, exposure and noise. Some of the results returned for specific attributes may not be highly accurate.
 * [Face detection and attributes](https://docs.microsoft.com/en-us/azure/cognitive-services/face/concepts/face-detection#attributes)
@@ -996,6 +1010,7 @@ $ cat result5214.json # jq . result5214.json
 <br><img src="https://docs.microsoft.com/en-us/azure/cognitive-services/face/images/landmarks.1.jpg" alt="Face Landmarks" width="50%"/><br>
 * [Head pose](https://docs.microsoft.com/en-us/azure/cognitive-services/face/images/headpose.1.jpg)
 <br><img src="https://docs.microsoft.com/en-us/azure/cognitive-services/face/images/headpose.1.jpg" alt="Head Pose" width="50%"/><br>
+***
 
 * Prepare (input: PNG file "URL/faces.png"; output: JSON file "request.json")
 ```
@@ -1023,6 +1038,7 @@ $ cat result1651.json # jq . result1651.json
 ***
 
 ### Detect multiple objects in images
+***
 
 * Prepare (input: PNG file "URL/Italian-Sign-Bogdan-Dada-Unsplash.jpg"; output: JSON file "request.json")
 ```
@@ -1054,6 +1070,7 @@ N/A
 ***
 
 ### Detect landmarks in images
+***
 
 * Prepare (input: PNG file "URL/moscow_small.jpeg"; output: JSON file "request.json")
 ```
@@ -1123,6 +1140,7 @@ $ jq . result29245.json
 
 ### Detect and label objects in images
 * Generates a list of words, or tags based on objects, living beings, scenery or actions found in images
+***
 
 * Verify the file content type of the input file (that it is an image)
 ```
@@ -1229,10 +1247,10 @@ vehicle 0.6149222254753113
    
 
 ### Detect text in images (Recognition DetectText)
-
 * [detect-text](https://docs.aws.amazon.com/cli/latest/reference/rekognition/detect-text.html)
 * [DetectText can detect <i>up to 50 words</i> in an image](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/limits.html)
 * <i>A word is one or more <b>ISO basic latin script characters</b> that are not separated by spaces.</i>
+***
 
 * Verify that the file is in the S3 Bucket; create JSON request content file
 ```
@@ -1253,9 +1271,9 @@ Google is using deepfakes to fight deepfakes. With the 2020 US presidential elec
 ```
 
 ### Detect text in images (Textract DetectDocumentText)
-
 * [Detecting and Analyzing Text in Single-Page Documents](https://docs.aws.amazon.com/en_pv/textract/latest/dg/sync.html)
 * NB. This require Security Policy `AmazonTextractFullAccess`, not `AmazonRekognitionFullAccess`
+***
 
 * Verify that the file is in the S3 Bucket; create JSON request content file
 ```
@@ -1278,9 +1296,9 @@ Google is using deepfakes to fight deepfakes. With the 2020 US presidentia elect
 ***
 
 ### Detect handwriting in images
-
 * [detect-text](https://docs.aws.amazon.com/cli/latest/reference/rekognition/detect-text.html)
 * [DetectText can detect <i>up to 50 words</i> in an image](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/limits.html)
+***
 
 * Verify that the file is in the S3 Bucket; create JSON request content file
 ```
@@ -1302,10 +1320,10 @@ oople CLoud 0 gle P fatform oople gle CLoud 0 P fatform
 ***
 
 ### Detect text in files (Textract DocumentTextDetection)
-
 * [Detecting and Analyzing Text in Multipage Documents](https://docs.aws.amazon.com/en_pv/textract/latest/dg/async.html)
 * [Calling Amazon Textract Asynchronous Operations](https://docs.aws.amazon.com/en_pv/textract/latest/dg/api-async.html)
 <br><img src="https://docs.aws.amazon.com/en_pv/textract/latest/dg/images/asynchronous.png" alt="DocumentTextDetection" width="50%"/><br>
+***
 
 * NB. Here using  `AmazonTextractFullAccess` Policy, not `AmazonRekognitionFullAccess`
 * NB. Here using `AmazonSNSFullAccess` for SNS  and `AmazonSQSFullAccess` for SQS and `IAMFullAccess` for IAM
@@ -1401,11 +1419,10 @@ A Simple PDF File This is a small demonstration .pdf file -- just for use in the
 ***
 
 ### Detect Faces in images
-
 * [Detecting Faces in an Image](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/faces-detect-images.html)
 * [detect-faces](https://docs.aws.amazon.com/cli/latest/reference/rekognition/detect-faces.html)
 <br><img src="https://docs.aws.amazon.com/rekognition/latest/dg/images/landmarkface.png" alt="Face Landmarks" width="50%" /><br>
-
+***
 
 * Verify that the file is in the S3 Bucket; create JSON request content file
 ```
@@ -1446,8 +1463,8 @@ $ jq -r '.FaceDetails[].Confidence' result10579.json
 ***
 
 ### Detect multiple objects in images
-
 * [Detecting Labels in an Image](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/labels-detect-labels-image.html)
+***
 
 * Verify that the file is in the S3 Bucket; create JSON request content file
 ```
@@ -1490,6 +1507,7 @@ N/A
 ***
 
 ### Detect landmarks in images
+***
  
 * Verify that the file is in the S3 Bucket; create JSON request content file
 ```
@@ -1526,12 +1544,12 @@ Monument 55.30182647705078
 ***
 
 ### Recognition of Face in images
-
 * [compare-faces](https://docs.aws.amazon.com/cli/latest/reference/rekognition/compare-faces.html)
 * Target image
 <br><img src="https://www.nih.gov/sites/default/files/news-events/research-matters/2014/20140428-attention.jpg" width="50%" /><br>
 * Source image (to find in the target image (show as downsampled to 2kb from original 4kb)
 <br><img src="https://github.com/realBjornRoden/cognition/blob/master/data/face2match2kb.jpg" /><br>
+***
 
 * Verify that the files are in the S3 Bucket
 ```
