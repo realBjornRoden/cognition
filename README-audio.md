@@ -656,8 +656,11 @@ $ aws translate translate-text --region us-east-2 --source-language-code "ar" --
     "TargetLanguageCode": "en"
 }
 
-$ jq -r '.TranslatedText' result-1.json|base64       
+$ jq -r '.TranslatedText' result-1.json | base64
 2YXYsdit2KjYpyDZiNmI2LHZhNivCg==
+
+$ jq -r '.TranslatedText' result-1.json | base64 --decode
+مرحبا وورلد
 ```
 
 1. Create JSON formatted request file (request.json) - longer source text
@@ -671,12 +674,10 @@ $ cat request.json
 { "SourceLanguageCode": "en", "TargetLanguageCode": "ar", "Text": "Hello World" }
 ```
 
-* Submit the job (input: JSON file "request.json"; output: JSON file "result$JOBNO.json)
+* Submit the job (input: JSON file "request.json"; output: JSON file "result$RANDOM.json)
 ```
 $ aws translate translate-text --region us-east-2 --cli-input-json file://request.json | tee result$RANDOM.json | jq -r '.TranslatedText' |base64
 2YXYsdit2KjYpyDZiNmI2LHZhNivCg==
-$ jq -r '.TranslatedText' result12345.json | base64 --decode
-مرحبا وورلد
 ```
 
 
