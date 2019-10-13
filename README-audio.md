@@ -263,6 +263,7 @@ checking in with another show for HPR in the car on my way to a client's going t
 * [multiple-languages](https://cloud.google.com/speech-to-text/docs/multiple-languages)
 * [v1p1beta1/RecognitionConfig](https://cloud.google.com/speech-to-text/docs/reference/rest/v1p1beta1/RecognitionConfig)
    * "<i>Optional A list of up to 3 additional BCP-47 language tags, listing possible alternative languages of the supplied audio</i>"
+
 1. Transfer the audio file to GCP bucket
 ```
 $ gsutil cp ../data/audio[12].wav gs://$(gcloud config get-value project)  
@@ -416,11 +417,14 @@ Operation completed over 2 objects/10.3 MiB.
    * <i>FLAC, MP3, MP4, or WAV file format</i>
 * [API_StartTranscriptionJob](https://docs.aws.amazon.com/transcribe/latest/dg/API_StartTranscriptionJob.html)
 
-* Verify (that the file is in the S3 Bucket, if not copy it there; create JSON request content file)
+* Verify (that the file is in the S3 Bucket, if not copy it there
 ```
 $ aws s3 ls s3://blobbucket/audio2.wav || aws s3 cp ../data/audio2.wav s3://blobbucket/audio2.wav
 upload: ../data/audio2.wav to s3://blobbucket/audio2.wav         
+```
 
+1. Create JSON formatted request file (request.json)
+```
 $ JOBNO=$RANDOM
 
 $ cat <<-EOD > request.json
@@ -431,7 +435,7 @@ $ cat request.json
 { "TranscriptionJobName": "job26816", "LanguageCode": "en-US", "MediaFormat": "wav", "Media": { "MediaFileUri": "s3://blobbucket/audio2.wav" } }
 ```
 
-* Submit the translation job (input: JSON file "request.json"; output: JSON file "result$JOBNO.json)
+* Submit the job (input: JSON file "request.json"; output: JSON file "result$JOBNO.json)
 ```
 $ aws transcribe start-transcription-job --region us-east-2 --cli-input-json file://request.json | tee result-start-$JOBNO.json
 {
@@ -517,20 +521,22 @@ checking in with another show for H p. R. Um, In the car on my way to a client's
 * [API_StartTranscriptionJob](https://docs.aws.amazon.com/transcribe/latest/dg/API_StartTranscriptionJob.html)
 * <i>To turn on speaker identification, set the `MaxSpeakerLabels` and `ShowSpeakerLabels` field of the Settings field when you make a call to the StartTranscriptionJob operation.</i>
 
-* Verify (that the file is in the S3 Bucket, if not copy it there; create JSON request content file)
+* Verify (that the file is in the S3 Bucket, if not copy it there
 ```
 $ aws s3 ls s3://blobbucket/audio2.wav || aws s3 cp ../data/audio2.wav s3://blobbucket/audio2.wav
 upload: ../data/audio2.wav to s3://blobbucket/audio2.wav         
+```
 
+1. Create JSON formatted request file (request.json)
+```
 $ JOBNO=28912
 
 $ cat <<-EOD > request.json
 { "TranscriptionJobName": "job28912", "LanguageCode": "en-US", "Settings": { "MaxSpeakerLabels": 2, "ShowSpeakerLabels": true }, "MediaFormat": "wav", "Media": { "MediaFileUri": "s3://blobbucket/audio2.wav" } }
 EOD
-
 ```
 
-* Submit the translation job (input: JSON file "request.json"; output: JSON file "result$JOBNO.json)
+* Submit the job (input: JSON file "request.json"; output: JSON file "result$JOBNO.json)
 ```
 $ aws transcribe start-transcription-job --region us-east-2 --cli-input-json file://request.json | tee result-start-$JOBNO.json
 {
@@ -634,7 +640,50 @@ N/A
 
 ### Translate
 * [translate](https://docs.aws.amazon.com/translate/latest/dg/what-is.html)
-* Require IAM `TranslateFullAccess`
+* [translate-limits](https://docs.aws.amazon.com/en_pv/translate/latest/dg/what-is-limits.html)
+* Here using IAM `TranslateFullAccess`
+
+1. Run `aws translate translate-text` directly - shorter source text
+```
+$ aws translate translate-text --region us-east-2 --source-language-code "en" --target-language-code "ar" --text "Hello World" > result-1.json
+
+$ jq '.SourceLanguageCode,.TargetLanguageCode,.TranslatedText' result-1.json
+
+$ aws translate translate-text --region us-east-2 --source-language-code "ar" --target-language-code "en" --text "$(jq -r '.TranslatedText' result-1.json)" | tee result-2.json
+{
+    "TranslatedText": "Hello World",
+    "SourceLanguageCode": "ar",
+    "TargetLanguageCode": "en"
+}
+
+$ jq -r '.TranslatedText' result-1.json|base64       
+2YXYsdit2KjYpyDZiNmI2LHZhNivCg==
+```
+
+1. Create JSON formatted request file (request.json) - longer source text
+```
+
+$ cat <<-EOD > request.json
+	{ "SourceLanguageCode": "en", "TargetLanguageCode": "ar", "Text": "Hello World" }
+EOD
+
+$ cat request.json
+{ "SourceLanguageCode": "en", "TargetLanguageCode": "ar", "Text": "Hello World" }
+```
+
+* Submit the job (input: JSON file "request.json"; output: JSON file "result$JOBNO.json)
+```
+$ aws translate translate-text --region us-east-2 --cli-input-json file://request.json | tee result$RANDOM.json | jq -r '.TranslatedText' |base64
+2YXYsdit2KjYpyDZiNmI2LHZhNivCg==
+$ jq -r '.TranslatedText' result12345.json | base64 --decode
+مرحبا وورلد
+```
+
+
+
+
+
+
 
 
 
