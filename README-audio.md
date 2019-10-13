@@ -12,7 +12,6 @@
 1. Transcription
 1. Diarization
 1. Language Detection
-1. Translation
 
 ***
 
@@ -342,52 +341,6 @@ podcasting days day 80 since and listen to which I had burn to a CD and I put th
 
 ***
 
-### Translation
-* [translate-docs](https://cloud.google.com/translate/docs/)
-* Require `translate.googleapis.com` or `automl.googleapis.com`
-***
-
-* [Enable API](https://cloud.google.com/endpoints/docs/openapi/enable-api)
-* Check if available, enable APIs and check if enabled, required: `texttospeech.googleapis.com` and `speech.googleapis.com`
-```
-$ gcloud services list --available --filter translate.googleapis.com
-NAME                      TITLE
-automl.googleapis.com     Cloud AutoML API
-translate.googleapis.com  Cloud Translation API
-
-$ gcloud services enable translate.googleapis.com
-Operation "operations/acf.6920dcef-ef0d-4c40-b22c-e559bef6c4f4" finished successfully.
-
-$ gcloud services list --enabled --filter translate.googleapis.com
-NAME                      TITLE
-translate.googleapis.com  Cloud Translation API
-```
-
-* Create JSON formatted request file (request.json)
-```
-$ cat request.json 
-{ "q": "Ù…Ø±Ø­Ø¨Ø§ Ø¨Ø§Ù„Ø¹Ø§Ù„Ù…", "source": "ar", "target": "en", "format": "text" }
-```
-
-* Run  `curl` to access the API
-```
-$ curl -s -X POST -H "Authorization: Bearer ya29.c.Kl6bB_jYUEsWxlO6Dw-XpAfZi5XGHia39RvgKYaVXWcbAClsGihy9OpLAa62bE-5SO4kTKu5a1-QZ3R3KM8yPVJa4frdsnk2MuZhRR6KtMQPjDEENgOvbCemGBOic7Mb" -H "Content-Type: application/json" -d @request.json https://translation.googleapis.com/language/translate/v2
-```
-
-* Review the results from the JSON output file
-```
-$ jq '.data.translations[].translatedText' result26288.json
-"Hello World"
-```
-
-
-
-
-
-
-
-***
-
 ## AWS (Amazon Web Services)
 
 * [Amazon Transcribe](https://docs.aws.amazon.com/transcribe/index.html)
@@ -673,58 +626,6 @@ N/A
 
 ***
 
-### Translation
-* [translate](https://docs.aws.amazon.com/translate/latest/dg/what-is.html)
-* [translate-limits](https://docs.aws.amazon.com/en_pv/translate/latest/dg/what-is-limits.html)
-* Here using IAM `TranslateFullAccess`
-***
-
-* Shorter source text - Run `aws translate translate-text` directly
-```
-$ aws translate translate-text --region us-east-2 --source-language-code "en" --target-language-code "ar" --text "Hello World" > result-1.json
-
-$ jq '.SourceLanguageCode,.TargetLanguageCode,.TranslatedText' result-1.json
-
-$ aws translate translate-text --region us-east-2 --source-language-code "ar" --target-language-code "en" --text "$(jq -r '.TranslatedText' result-1.json)" | tee result-2.json
-{
-    "TranslatedText": "Hello World",
-    "SourceLanguageCode": "ar",
-    "TargetLanguageCode": "en"
-}
-
-$ jq -r '.TranslatedText' result-1.json | base64
-2YXYsdit2KjYpyDZiNmI2LHZhNivCg==
-
-$ jq -r '.TranslatedText' result-1.json | base64 --decode
-Ù…Ø±Ø­Ø¨Ø§ ÙˆÙˆØ±Ù„Ø¯
-```
-
-* Longer source text - Create JSON formatted request file (request.json)
-```
-
-$ cat <<-EOD > request.json
-	{ "SourceLanguageCode": "en", "TargetLanguageCode": "ar", "Text": "Hello World" }
-EOD
-
-$ cat request.json
-{ "SourceLanguageCode": "en", "TargetLanguageCode": "ar", "Text": "Hello World" }
-```
-
-* Submit the job (input: JSON file "request.json"; output: JSON file "result$RANDOM.json)
-```
-$ aws translate translate-text --region us-east-2 --cli-input-json file://request.json | tee result$RANDOM.json | jq -r '.TranslatedText' |base64
-2YXYsdit2KjYpyDZiNmI2LHZhNivCg==
-```
-
-
-
-
-
-
-
-
-
-
 
 <!--
 
@@ -865,9 +766,6 @@ $ aws translate translate-text --region us-east-2 --cli-input-json file://reques
 * [XXXX](XXXX)
 
 ### Language Detection
-* [XXXX](XXXX)
-
-### Translation
 * [XXXX](XXXX)
 
 * Verify (that the file is in the S3 Bucket; create JSON request content file)
