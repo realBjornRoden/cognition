@@ -1232,6 +1232,7 @@ vehicle 0.6149222254753113
 
 * [detect-text](https://docs.aws.amazon.com/cli/latest/reference/rekognition/detect-text.html)
 * [DetectText can detect <i>up to 50 words</i> in an image](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/limits.html)
+* <i>A word is one or more <b>ISO basic latin script characters</b> that are not separated by spaces.</i>
 
 * Verify that the file is in the S3 Bucket; create JSON request content file
 ```

@@ -29,20 +29,20 @@
 |default	|Best for audio that is not one of the specific audio models. For example, long-form audio. Ideally the audio is high-fidelity, recorded at a 16khz or greater sampling rate.|
 
 
-* Create project; service account; download service account key file and enable API [before-you-begin](https://cloud.google.com/vision/docs/before-you-begin)
+1. Create project; service account; download service account key file and enable API [before-you-begin](https://cloud.google.com/vision/docs/before-you-begin)
 
-* Authenticate CLI session with `gcloud auth login`
+1. Authenticate CLI session with `gcloud auth login`
 
-* Set the environment variable GOOGLE_APPLICATION_CREDENTIALS to point to the location of the service account key file
+1. Set the environment variable GOOGLE_APPLICATION_CREDENTIALS to point to the location of the service account key file
 ```
 export GOOGLE_APPLICATION_CREDENTIALS=$PWD/cognitive-aab254879251.json
 ```
-* Check the currently active project
+1. Check the currently active project
 ```
 $ gcloud config get-value project 
 bungabunga-123456
 ```
-* Set the current project
+1. Set the current project
 ```
 $ gcloud projects list
 PROJECT_ID          NAME                PROJECT_NUMBER
