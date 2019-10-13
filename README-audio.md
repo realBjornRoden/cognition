@@ -12,7 +12,7 @@
 1. Transcription
 1. Diarization
 1. Language Detection
-1. Translate
+1. Translation
 
 ***
 
@@ -342,7 +342,7 @@ podcasting days day 80 since and listen to which I had burn to a CD and I put th
 
 ***
 
-### Translate
+### Translation
 * [xxx](xxx)
 ***
 
@@ -645,7 +645,7 @@ N/A
 
 ***
 
-### Translate
+### Translation
 * [translate](https://docs.aws.amazon.com/translate/latest/dg/what-is.html)
 * [translate-limits](https://docs.aws.amazon.com/en_pv/translate/latest/dg/what-is-limits.html)
 * Here using IAM `TranslateFullAccess`
@@ -839,7 +839,7 @@ $ aws translate translate-text --region us-east-2 --cli-input-json file://reques
 ### Language Detection
 * [XXXX](XXXX)
 
-### Translate
+### Translation
 * [XXXX](XXXX)
 
 * Verify (that the file is in the S3 Bucket; create JSON request content file)
