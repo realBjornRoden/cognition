@@ -46,11 +46,14 @@
    $ aws s3api create-bucket --bucket blobbucket --acl private --region us-east-2 --create-bucket-configuration LocationConstraint=us-east-2
    http://blobbucket.s3.amazonaws.com/
    ```
-   * Upload files to the S3 Bucket (s3 and s3api commands)
+   * Upload files to the S3 Bucket (s3 and s3api commands; single file and recursive on directory)
    ```
-   $ aws s3 cp --recursive ../data/ s3://blobbucket/
+   $ aws s3 cp data/15fps-surveillance-video.mp4 s3://blobbucket/
+   upload: data/15fps-surveillance-video.mp4 to s3://blobbucket/15fps-surveillance-video.mp4
    
-   $ aws s3api put-object --bucket blobbucket --key texttyped1.png --body ../data/texttyped1.png --acl private
+   $ aws s3api put-object --bucket blobbucket --key t15fps-surveillance-video.mp4 --body ./data/15fps-surveillance-video.mp4 --acl private
+
+   $ aws s3 cp --recursive ./data/ s3://blobbucket/
    ```
    * List objects (files) in the S3 Bucket  (s3 and s3api commands)
    ```
