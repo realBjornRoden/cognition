@@ -20,6 +20,8 @@
    * Prerequisites are to have a valid and activated AWS account and permissions to use "Rekognition" cognitive services
    * <i>Amazon Rekognition operations can analyze videos in MPEG-4 and MOV formats encoded using H.264 codec, that are stored in Amazon S3 buckets</i>
    * "<i>The maximum file size for a stored video is 8GB</i> (2019)"
+   * [recommendations-camera-stored-streaming-video](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/recommendations-camera-stored-streaming-video.html)
+   
 * Process
 <br><img src="https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/images/VideoRekognition.png" /><br>
    * "<i>You start detecting labels in a video by calling start-label-detection. When Amazon Rekognition finishes analyzing the video, the completion status is sent to the <strong>Amazon SNS topic</strong> that's specified in the --notification-channel parameter of start-label-detection. You can get the completion status by subscribing an <strong>Amazon Simple Queue Service (Amazon SQS) queue</strong> to the Amazon SNS topic. You then poll receive-message to get the completion status from the Amazon SQS queue.</i>"
@@ -82,5 +84,20 @@
 
 ### XXXXX
 * [video-cli-commands](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/video-cli-commands.html)
+* Evaluate video [recommendations-video](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/recommendations-camera-stored-streaming-video.html)
+   * Codec (h.264 encoded)
+   * Frame rate (recommended frame rate is 30 fps, and not less than 5 fps)
+   * Encoder bitrate (recommended encoder bitrate is 3 Mbps, and not less than 1.5 Mbps)
+   * Frame Rate vs. Frame Resolution (such as for better face search results, favoring a higher frame resolution over a higher frame rate)
+<!--
 ***
+aws rekognition start-label-detection --video "S3Object={Bucket=bucketname,Name=videofile}" \
+--endpoint-url Endpoint \
+--notification-channel "SNSTopicArn=TopicARN,RoleArn=RoleARN" \
+--region us-east-1 
+    
+aws rekognition get-label-detection  --job-id JobId \
+--endpoint-url Endpoint \
+--region us-east-1 
+
 
