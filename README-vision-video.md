@@ -40,8 +40,14 @@
    secret_key     ****************nEac shared-credentials-file    
        region                <not set>             None    None
    ```
-1. [Create S3 Bucket](https://docs.aws.amazon.com/cli/latest/reference/s3api/create-bucket.html)
-   * In this case the bucket is named `blobbucket` and set to `private`, with LocationConstraint set to the specified region
+1. Create an S3 Bucket and copy files to it
+   * Using `aws s3` naming the bucket `blobbucket`
+   ```
+   $ aws s3 mb s3://blobbucket --region us-east-2 
+   make_bucket: blobbucket
+   ```
+   * Using `aws s3api` naming the bucket `blobbucket` set to `private`, with `LocationConstraint` set to the specified region
+   [Create an S3 Bucket](https://docs.aws.amazon.com/cli/latest/reference/s3/mb.html)
    ```
    $ aws s3api create-bucket --bucket blobbucket --acl private --region us-east-2 --create-bucket-configuration LocationConstraint=us-east-2
    http://blobbucket.s3.amazonaws.com/
