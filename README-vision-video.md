@@ -22,6 +22,7 @@
    * "<i>The maximum file size for a stored video is 8GB</i> (2019)"
 * Process
 <br><img src="https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/images/VideoRekognition.png" /><br>
+   * <i>You start detecting labels in a video by calling start-label-detection. When Amazon Rekognition finishes analyzing the video, the completion status is sent to the <strong>Amazon SNS topic</strong> that's specified in the --notification-channel parameter of start-label-detection. You can get the completion status by subscribing an <strong>Amazon Simple Queue Service (Amazon SQS) queue</strong> to the Amazon SNS topic. You then poll receive-message to get the completion status from the Amazon SQS queue.</i>
 
 1. Prepare to configure AWS CLI
    <br><i>NB. Do not use the AWS account root user access key. The access key for the AWS account root user gives full access to all resources for all AWS services, including billing information. The permissions cannot be reduce for the AWS account root user access key.</i>
@@ -51,7 +52,7 @@
    $ aws s3api create-bucket --bucket blobbucket --acl private --region us-east-2 --create-bucket-configuration LocationConstraint=us-east-2
    http://blobbucket.s3.amazonaws.com/
    ```
-   * Upload files to the S3 Bucket (s3 and s3api commands; single file and recursive on directory)
+   * Upload files to the S3 Bucket (s3 and s3api commands; single file or recursive on directory)
    ```
    $ aws s3 cp data/15fps-surveillance-video.mp4 s3://blobbucket/
    upload: data/15fps-surveillance-video.mp4 to s3://blobbucket/15fps-surveillance-video.mp4
@@ -80,6 +81,6 @@
 ***
 
 ### XXXXX
-* [XXXX](XXXX)
+* [video-cli-commands](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/video-cli-commands.html)
 ***
 
