@@ -613,6 +613,7 @@ results-output-job28912.json                  100%[=============================
 * Review the translation result from the Job
 ```
 $ jq -r '.jobName,.status,.results.speaker_labels.speakers,.results.transcripts[0].transcript' results-output-job28912.json
+
 job28912
 COMPLETED
 1

@@ -8,12 +8,15 @@
 
 ## Use Cases
 1. Translation
+1. Analysis
 
 ***
 
 ## GCP (Google Cloud Platform)
 * [translate-docs](https://cloud.google.com/translate/docs/)
-* Prerequisites are to have a valid and activated GCP account and permissions to use API `translate.googleapis.com` or `automl.googleapis.com` cognitive services
+   * Prerequisites are to have a valid and activated GCP account and permissions to use API `translate.googleapis.com` or `automl.googleapis.com` cognitive services
+* [natural-language](https://cloud.google.com/natural-language/docs/basics)
+
 ***
 
 1. Create project; service account; download service account key file and enable API [before-you-begin](https://cloud.google.com/vision/docs/before-you-begin)
@@ -41,6 +44,36 @@
    
    $ gcloud config get-value project 
    cognitive-254305
+   ```
+1. List supported languages
+   ```
+   $ curl -sH "Authorization: Bearer "$(gcloud auth application-default print-access-token) "https://translation.googleapis.com/language/translate/v2/languages"|jq -r '.data.languages[].language' | pr -4 -t
+   af		  gd		    lb		      sl
+   am		  gl		    lo		      sm
+   ar		  gu		    lt		      sn
+   az		  ha		    lv		      so
+   be		  haw		    mg		      sq
+   bg		  hi		    mi		      sr
+   bn		  hmn		    mk		      st
+   bs		  hr		    ml		      su
+   ca		  ht		    mn		      sv
+   ceb		  hu		    mr		      sw
+   co		  hy		    ms		      ta
+   cs		  id		    mt		      te
+   cy		  ig		    my		      tg
+   da		  is		    ne		      th
+   de		  it		    nl		      tl
+   el		  iw		    no		      tr
+   en		  ja		    ny		      uk
+   eo		  jw		    pa		      ur
+   es		  ka		    pl		      uz
+   et		  kk		    ps		      vi
+   eu		  km		    pt		      xh
+   fa		  kn		    ro		      yi
+   fi		  ko		    ru		      yo
+   fr		  ku		    sd		      zh
+   fy		  ky		    si		      zh-TW
+   ga		  la		    sk		      zu
    ```
 
 ### APIs
@@ -95,11 +128,20 @@ $ jq '.' result26288.json
 
 ***
 
+### Analysis
+
+
+***
+
 ## AWS (Amazon Web Services)
 
 * [Amazon Translate](https://docs.aws.amazon.com/translate/latest/dg/what-is.html)
-* [translate-limits](https://docs.aws.amazon.com/en_pv/translate/latest/dg/what-is-limits.html)
-* Prerequisites are to have a valid and activated AWS account and permissions to use "Translate" cognitive services
+   * [translate-limits](https://docs.aws.amazon.com/en_pv/translate/latest/dg/what-is-limits.html)
+   * Prerequisites are to have a valid and activated AWS account and permissions to use "Translate" cognitive services
+* [Amazon Comprehend](https://aws.amazon.com/comprehend/)
+   * [comprehend](https://docs.aws.amazon.com/en_pv/comprehend/latest/dg/functionality.html)
+
+***
 
 1. Prepare to configure AWS CLI
    <br><i>NB. Do not use the AWS account root user access key. The access key for the AWS account root user gives full access to all resources for all AWS services, including billing information. The permissions cannot be reduce for the AWS account root user access key.</i>
@@ -190,7 +232,9 @@ $ cat request.json
 $ aws translate translate-text --region us-east-2 --cli-input-json file://request.json | tee result$RANDOM.json | jq -r '.TranslatedText' |base64
 2YXYsdit2KjYpyDZiNmI2LHZhNivCg==
 ```
+***
 
+### Analysis
 
 
 
