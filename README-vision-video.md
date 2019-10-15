@@ -191,6 +191,30 @@
        ]
    }
    ```
+* SQS Queue Policy
+   ```
+   $ aws sqs get-queue-attributes --region us-east-1 --queue-url https://sqs.us-east-1.amazonaws.com/deadbeef7898/RekognitionVideo --attribute-names Policy|jq -r '.Attributes.Policy'|jq .  
+   {
+     "Version": "2012-10-17",
+     "Id": "arn:aws:sqs:us-east-1:deadbeef7898:RekognitionVideo/SQSDefaultPolicy",
+     "Statement": [
+       {
+         "Sid": "Sid1571039537626",
+         "Effect": "Allow",
+         "Principal": {
+           "AWS": "*"
+         },
+         "Action": "SQS:SendMessage",
+         "Resource": "arn:aws:sqs:us-east-1:deadbeef7898:RekognitionVideo",
+         "Condition": {
+           "ArnEquals": {
+             "aws:SourceArn": "arn:aws:sns:us-east-1:deadbeef7898:RekognitionVideo"
+           }
+         }
+       }
+     ]
+   }
+   ```
 * SNS Topic
    ```
    $ aws sns list-topics --region us-east-1
@@ -364,3 +388,31 @@
       Frame: 10978 Confidence: 97.76 Box: [{"BoundingBox":{"Width":0.11687908321619034,"Height":0.21114571392536163,"Left":0.6746412515640259,"Top":0.274556428194046},"Confidence":98.29331970214844}]
       Frame: 11478 Confidence: 79.05 Box: [{"BoundingBox":{"Width":0.07418155670166016,"Height":0.22305838763713837,"Left":0.8415846824645996,"Top":0.29771655797958374},"Confidence":98.47969055175781}]
       ```
+
+### Detect Faces
+* [detecting-faces](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/faces-sqs-video.html)
+***
+<!--
+aws rekognition detect-faces \
+--image '{"S3Object":{"Bucket":"bucket","Name":"file"}}' \
+--attributes "ALL" 
+
+1. Start the video analysis request with `aws rekognition start-label-detection`
+   ```
+   $ aws rekognition start-face-detection --video '{"S3Object":{"Bucket":"blobbucket-us-east-1","Name":"15fps-surveillance-video.mp4"}}' --notification-channel '{"SNSTopicArn":"arn:aws:sns:us-east-1:deadbeef7898:RekognitionVideo","RoleArn":"arn:aws:iam::deadbeef7898:role/RekognitionVideo"}' --region us-east-1
+   {
+       "JobId": "7ff36fb709f061b4b580eb483ac6d17c9c882cf9df240b70ca312be2d2bdc7e5"
+   }
+
+aws sqs receive-message --queue-url https://sqs.us-east-1.amazonaws.com/deadbeef7898/RekognitionVideo --region us-east-1 
+{
+    "Messages": [
+        {
+            "MessageId": "ec3211dc-3f7b-4885-a49e-4c383d94a3cd",
+            "ReceiptHandle": "AQEBOWfY5FSxfcXhvM7fknt9ihU9jrU/Cm0f+wh2pgl5ApTAOTGJI1qe1B7pakMHyNzhkywhc+FmvlEMiDheTvQTopDP5Nq7dclfqSkcUtdyLjV3AH6O+MxVOpkgou8jNcQBqwV5Fkryz4ym+AafdWbV98JsIpaSB/Az8IDfYA4Rok+M9EkBkslgr5QJr0aSJVBVg+FYjlp0PI4YEPgWJgQ34Q+WnWyYDn6T4FrghAvUFVLd10j69qKZIDIwTHaAARZz4sdEyWrY5U8btDTSmpcmRhkWER2kXtQt0r9WOkFT3SugnBSoIRPf3CbExJcgiutIiwo/9uRBJ8DXJM2B6ecdvUlISrnI32DLWzyTx7hmkEn8uTnT3KozaecAszyF3B1rv6ZQdtBQuVTx0gYXessnUw==",
+            "MD5OfBody": "3442806b4e240da211091700a48216ef",
+            "Body": "{\n  \"Type\" : \"Notification\",\n  \"MessageId\" : \"de3dc304-57e4-546c-a947-951a6456ab86\",\n  \"TopicArn\" : \"arn:aws:sns:us-east-1:deadbeef7898:RekognitionVideo\",\n  \"Message\" : \"{\\\"JobId\\\":\\\"7964e89e7bcf6c13205552ebb6564b0659fc0c0eaa811beda0fc3a6ce2b336fa\\\",\\\"Status\\\":\\\"SUCCEEDED\\\",\\\"API\\\":\\\"StartLabelDetection\\\",\\\"Timestamp\\\":1571041650362,\\\"Video\\\":{\\\"S3ObjectName\\\":\\\"15fps-surveillance-video.mp4\\\",\\\"S3Bucket\\\":\\\"blobbucket-us-east-1\\\"}}\",\n  \"Timestamp\" : \"2019-10-14T08:27:30.458Z\",\n  \"SignatureVersion\" : \"1\",\n  \"Signature\" : \"nApZMv3+NZjoO0ld79BMsmR+YV44VK69Kg39KZj2JxUYXWN+rlyZnlMiwiz/o6Gge2bNgFL6Ome0/qRvGZonKW9MfxScYkl6ZW50AElxoXoZP5cR++yJ340MucFRK+fdjNlqoXemmfUt3S5Q5n9p3JUViPt4k/rZmyFSwE751FJeQp/b1xK/fsd4hAoraQ5pwSvoagUBLihMqAkCyRVDhwbNY1FwjOgjK3SxpH5PF4KLhMO3XcniqOI0RxYYBrXPmWOy9G2gObepl/vqt1xVYEPWUud6aqM3ERmNTqn7q6LYioIjx6koWbXWdpIgjK6oI3cwoZkiNU1jx3DVKUC32w==\",\n  \"SigningCertURL\" : \"https://sns.us-east-1.amazonaws.com/SimpleNotificationService-6aad65c2f9911b05cd53efda11f913f9.pem\",\n  \"UnsubscribeURL\" : \"https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:deadbeef7898:RekognitionVideo:af2afca1-b93b-44d2-b69b-79983ba1fa5b\"\n}"
+        }
+    ]
+}
+
