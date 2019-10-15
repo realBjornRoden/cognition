@@ -105,7 +105,8 @@
 1. Create the IAM Policy to allow Rekognition to publish the completion status on SNS
    * IAM > Policies > Create Policy > Add JSON
       ```
-      { "Version": "2012-10-17",
+      {
+        "Version": "2012-10-17",
         "Statement": [
            {
              "Effect": "Allow",
