@@ -93,6 +93,7 @@
    * SQS > Queue Actions > Subscribe Queue to SNS Topic > Choose a Topic
 1. Grant permission to the SNS topic to send messages to the SQS queue
    * SQS > Select the queue > Add Permissions > 
+      ```
       Effect: Allow
       Principal: Everybody (*)
       Actions drop-down: SendMessage
@@ -100,8 +101,12 @@
          Condition: ArnEquals
          Key: aws:SourceArn
          Value: the SNS Topic ARN
+      ```
 1. Create the IAM Policy to allow Rekognition to publish the completion status on SNS
-   * IAM > Policies > Create Policy > Add JSON { "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Action": [ "sns:Publish" ], "Resource": "arn:aws:sns:us-east-2:deadbeeef7898:Textract" } ] }
+   * IAM > Policies > Create Policy > Add JSON
+      ```
+	{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Action": [ "sns:Publish" ], "Resource": "arn:aws:sns:us-east-1:deadbeeef7898:RekognitionVideo" } ] }
+      ```
 1. Create the IAM Role
    * IAM > Roles > Choose the service > Rekognition > AmazonRekognitionServiceRole
 
@@ -110,21 +115,31 @@
       * SNS > Topics > select topic > Publish message > type and publish message
    1. Receive the test message
       ```
-      $ aws sqs receive-message --queue-url https://us-east-2.queue.amazonaws.com/deadbeeef7898/Textract --region us-east-2
+      $ aws sqs receive-message --queue-url https://sqs.us-east-1.amazonaws.com/deadbeef7898/RekognitionVideo --region us-east-1 | tee test-message.json
+      {
+          "Messages": [
+              {
+                  "MessageId": "88ab70a8-63cf-425e-a276-8d1bc2f09d97",
+                  "ReceiptHandle": "AQEBFEcyFAXJiTVdLDVtiQMtwc5TuHtwHyHjEpmZ0ux434rtrp6lrc77HzggfSzk4Eq34W45Nxuvjz478Q7zNCNMSzkjmelSDuIMcPqcV85L+f5Gh6Ty3B3ga6QYNFocBjAAECVHhjgAl1U+HHhNHuPnE94h2jurKcXc86m5dgyUvdVncl3O/oJCQ4mp8okmqJKRjbmX5+r4pE6JVwRHpdEo6zti1SeEw8WplgA+e7YM7ojQEC+4rVAyKAla/Fy/k68Wxc3r7jx2kokWaajubWBOam2QYB0Zqr2m7aNt4KVp5uz2zEqWW/MCBDmeirXseZ7TOuD8KmjPzabudhlIOV1hoowFMa4TIpNCpCLUPvJKvJzOExBYaHZNIZyMdtCTb0SJt95p/7NTuBs5teh6yCz+lQ==",
+                  "MD5OfBody": "da44c816125c2d5583b649719858556a",
+                  "Body": "{\n  \"Type\" : \"Notification\",\n  \"MessageId\" : \"33807e86-7880-55c1-b183-289900bcd25b\",\n  \"TopicArn\" : \"arn:aws:sns:us-east-1:deadbeef7898:RekognitionVideo\",\n  \"Message\" : \"bunga bunga\",\n  \"Timestamp\" : \"2019-10-15T07:32:12.475Z\",\n  \"SignatureVersion\" : \"1\",\n  \"Signature\" : \"riP4YsOb9PT8AgtCIOXBiseaP4WeTzO6DSAk2JwP9+nDNnOoWXBGFREuYy6H2yKOTELIj6wissenm9nb9O/QRuBmQwyfRkEQUK1lhQipRmoYIbmeZjYMiynBUq9Kq5DOoH8TMmbLogUJwswDaigq33DG28Y6H4Bqt/j2V9KgxQr2gjS5Q8z1xVw/QCeam3Q1Lzii1wAm+fX8TXPl8ZrnBNMiEbNdyZzSgFHlAwj/BLbLK+WmPwxp/3Jtlxfg1Qy5paZKqzTSoeegBryJMWUWrhNPyQsz96uMSH0ZIrEY7sGiaVfeUZPmBGOKh0Vd5AH8z2V/TXRvKWier43uqa4G4A==\",\n  \"SigningCertURL\" : \"https://sns.us-east-1.amazonaws.com/SimpleNotificationService-6aad65c2f9911b05cd53efda11f913f9.pem\",\n  \"UnsubscribeURL\" : \"https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:deadbeef7898:RekognitionVideo:af2afca1-b93b-44d2-b69b-79983ba1fa5b\"\n}"
+              }
+          ]
+      }
       ```
    1. Parse the test message JSON
       ```
-      $ jq -r .Messages[].Body out.test|jq -r .
+      $ jq -r .Messages[].Body test-message.json|jq -r .
       {
         "Type": "Notification",
-        "MessageId": "2a533413-c11c-5f89-b694-620c9ef8f4bb",
-        "TopicArn": "arn:aws:sns:us-east-2:deadbeeef7898:Textract",
+        "MessageId": "33807e86-7880-55c1-b183-289900bcd25b",
+        "TopicArn": "arn:aws:sns:us-east-1:598691507898:RekognitionVideo",
         "Message": "bunga bunga",
-        "Timestamp": "2019-10-15T05:48:20.205Z",
+        "Timestamp": "2019-10-15T07:32:12.475Z",
         "SignatureVersion": "1",
-        "Signature": "Ph2ma8EQcgv0MBAwkdF5frdNay9Ymz8pT+/z3dWnozvMNtWwbTDLPP/03iDJuExyNEAOaIAOtGe4ehmmQfA/+6ZNnhfnkG+3R+ux9VIJiKUc9XJsibBH4zrLt7w3dVwOl38nDKf94vbNLPgH17s27SgaXlPBuvELminvwZY1q8/VLnR/gVooxrNwi2CRl1HyDNFZaPWfsw25RMX8ra47SwF173WDi/D7Zfm4IHutIjfPV4eRAWgL6JG0/xKGUJvMY0fD1chqrsw+j119LFWSGAxuQGu5FuGA1ZcauTc69r9muOy8euHxeNWkBBAyp5gUWJuxXY6CXAeuMCPUhG01zA==",
-        "SigningCertURL": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-6aad65c2f9911b05cd53efda11f913f9.pem",
-        "UnsubscribeURL": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-2:deadbeeef7898:Textract:74ab3934-7e9d-450d-98e9-6803f245ab12"
+        "Signature": "riP4YsOb9PT8AgtCIOXBiseaP4WeTzO6DSAk2JwP9+nDNnOoWXBGFREuYy6H2yKOTELIj6wissenm9nb9O/QRuBmQwyfRkEQUK1lhQipRmoYIbmeZjYMiynBUq9Kq5DOoH8TMmbLogUJwswDaigq33DG28Y6H4Bqt/j2V9KgxQr2gjS5Q8z1xVw/QCeam3Q1Lzii1wAm+fX8TXPl8ZrnBNMiEbNdyZzSgFHlAwj/BLbLK+WmPwxp/3Jtlxfg1Qy5paZKqzTSoeegBryJMWUWrhNPyQsz96uMSH0ZIrEY7sGiaVfeUZPmBGOKh0Vd5AH8z2V/TXRvKWier43uqa4G4A==",
+        "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-6aad65c2f9911b05cd53efda11f913f9.pem",
+        "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:598691507898:RekognitionVideo:af2afca1-b93b-44d2-b69b-79983ba1fa5b"
       }
       ```
 
