@@ -399,23 +399,29 @@
    }
    ```
 
-1. Retrieve the result from the analysis, in this case no faces were detected
+1. Retrieve the video analysis results with `aws rekognition get-face-detection`
    ```
    $ aws rekognition get-face-detection --job-id "7ff36fb709f061b4b580eb483ac6d17c9c882cf9df240b70ca312be2d2bdc7e5" --region us-east-1 >result-face-detection.json
+   ```
 
-   $ cat result-face-detection.json
+1. Reveiw the video analysis results 
+   * Review the analsysis metadata information about the video file
+   ```
+   $ jq -r '.JobStatus,.VideoMetadata' result-face-detection.json
+   SUCCEEDED
    {
-       "JobStatus": "SUCCEEDED",
-       "VideoMetadata": {
-           "Codec": "h264",
-           "DurationMillis": 21656,
-           "Format": "QuickTime / MOV",
-           "FrameRate": 29.9689998626709,
-           "FrameHeight": 240,
-           "FrameWidth": 320
-       },
-       "Faces": []
+     "Codec": "h264",
+     "DurationMillis": 21656,
+     "Format": "QuickTime / MOV",
+     "FrameRate": 29.9689998626709,
+     "FrameHeight": 240,
+     "FrameWidth": 320
    }
+   ```
+   * Review the analsysis information about the video file, in this case no faces were detected
+   ```
+   $ jq -r '.Faces' result-face-detection.json
+   []
    ```
 
 1. Delete the SQS message
@@ -494,7 +500,7 @@
    }
    ```
 
-1. Get the video analysis results with `aws rekognition get-label-detection`
+1. Retrieve the video analysis results with `aws rekognition get-label-detection`
    ```
    $ aws rekognition get-person-tracking --job-id "43157b6bc2b0c73243e35eebf325a8322d06fa94b4940021fdf8f4b966a91ba4" --region us-east-1 >result-person-tracking.json
    ```
