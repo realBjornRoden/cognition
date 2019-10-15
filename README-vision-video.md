@@ -2,8 +2,8 @@
 
 ## Use Cases
 1. Detect Labels
-1. Detect People
 1. Detect Faces
+1. Track Person
 
 ***
 
@@ -179,7 +179,6 @@
    Permission to publish on SNS:
    JSON: { "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Action": [ "sns:Publish" ], "Resource": "arn:aws:sns:us-east-1:deadbeeef7898:RekognitionVideo" } ] }
    ```
-
 
 ### Setup Configuration Review
 * SQS Queue
