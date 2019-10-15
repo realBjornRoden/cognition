@@ -367,11 +367,7 @@
       Frame: 967 Confidence: 58.26 Box: [{"BoundingBox":{"Width":0.041670799255371094,"Height":0.1896933913230896,"Left":0.952782928943634,"Top":0.3357686996459961},"Confidence":63.67138671875}]
       Frame: 1468 Confidence: 92.70 Box: [{"BoundingBox":{"Width":0.08079147338867188,"Height":0.23073521256446838,"Left":0.9086510539054871,"Top":0.3004027009010315},"Confidence":99.84532928466797}]
       Frame: 1968 Confidence: 99.73 Box: [{"BoundingBox":{"Width":0.06082210689783096,"Height":0.2385426163673401,"Left":0.871123194694519,"Top":0.28691354393959045},"Confidence":99.72191619873047}]
-      Frame: 2469 Confidence: 99.64 Box: [{"BoundingBox":{"Width":0.07394981384277344,"Height":0.24707704782485962,"Left":0.8161672353744507,"Top":0.2709895074367523},"Confidence":99.63427734375}]
-      Frame: 2969 Confidence: 99.62 Box: [{"BoundingBox":{"Width":0.09204711765050888,"Height":0.2337835133075714,"Left":0.7435498237609863,"Top":0.2602587640285492},"Confidence":99.5849838256836}]
       <...removed...>
-      Frame: 9476 Confidence: 96.13 Box: [{"BoundingBox":{"Width":0.059099484235048294,"Height":0.22834141552448273,"Left":0.4874933660030365,"Top":0.21885770559310913},"Confidence":98.3703842163086}]
-      Frame: 9976 Confidence: 90.30 Box: [{"BoundingBox":{"Width":0.06722088158130646,"Height":0.21765105426311493,"Left":0.5355201959609985,"Top":0.22908101975917816},"Confidence":86.02194213867188}]
       Frame: 10477 Confidence: 94.11 Box: [{"BoundingBox":{"Width":0.11091585457324982,"Height":0.2167797088623047,"Left":0.570489227771759,"Top":0.2526220977306366},"Confidence":95.37702941894531}]
       Frame: 10978 Confidence: 97.76 Box: [{"BoundingBox":{"Width":0.11687908321619034,"Height":0.21114571392536163,"Left":0.6746412515640259,"Top":0.274556428194046},"Confidence":98.29331970214844}]
       Frame: 11478 Confidence: 79.05 Box: [{"BoundingBox":{"Width":0.07418155670166016,"Height":0.22305838763713837,"Left":0.8415846824645996,"Top":0.29771655797958374},"Confidence":98.47969055175781}]
@@ -381,9 +377,9 @@
 * [detecting-faces](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/faces-sqs-video.html)
 ***
 
-1. Start the video analysis request with `aws rekognition start-face-detection`
+1. Start the video analysis request with `aws rekognition start-face-detection` (optional --attributes "ALL")
    ```
-   $ aws rekognition start-face-detection --video '{"S3Object":{"Bucket":"blobbucket-us-east-1","Name":"15fps-surveillance-video.mp4"}}' --attributes "ALL" --notification-channel '{"SNSTopicArn":"arn:aws:sns:us-east-1:deadbeef7898:RekognitionVideo","RoleArn":"arn:aws:iam::deadbeef7898:role/RekognitionVideo"}' --region us-east-1
+   $ aws rekognition start-face-detection --video '{"S3Object":{"Bucket":"blobbucket-us-east-1","Name":"15fps-surveillance-video.mp4"}}' --notification-channel '{"SNSTopicArn":"arn:aws:sns:us-east-1:deadbeef7898:RekognitionVideo","RoleArn":"arn:aws:iam::deadbeef7898:role/RekognitionVideo"}' --region us-east-1
    {
        "JobId": "7ff36fb709f061b4b580eb483ac6d17c9c882cf9df240b70ca312be2d2bdc7e5"
    }
@@ -424,12 +420,58 @@
    []
    ```
 
-1. Delete the SQS message
+1. Download another video file, upload the video to be analyzed to S3 Bucket
    ```
-   $ aws sqs receive-message --queue-url https://sqs.us-east-1.amazonaws.com/deadbeef7898/RekognitionVideo --region us-east-1 | jq '.Messages[].ReceiptHandle'
-   "AQEBxmrUWIWdu60Bp00l3tiaoGb2/eRZou1/wmI6WQjyl1BglyfNRz+4sxZE2RC+FnWo/hlnLU9r7qwysA34Y1d2K+mF1PYFMmx88wsXBszaOXQpetz9knSIh4Vts/yrYYlbhcdU7EyB4nf5VYNCuMk7StW7g7DLwUxDrF5KJbIMYhPR/JdyZ70EIG52vHjr+UPgXxpIuxuTiz0Q+vEIsgxYBAPgiVBdgmRJgcw3I8e297PO8NNDHm6eVSrWntMFFsl59dTIb+8LII4Mdp2OOjKcsLKNtHiUf/8i3bG76X7051yOe2PjXtRZ2m7aRfET/HmP6oWUV9fjz4T25WJH/idPNa1DgwQlkcsbnw24r+ucMsnCa0W6gTjH/zsmo0yLP2g7IMhXnskgBu0F/HGHie10WA=="
+   $ wget -q https://github.com/intel-iot-devkit/sample-videos/blob/master/face-demographics-walking.mp4?raw=true --output-document face-demographics-walking.mp4 
 
-   $ aws sqs delete-message --queue-url https://sqs.us-east-1.amazonaws.com/deadbeef7898/RekognitionVideo --region us-east-1 --receipt-handle "AQEBxmrUWIWdu60Bp00l3tiaoGb2/eRZou1/wmI6WQjyl1BglyfNRz+4sxZE2RC+FnWo/hlnLU9r7qwysA34Y1d2K+mF1PYFMmx88wsXBszaOXQpetz9knSIh4Vts/yrYYlbhcdU7EyB4nf5VYNCuMk7StW7g7DLwUxDrF5KJbIMYhPR/JdyZ70EIG52vHjr+UPgXxpIuxuTiz0Q+vEIsgxYBAPgiVBdgmRJgcw3I8e297PO8NNDHm6eVSrWntMFFsl59dTIb+8LII4Mdp2OOjKcsLKNtHiUf/8i3bG76X7051yOe2PjXtRZ2m7aRfET/HmP6oWUV9fjz4T25WJH/idPNa1DgwQlkcsbnw24r+ucMsnCa0W6gTjH/zsmo0yLP2g7IMhXnskgBu0F/HGHie10WA=="
+   $ aws s3 cp face-demographics-walking.mp4 s3://blobbucket-us-east-1
+   upload: face-demographics-walking.mp4 to s3://blobbucket-us-east-1/face-demographics-walking.mp4
+   ```
+
+1. Start the video analysis request with `aws rekognition start-label-detection`
+   ```
+   $ aws rekognition start-face-detection --video '{"S3Object":{"Bucket":"blobbucket-us-east-1","Name":"face-demographics-walking.mp4"}}' --notification-channel '{"SNSTopicArn":"arn:aws:sns:us-east-1:deadbeef7898:RekognitionVideo","RoleArn":"arn:aws:iam::deadbeef7898:role/RekognitionVideo"}' --region us-east-1
+   {
+       "JobId": "2cb63de78f4548c47eb6c3c66100882e5b3f222c93eecce0b52d20048a5fa5a6"
+   }
+   ```
+
+1. Retrieve the video analysis results with `aws rekognition get-face-detection`
+   ```
+   $ aws rekognition get-face-detection --job-id "2cb63de78f4548c47eb6c3c66100882e5b3f222c93eecce0b52d20048a5fa5a6" --region us-east-1 > result-face-detection.json
+   ```
+
+1. Reveiw the video analysis results 
+   * Review the analsysis metadata information about the video file
+   ```
+   $ jq -r '.JobStatus,.VideoMetadata' result-face-detection.json                          
+   SUCCEEDED
+   {
+     "Codec": "h264",
+     "DurationMillis": 61000,
+     "Format": "QuickTime / MOV",
+     "FrameRate": 12,
+     "FrameHeight": 432,
+     "FrameWidth": 768
+   }
+   ```
+   * Review the analsysis information about the video file, in this case no faces were detected
+   ```
+   $ jq -r '.Faces[]|"\(.Timestamp) \(.Face)"'
+   3500 {"BoundingBox":{"Width":0.027757644653320312,"Height":0.06776954233646393,"Left":0.6440739631652832,"Top":0.41033536195755005},"Landmarks":[{"Type":"eyeLeft","X":0.6502984762191772,"Y":0.4407263398170471},{"Type":"eyeRight","X":0.6625860333442688,"Y":0.443087637424469},{"Type":"mouthLeft","X":0.6502963304519653,"Y":0.46514222025871277},{"Type":"mouthRight","X":0.6604178547859192,"Y":0.46720975637435913},{"Type":"nose","X":0.6535741686820984,"Y":0.45524677634239197}],"Pose":{"Roll":5.754757881164551,"Yaw":-14.252616882324219,"Pitch":-9.749495506286621},"Quality":{"Brightness":67.4625244140625,"Sharpness":4.3748369216918945},"Confidence":99.984375}
+   4000 {"BoundingBox":{"Width":0.031226634979248047,"Height":0.07277679443359375,"Left":0.5975508689880371,"Top":0.3990911543369293},"Landmarks":[{"Type":"eyeLeft","X":0.6055415272712708,"Y":0.43099138140678406},{"Type":"eyeRight","X":0.6195850968360901,"Y":0.43311625719070435},{"Type":"mouthLeft","X":0.6054181456565857,"Y":0.4574406147003174},{"Type":"mouthRight","X":0.6169991493225098,"Y":0.4592193067073822},{"Type":"nose","X":0.6105813384056091,"Y":0.44481155276298523}],"Pose":{"Roll":4.761718273162842,"Yaw":-5.82323694229126,"Pitch":-4.08699369430542},"Quality":{"Brightness":68.8060302734375,"Sharpness":5.775668621063232},"Confidence":99.99951171875}
+   <...removed...>
+   57000 {"BoundingBox":{"Width":0.08947575092315674,"Height":0.2212342917919159,"Left":0.28530335426330566,"Top":0.17665453255176544},"Landmarks":[{"Type":"eyeLeft","X":0.308383047580719,"Y":0.26193365454673767},{"Type":"eyeRight","X":0.34949177503585815,"Y":0.27033892273902893},{"Type":"mouthLeft","X":0.3062664568424225,"Y":0.3457050323486328},{"Type":"mouthRight","X":0.3399772644042969,"Y":0.35257187485694885},{"Type":"nose","X":0.3243454694747925,"Y":0.304144948720932}],"Pose":{"Roll":7.071478366851807,"Yaw":3.2929866313934326,"Pitch":6.693583011627197},"Quality":{"Brightness":64.69092559814453,"Sharpness":9.912903785705566},"Confidence":99.99991607666016}
+   57500 {"BoundingBox":{"Width":0.10324972867965698,"Height":0.2676992118358612,"Left":0.1456538289785385,"Top":0.11725166440010071},"Landmarks":[{"Type":"eyeLeft","X":0.15775452554225922,"Y":0.20997007191181183},{"Type":"eyeRight","X":0.2070106565952301,"Y":0.21734699606895447},{"Type":"mouthLeft","X":0.15542709827423096,"Y":0.3117433786392212},{"Type":"mouthRight","X":0.1957804262638092,"Y":0.3177231550216675},{"Type":"nose","X":0.17199307680130005,"Y":0.25771284103393555}],"Pose":{"Roll":3.58176589012146,"Yaw":-10.199628829956055,"Pitch":11.118213653564453},"Quality":{"Brightness":62.23863983154297,"Sharpness":7.589449882507324},"Confidence":99.9999771118164}
+   ```
+
+1. Delete the SQS messages (run it several times)
+   ```
+   $ while [[ $(aws sqs get-queue-attributes --region us-east-1 --queue-url https://sqs.us-east-1.amazonaws.com/deadbeef7898/RekognitionVideo --attribute-names ApproximateNumberOfMessages|jq -r '.Attributes.ApproximateNumberOfMessages') -gt 0 ]];do
+      for i in $(aws sqs receive-message --max-number-of-messages 10 --queue-url https://sqs.us-east-1.amazonaws.com/deadbeef7898/RekognitionVideo --region us-east-1 | jq -r ".Messages[].ReceiptHandle");do
+         aws sqs delete-message --queue-url https://sqs.us-east-1.amazonaws.com/deadbeef7898/RekognitionVideo --region us-east-1 --receipt-handle $i
+      done
+   done
 
    $ aws sqs get-queue-attributes --region us-east-1 --queue-url https://sqs.us-east-1.amazonaws.com/deadbeef7898/RekognitionVideo --attribute-names ApproximateNumberOfMessages
    {
@@ -524,12 +566,13 @@
    1301 {"Index":0,"BoundingBox":{"Width":0.078125,"Height":0.22499999403953552,"Left":0.9125000238418579,"Top":0.30000001192092896}}
    1368 {"Index":0,"BoundingBox":{"Width":0.078125,"Height":0.22083333134651184,"Left":0.9125000238418579,"Top":0.30416667461395264}}
    1434 {"Index":0,"BoundingBox":{"Width":0.078125,"Height":0.22083333134651184,"Left":0.9125000238418579,"Top":0.30416667461395264}}
-   1501 {"Index":0,"BoundingBox":{"Width":0.078125,"Height":0.22083333134651184,"Left":0.9125000238418579,"Top":0.30416667461395264}}
    <...removed...>
-   11511 {"Index":0,"BoundingBox":{"Width":0.08124999701976776,"Height":0.22499999403953552,"Left":0.831250011920929,"Top":0.2916666567325592}}
-   11578 {"Index":0,"BoundingBox":{"Width":0.09687499701976776,"Height":0.23333333432674408,"Left":0.887499988079071,"Top":0.30416667461395264}}
    11645 {"Index":0,"BoundingBox":{"Width":0.09687499701976776,"Height":0.23333333432674408,"Left":0.887499988079071,"Top":0.30416667461395264}}
    11712 {"Index":0,"BoundingBox":{"Width":0.09687499701976776,"Height":0.23333333432674408,"Left":0.887499988079071,"Top":0.30416667461395264}}
    11778 {"Index":0,"BoundingBox":{"Width":0.09687499701976776,"Height":0.2291666716337204,"Left":0.887499988079071,"Top":0.3083333373069763}}
    ```
+
+
+
+
 
