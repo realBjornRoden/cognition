@@ -23,7 +23,6 @@
    <br><i>NB. Do not use the AWS account root user access key. The access key for the AWS account root user gives full access to all resources for all AWS services, including billing information. The permissions cannot be reduce for the AWS account root user access key.</i>
    1. Create a GROUP in the Console, such as `cognitive`, and assign `AmazonRekognitionFullAccess` and `AmazonS3FullAccess` as Policy [create-admin-group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
       * NB. Here also using `AmazonSNSFullAccess` for SNS  and `AmazonSQSFullAccess` for SQS and `IAMFullAccess` for IAM
-   <br>Select one or more policies to attach. Each group can have up to 10 policies attached.
    1. Create a USER in the Console, such as `aiuser`, assign it to the GROUP, and save the `credentials.csv` file (store and keep it secret) [create-admin-user](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
    1. Set a PASSWORD for the user [aws-password](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_admin-change-user.html)
 1. Run the `aws configure` command to configure the AWS CLI using the keys for the USER (`aiuser`)
@@ -86,7 +85,6 @@
 
 ***
 ### Setup Process
-* Setup Process Overview
 1. Create an SNS topic to receive notifications from Rekognition
    * SNS > Topics
 1. Create a Standard SQS queue to recieve messages from Amazon SNS
@@ -107,32 +105,28 @@
 1. Create the IAM Role
    * IAM > Roles > Choose the service > Rekognition > AmazonRekognitionServiceRole
 
-* Testing sending message to SNS topic for SQS subscriber
-
-1. Send test message
-   * SNS > Topics > select topic > Publish message > type and publish message
-
-1. Receive the test message
-   ```
-   $ aws sqs receive-message --queue-url https://us-east-2.queue.amazonaws.com/deadbeeef7898/Textract --region us-east-2
-   ```
-
-1. Parse the test message JSON
-   ```
-   $ jq -r .Messages[].Body out.test|jq -r .
-   {
-     "Type": "Notification",
-     "MessageId": "2a533413-c11c-5f89-b694-620c9ef8f4bb",
-     "TopicArn": "arn:aws:sns:us-east-2:deadbeeef7898:Textract",
-     "Message": "bunga bunga",
-     "Timestamp": "2019-10-15T05:48:20.205Z",
-     "SignatureVersion": "1",
-     "Signature": "Ph2ma8EQcgv0MBAwkdF5frdNay9Ymz8pT+/z3dWnozvMNtWwbTDLPP/03iDJuExyNEAOaIAOtGe4ehmmQfA/+6ZNnhfnkG+3R+ux9VIJiKUc9XJsibBH4zrLt7w3dVwOl38nDKf94vbNLPgH17s27SgaXlPBuvELminvwZY1q8/VLnR/gVooxrNwi2CRl1HyDNFZaPWfsw25RMX8ra47SwF173WDi/D7Zfm4IHutIjfPV4eRAWgL6JG0/xKGUJvMY0fD1chqrsw+j119LFWSGAxuQGu5FuGA1ZcauTc69r9muOy8euHxeNWkBBAyp5gUWJuxXY6CXAeuMCPUhG01zA==",
-     "SigningCertURL": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-6aad65c2f9911b05cd53efda11f913f9.pem",
-     "UnsubscribeURL": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-2:deadbeeef7898:Textract:74ab3934-7e9d-450d-98e9-6803f245ab12"
-   }
-   ```
-
+1. Testing sending message to SNS topic for SQS subscriber
+   1. Send test message
+      * SNS > Topics > select topic > Publish message > type and publish message
+   1. Receive the test message
+      ```
+      $ aws sqs receive-message --queue-url https://us-east-2.queue.amazonaws.com/deadbeeef7898/Textract --region us-east-2
+      ```
+   1. Parse the test message JSON
+      ```
+      $ jq -r .Messages[].Body out.test|jq -r .
+      {
+        "Type": "Notification",
+        "MessageId": "2a533413-c11c-5f89-b694-620c9ef8f4bb",
+        "TopicArn": "arn:aws:sns:us-east-2:deadbeeef7898:Textract",
+        "Message": "bunga bunga",
+        "Timestamp": "2019-10-15T05:48:20.205Z",
+        "SignatureVersion": "1",
+        "Signature": "Ph2ma8EQcgv0MBAwkdF5frdNay9Ymz8pT+/z3dWnozvMNtWwbTDLPP/03iDJuExyNEAOaIAOtGe4ehmmQfA/+6ZNnhfnkG+3R+ux9VIJiKUc9XJsibBH4zrLt7w3dVwOl38nDKf94vbNLPgH17s27SgaXlPBuvELminvwZY1q8/VLnR/gVooxrNwi2CRl1HyDNFZaPWfsw25RMX8ra47SwF173WDi/D7Zfm4IHutIjfPV4eRAWgL6JG0/xKGUJvMY0fD1chqrsw+j119LFWSGAxuQGu5FuGA1ZcauTc69r9muOy8euHxeNWkBBAyp5gUWJuxXY6CXAeuMCPUhG01zA==",
+        "SigningCertURL": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-6aad65c2f9911b05cd53efda11f913f9.pem",
+        "UnsubscribeURL": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-2:deadbeeef7898:Textract:74ab3934-7e9d-450d-98e9-6803f245ab12"
+      }
+      ```
 
 ### Setup Configuration Overview
 
