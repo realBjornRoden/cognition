@@ -421,7 +421,7 @@
 1. Delete the SQS message
    ```
    $ aws sqs receive-message --queue-url https://sqs.us-east-1.amazonaws.com/deadbeef7898/RekognitionVideo --region us-east-1 | jq '.Messages[].ReceiptHandle'
-"AQEBxmrUWIWdu60Bp00l3tiaoGb2/eRZou1/wmI6WQjyl1BglyfNRz+4sxZE2RC+FnWo/hlnLU9r7qwysA34Y1d2K+mF1PYFMmx88wsXBszaOXQpetz9knSIh4Vts/yrYYlbhcdU7EyB4nf5VYNCuMk7StW7g7DLwUxDrF5KJbIMYhPR/JdyZ70EIG52vHjr+UPgXxpIuxuTiz0Q+vEIsgxYBAPgiVBdgmRJgcw3I8e297PO8NNDHm6eVSrWntMFFsl59dTIb+8LII4Mdp2OOjKcsLKNtHiUf/8i3bG76X7051yOe2PjXtRZ2m7aRfET/HmP6oWUV9fjz4T25WJH/idPNa1DgwQlkcsbnw24r+ucMsnCa0W6gTjH/zsmo0yLP2g7IMhXnskgBu0F/HGHie10WA=="
+   "AQEBxmrUWIWdu60Bp00l3tiaoGb2/eRZou1/wmI6WQjyl1BglyfNRz+4sxZE2RC+FnWo/hlnLU9r7qwysA34Y1d2K+mF1PYFMmx88wsXBszaOXQpetz9knSIh4Vts/yrYYlbhcdU7EyB4nf5VYNCuMk7StW7g7DLwUxDrF5KJbIMYhPR/JdyZ70EIG52vHjr+UPgXxpIuxuTiz0Q+vEIsgxYBAPgiVBdgmRJgcw3I8e297PO8NNDHm6eVSrWntMFFsl59dTIb+8LII4Mdp2OOjKcsLKNtHiUf/8i3bG76X7051yOe2PjXtRZ2m7aRfET/HmP6oWUV9fjz4T25WJH/idPNa1DgwQlkcsbnw24r+ucMsnCa0W6gTjH/zsmo0yLP2g7IMhXnskgBu0F/HGHie10WA=="
 
    $ aws sqs delete-message --queue-url https://sqs.us-east-1.amazonaws.com/deadbeef7898/RekognitionVideo --region us-east-1 --receipt-handle "AQEBxmrUWIWdu60Bp00l3tiaoGb2/eRZou1/wmI6WQjyl1BglyfNRz+4sxZE2RC+FnWo/hlnLU9r7qwysA34Y1d2K+mF1PYFMmx88wsXBszaOXQpetz9knSIh4Vts/yrYYlbhcdU7EyB4nf5VYNCuMk7StW7g7DLwUxDrF5KJbIMYhPR/JdyZ70EIG52vHjr+UPgXxpIuxuTiz0Q+vEIsgxYBAPgiVBdgmRJgcw3I8e297PO8NNDHm6eVSrWntMFFsl59dTIb+8LII4Mdp2OOjKcsLKNtHiUf/8i3bG76X7051yOe2PjXtRZ2m7aRfET/HmP6oWUV9fjz4T25WJH/idPNa1DgwQlkcsbnw24r+ucMsnCa0W6gTjH/zsmo0yLP2g7IMhXnskgBu0F/HGHie10WA=="
 
@@ -498,31 +498,32 @@
    ```
    $ aws rekognition get-person-tracking --job-id "43157b6bc2b0c73243e35eebf325a8322d06fa94b4940021fdf8f4b966a91ba4" --region us-east-1 >result-person-tracking.json
    ```
+1. Reveiw the video analysis results 
    * Review the analsysis metadata information about the video file
-      ```
-      $ jq -r '.JobStatus,.VideoMetadata' result-person-tracking.json
-      SUCCEEDED
-      {
-        "Codec": "h264",
-        "DurationMillis": 21656,
-        "Format": "QuickTime / MOV",
-        "FrameRate": 29.9689998626709,
-        "FrameHeight": 240,
-        "FrameWidth": 320
-      }
-      ```
+   ```
+   $ jq -r '.JobStatus,.VideoMetadata' result-person-tracking.json
+   SUCCEEDED
+   {
+     "Codec": "h264",
+     "DurationMillis": 21656,
+     "Format": "QuickTime / MOV",
+     "FrameRate": 29.9689998626709,
+     "FrameHeight": 240,
+     "FrameWidth": 320
+   }
+   ```
    * Review the analsysis information about the video file
-      ```
-      $ jq -r '.Persons[]|"\(.Timestamp) \(.Person)"' result-person-tracking.json                                                                    
-      1301 {"Index":0,"BoundingBox":{"Width":0.078125,"Height":0.22499999403953552,"Left":0.9125000238418579,"Top":0.30000001192092896}}
-      1368 {"Index":0,"BoundingBox":{"Width":0.078125,"Height":0.22083333134651184,"Left":0.9125000238418579,"Top":0.30416667461395264}}
-      1434 {"Index":0,"BoundingBox":{"Width":0.078125,"Height":0.22083333134651184,"Left":0.9125000238418579,"Top":0.30416667461395264}}
-      1501 {"Index":0,"BoundingBox":{"Width":0.078125,"Height":0.22083333134651184,"Left":0.9125000238418579,"Top":0.30416667461395264}}
-      <...removed...>
-      11511 {"Index":0,"BoundingBox":{"Width":0.08124999701976776,"Height":0.22499999403953552,"Left":0.831250011920929,"Top":0.2916666567325592}}
-      11578 {"Index":0,"BoundingBox":{"Width":0.09687499701976776,"Height":0.23333333432674408,"Left":0.887499988079071,"Top":0.30416667461395264}}
-      11645 {"Index":0,"BoundingBox":{"Width":0.09687499701976776,"Height":0.23333333432674408,"Left":0.887499988079071,"Top":0.30416667461395264}}
-      11712 {"Index":0,"BoundingBox":{"Width":0.09687499701976776,"Height":0.23333333432674408,"Left":0.887499988079071,"Top":0.30416667461395264}}
-      11778 {"Index":0,"BoundingBox":{"Width":0.09687499701976776,"Height":0.2291666716337204,"Left":0.887499988079071,"Top":0.3083333373069763}}
-      ```
+   ```
+   $ jq -r '.Persons[]|"\(.Timestamp) \(.Person)"' result-person-tracking.json                                                                    
+   1301 {"Index":0,"BoundingBox":{"Width":0.078125,"Height":0.22499999403953552,"Left":0.9125000238418579,"Top":0.30000001192092896}}
+   1368 {"Index":0,"BoundingBox":{"Width":0.078125,"Height":0.22083333134651184,"Left":0.9125000238418579,"Top":0.30416667461395264}}
+   1434 {"Index":0,"BoundingBox":{"Width":0.078125,"Height":0.22083333134651184,"Left":0.9125000238418579,"Top":0.30416667461395264}}
+   1501 {"Index":0,"BoundingBox":{"Width":0.078125,"Height":0.22083333134651184,"Left":0.9125000238418579,"Top":0.30416667461395264}}
+   <...removed...>
+   11511 {"Index":0,"BoundingBox":{"Width":0.08124999701976776,"Height":0.22499999403953552,"Left":0.831250011920929,"Top":0.2916666567325592}}
+   11578 {"Index":0,"BoundingBox":{"Width":0.09687499701976776,"Height":0.23333333432674408,"Left":0.887499988079071,"Top":0.30416667461395264}}
+   11645 {"Index":0,"BoundingBox":{"Width":0.09687499701976776,"Height":0.23333333432674408,"Left":0.887499988079071,"Top":0.30416667461395264}}
+   11712 {"Index":0,"BoundingBox":{"Width":0.09687499701976776,"Height":0.23333333432674408,"Left":0.887499988079071,"Top":0.30416667461395264}}
+   11778 {"Index":0,"BoundingBox":{"Width":0.09687499701976776,"Height":0.2291666716337204,"Left":0.887499988079071,"Top":0.3083333373069763}}
+   ```
 
