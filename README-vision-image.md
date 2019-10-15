@@ -1330,8 +1330,9 @@ oople CLoud 0 gle P fatform oople gle CLoud 0 P fatform
 
 * Multi-step process:
    1. Setup SQS to receive SNS status notification [aws-sqs](https://docs.aws.amazon.com/cli/latest/reference/sqs/index.html)
-      * Add Operaiton Permissions for Principal to the Queue, such as for "Everybody (*)"
+      * Add Operaiton Permissions for Principal to the Queue
    1. Setup SNS Topic and Subscription to recieve notification from StartDocumentTextDetection [aws-sns](https://docs.aws.amazon.com/cli/latest/reference/sns/index.html)
+      * Add Permissions for `ArnEquals aws:SourceArn: "arn:aws:sns:us-east-2:598691507898:topic123"`
    1. Create IAM Role to allow Textract to publish to SNS, with the `AmazonTextractServiceRole` Policy
    1. StartDocumentTextDetection operation to submit the OCR operation, returns a job identifier (JobId) for the next step [aws-textract](https://docs.aws.amazon.com/cli/latest/reference/textract/start-document-text-detection.html)
    1. Check completion status queued in SQS from SNS
