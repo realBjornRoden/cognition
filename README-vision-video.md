@@ -105,7 +105,15 @@
 1. Create the IAM Policy to allow Rekognition to publish the completion status on SNS
    * IAM > Policies > Create Policy > Add JSON
       ```
-      { "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Action": [ "sns:Publish" ], "Resource": "arn:aws:sns:us-east-1:deadbeeef7898:RekognitionVideo" } ] }
+      { "Version": "2012-10-17",
+        "Statement": [
+           {
+             "Effect": "Allow",
+             "Action": [ "sns:Publish" ],
+             "Resource": "arn:aws:sns:us-east-1:deadbeeef7898:RekognitionVideo"
+           }
+        ]
+      }
       ```
 1. Create the IAM Role
    * IAM > Roles > Choose the service > Rekognition > AmazonRekognitionServiceRole
