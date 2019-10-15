@@ -261,7 +261,7 @@
    ```
 
 ### Detect Labels
-* [detect-labels](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/labels-detect-labels-image.html)
+* [detecting-labels](https://docs.aws.amazon.com/en_pv/rekognition/latest/dg/labels-detecting-labels-video.html)
 ***
 
 1. Upload the video to be analyzed to S3 Bucket, create the bucket if needed
