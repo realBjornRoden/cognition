@@ -119,7 +119,7 @@
 1. Create the IAM Role
    * IAM > Roles > Choose the service > Rekognition > AmazonRekognitionServiceRole
 
-1. Testing sending message to SNS topic for SQS subscriber
+1. Test the SNS to SQS connection by sending a message to the SNS topic for the SQS subscriber
    1. Send test message
       * SNS > Topics > select topic > Publish message > type and publish message
    1. Receive the test message
@@ -138,18 +138,8 @@
       ```
    1. Parse the test message JSON
       ```
-      $ jq -r .Messages[].Body test-message.json|jq -r .
-      {
-        "Type": "Notification",
-        "MessageId": "33807e86-7880-55c1-b183-289900bcd25b",
-        "TopicArn": "arn:aws:sns:us-east-1:598691507898:RekognitionVideo",
-        "Message": "bunga bunga",
-        "Timestamp": "2019-10-15T07:32:12.475Z",
-        "SignatureVersion": "1",
-        "Signature": "riP4YsOb9PT8AgtCIOXBiseaP4WeTzO6DSAk2JwP9+nDNnOoWXBGFREuYy6H2yKOTELIj6wissenm9nb9O/QRuBmQwyfRkEQUK1lhQipRmoYIbmeZjYMiynBUq9Kq5DOoH8TMmbLogUJwswDaigq33DG28Y6H4Bqt/j2V9KgxQr2gjS5Q8z1xVw/QCeam3Q1Lzii1wAm+fX8TXPl8ZrnBNMiEbNdyZzSgFHlAwj/BLbLK+WmPwxp/3Jtlxfg1Qy5paZKqzTSoeegBryJMWUWrhNPyQsz96uMSH0ZIrEY7sGiaVfeUZPmBGOKh0Vd5AH8z2V/TXRvKWier43uqa4G4A==",
-        "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-6aad65c2f9911b05cd53efda11f913f9.pem",
-        "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:598691507898:RekognitionVideo:af2afca1-b93b-44d2-b69b-79983ba1fa5b"
-      }
+      $ jq -r '.Messages[].Body' test-message.json|jq -r '"\(.MessageId) \(.Timestamp) MESSAGE:\"\(.Message)\""'  
+      33807e86-7880-55c1-b183-289900bcd25b 2019-10-15T07:32:12.475Z MESSAGE:"bunga bunga"
       ```
 
 ### Setup Configuration Overview
@@ -332,40 +322,43 @@
 1. Get the video analysis results with `aws rekognition get-label-detection`
    ```
    $ aws rekognition get-label-detection --job-id "7964e89e7bcf6c13205552ebb6564b06deadbeeefaa811beda0fc3a6ce2b336fa" --region us-east-1 >result-detection.json
-
-   $ jq -r '.JobStatus,.VideoMetadata' result-detection.json
-   SUCCEEDED
-   {
-     "Codec": "h264",
-     "DurationMillis": 21656,
-     "Format": "QuickTime / MOV",
-     "FrameRate": 29.9689998626709,
-     "FrameHeight": 240,
-     "FrameWidth": 320
-   }
-
-   $ jq -r '.Labels[]|select(.Label.Name=="Person")|"\(.Timestamp) \(.Label.Confidence|tonumber) \(.Label.Instances)"' out2.json|awk '{printf "Frame: %s Confidence: %.2f Box: %s\n", $1, $2,$3}'  
-   Frame: 967 Confidence: 58.26 Box: [{"BoundingBox":{"Width":0.041670799255371094,"Height":0.1896933913230896,"Left":0.952782928943634,"Top":0.3357686996459961},"Confidence":63.67138671875}]
-   Frame: 1468 Confidence: 92.70 Box: [{"BoundingBox":{"Width":0.08079147338867188,"Height":0.23073521256446838,"Left":0.9086510539054871,"Top":0.3004027009010315},"Confidence":99.84532928466797}]
-   Frame: 1968 Confidence: 99.73 Box: [{"BoundingBox":{"Width":0.06082210689783096,"Height":0.2385426163673401,"Left":0.871123194694519,"Top":0.28691354393959045},"Confidence":99.72191619873047}]
-   Frame: 2469 Confidence: 99.64 Box: [{"BoundingBox":{"Width":0.07394981384277344,"Height":0.24707704782485962,"Left":0.8161672353744507,"Top":0.2709895074367523},"Confidence":99.63427734375}]
-   Frame: 2969 Confidence: 99.62 Box: [{"BoundingBox":{"Width":0.09204711765050888,"Height":0.2337835133075714,"Left":0.7435498237609863,"Top":0.2602587640285492},"Confidence":99.5849838256836}]
-   Frame: 3470 Confidence: 99.63 Box: [{"BoundingBox":{"Width":0.06473159790039062,"Height":0.24745871126651764,"Left":0.7012126445770264,"Top":0.24149833619594574},"Confidence":99.72181701660156}]
-   Frame: 3970 Confidence: 98.73 Box: [{"BoundingBox":{"Width":0.05377340316772461,"Height":0.23113708198070526,"Left":0.6442241668701172,"Top":0.23210640251636505},"Confidence":99.38427734375}]
-   Frame: 4471 Confidence: 96.91 Box: [{"BoundingBox":{"Width":0.0795888900756836,"Height":0.23333440721035004,"Left":0.5717700719833374,"Top":0.2333349585533142},"Confidence":95.74153900146484}]
-   Frame: 4971 Confidence: 97.90 Box: [{"BoundingBox":{"Width":0.093767449259758,"Height":0.22934886813163757,"Left":0.5023199915885925,"Top":0.23211219906806946},"Confidence":98.04926300048828}]
-   Frame: 5472 Confidence: 99.27 Box: [{"BoundingBox":{"Width":0.07382984459400177,"Height":0.21751612424850464,"Left":0.4604105055332184,"Top":0.22720497846603394},"Confidence":99.57424926757812}]
-   Frame: 5972 Confidence: 99.37 Box: [{"BoundingBox":{"Width":0.06527690589427948,"Height":0.2122858613729477,"Left":0.45242947340011597,"Top":0.22600330412387848},"Confidence":99.54767608642578}]
-   Frame: 6473 Confidence: 98.90 Box: [{"BoundingBox":{"Width":0.060443781316280365,"Height":0.22271715104579926,"Left":0.45079106092453003,"Top":0.22034291923046112},"Confidence":98.5984115600586}]
-   Frame: 6973 Confidence: 99.07 Box: [{"BoundingBox":{"Width":0.057089708745479584,"Height":0.22315064072608948,"Left":0.4529975950717926,"Top":0.2216542810201645},"Confidence":99.1624526977539}]
-   Frame: 7474 Confidence: 99.18 Box: [{"BoundingBox":{"Width":0.06469936668872833,"Height":0.2262258529663086,"Left":0.4495598375797272,"Top":0.22182568907737732},"Confidence":99.23768615722656}]
-   Frame: 7974 Confidence: 99.16 Box: [{"BoundingBox":{"Width":0.06654186546802521,"Height":0.22303110361099243,"Left":0.45049452781677246,"Top":0.22402258217334747},"Confidence":99.04534912109375}]
-   Frame: 8475 Confidence: 99.35 Box: [{"BoundingBox":{"Width":0.058776091784238815,"Height":0.2221209853887558,"Left":0.4544622302055359,"Top":0.2249108999967575},"Confidence":99.43775939941406}]
-   Frame: 8975 Confidence: 99.18 Box: [{"BoundingBox":{"Width":0.06203870847821236,"Height":0.22727209329605103,"Left":0.4643033444881439,"Top":0.22616854310035706},"Confidence":99.36737060546875}]
-   Frame: 9476 Confidence: 96.13 Box: [{"BoundingBox":{"Width":0.059099484235048294,"Height":0.22834141552448273,"Left":0.4874933660030365,"Top":0.21885770559310913},"Confidence":98.3703842163086}]
-   Frame: 9976 Confidence: 90.30 Box: [{"BoundingBox":{"Width":0.06722088158130646,"Height":0.21765105426311493,"Left":0.5355201959609985,"Top":0.22908101975917816},"Confidence":86.02194213867188}]
-   Frame: 10477 Confidence: 94.11 Box: [{"BoundingBox":{"Width":0.11091585457324982,"Height":0.2167797088623047,"Left":0.570489227771759,"Top":0.2526220977306366},"Confidence":95.37702941894531}]
-   Frame: 10978 Confidence: 97.76 Box: [{"BoundingBox":{"Width":0.11687908321619034,"Height":0.21114571392536163,"Left":0.6746412515640259,"Top":0.274556428194046},"Confidence":98.29331970214844}]
-   Frame: 11478 Confidence: 79.05 Box: [{"BoundingBox":{"Width":0.07418155670166016,"Height":0.22305838763713837,"Left":0.8415846824645996,"Top":0.29771655797958374},"Confidence":98.47969055175781}]
    ```
-
+   * Review the analsysis metadata information about the video file
+      ```
+      $ jq -r '.JobStatus,.VideoMetadata' result-detection.json
+      SUCCEEDED
+      {
+        "Codec": "h264",
+        "DurationMillis": 21656,
+        "Format": "QuickTime / MOV",
+        "FrameRate": 29.9689998626709,
+        "FrameHeight": 240,
+        "FrameWidth": 320
+      }
+      ```
+   * Review the analsysis information about the video file, in this case label names tagged as "Person"
+      ```
+      $ jq -r '.Labels[]|select(.Label.Name=="Person")|"\(.Timestamp) \(.Label.Confidence|tonumber) \(.Label.Instances)"' out2.json|awk '{printf "Frame: %s Confidence: %.2f Box: %s\n", $1, $2,$3}'  
+      Frame: 967 Confidence: 58.26 Box: [{"BoundingBox":{"Width":0.041670799255371094,"Height":0.1896933913230896,"Left":0.952782928943634,"Top":0.3357686996459961},"Confidence":63.67138671875}]
+      Frame: 1468 Confidence: 92.70 Box: [{"BoundingBox":{"Width":0.08079147338867188,"Height":0.23073521256446838,"Left":0.9086510539054871,"Top":0.3004027009010315},"Confidence":99.84532928466797}]
+      Frame: 1968 Confidence: 99.73 Box: [{"BoundingBox":{"Width":0.06082210689783096,"Height":0.2385426163673401,"Left":0.871123194694519,"Top":0.28691354393959045},"Confidence":99.72191619873047}]
+      Frame: 2469 Confidence: 99.64 Box: [{"BoundingBox":{"Width":0.07394981384277344,"Height":0.24707704782485962,"Left":0.8161672353744507,"Top":0.2709895074367523},"Confidence":99.63427734375}]
+      Frame: 2969 Confidence: 99.62 Box: [{"BoundingBox":{"Width":0.09204711765050888,"Height":0.2337835133075714,"Left":0.7435498237609863,"Top":0.2602587640285492},"Confidence":99.5849838256836}]
+      Frame: 3470 Confidence: 99.63 Box: [{"BoundingBox":{"Width":0.06473159790039062,"Height":0.24745871126651764,"Left":0.7012126445770264,"Top":0.24149833619594574},"Confidence":99.72181701660156}]
+      Frame: 3970 Confidence: 98.73 Box: [{"BoundingBox":{"Width":0.05377340316772461,"Height":0.23113708198070526,"Left":0.6442241668701172,"Top":0.23210640251636505},"Confidence":99.38427734375}]
+      Frame: 4471 Confidence: 96.91 Box: [{"BoundingBox":{"Width":0.0795888900756836,"Height":0.23333440721035004,"Left":0.5717700719833374,"Top":0.2333349585533142},"Confidence":95.74153900146484}]
+      Frame: 4971 Confidence: 97.90 Box: [{"BoundingBox":{"Width":0.093767449259758,"Height":0.22934886813163757,"Left":0.5023199915885925,"Top":0.23211219906806946},"Confidence":98.04926300048828}]
+      Frame: 5472 Confidence: 99.27 Box: [{"BoundingBox":{"Width":0.07382984459400177,"Height":0.21751612424850464,"Left":0.4604105055332184,"Top":0.22720497846603394},"Confidence":99.57424926757812}]
+      Frame: 5972 Confidence: 99.37 Box: [{"BoundingBox":{"Width":0.06527690589427948,"Height":0.2122858613729477,"Left":0.45242947340011597,"Top":0.22600330412387848},"Confidence":99.54767608642578}]
+      Frame: 6473 Confidence: 98.90 Box: [{"BoundingBox":{"Width":0.060443781316280365,"Height":0.22271715104579926,"Left":0.45079106092453003,"Top":0.22034291923046112},"Confidence":98.5984115600586}]
+      Frame: 6973 Confidence: 99.07 Box: [{"BoundingBox":{"Width":0.057089708745479584,"Height":0.22315064072608948,"Left":0.4529975950717926,"Top":0.2216542810201645},"Confidence":99.1624526977539}]
+      Frame: 7474 Confidence: 99.18 Box: [{"BoundingBox":{"Width":0.06469936668872833,"Height":0.2262258529663086,"Left":0.4495598375797272,"Top":0.22182568907737732},"Confidence":99.23768615722656}]
+      Frame: 7974 Confidence: 99.16 Box: [{"BoundingBox":{"Width":0.06654186546802521,"Height":0.22303110361099243,"Left":0.45049452781677246,"Top":0.22402258217334747},"Confidence":99.04534912109375}]
+      Frame: 8475 Confidence: 99.35 Box: [{"BoundingBox":{"Width":0.058776091784238815,"Height":0.2221209853887558,"Left":0.4544622302055359,"Top":0.2249108999967575},"Confidence":99.43775939941406}]
+      Frame: 8975 Confidence: 99.18 Box: [{"BoundingBox":{"Width":0.06203870847821236,"Height":0.22727209329605103,"Left":0.4643033444881439,"Top":0.22616854310035706},"Confidence":99.36737060546875}]
+      Frame: 9476 Confidence: 96.13 Box: [{"BoundingBox":{"Width":0.059099484235048294,"Height":0.22834141552448273,"Left":0.4874933660030365,"Top":0.21885770559310913},"Confidence":98.3703842163086}]
+      Frame: 9976 Confidence: 90.30 Box: [{"BoundingBox":{"Width":0.06722088158130646,"Height":0.21765105426311493,"Left":0.5355201959609985,"Top":0.22908101975917816},"Confidence":86.02194213867188}]
+      Frame: 10477 Confidence: 94.11 Box: [{"BoundingBox":{"Width":0.11091585457324982,"Height":0.2167797088623047,"Left":0.570489227771759,"Top":0.2526220977306366},"Confidence":95.37702941894531}]
+      Frame: 10978 Confidence: 97.76 Box: [{"BoundingBox":{"Width":0.11687908321619034,"Height":0.21114571392536163,"Left":0.6746412515640259,"Top":0.274556428194046},"Confidence":98.29331970214844}]
+      Frame: 11478 Confidence: 79.05 Box: [{"BoundingBox":{"Width":0.07418155670166016,"Height":0.22305838763713837,"Left":0.8415846824645996,"Top":0.29771655797958374},"Confidence":98.47969055175781}]
+      ```
