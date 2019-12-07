@@ -97,7 +97,7 @@ translate.googleapis.com  Cloud Translation API
 ***
 
 ### Translation
-
+* [translating-text](https://cloud.google.com/translate/docs/translating-text)
 * Create JSON formatted request file (request.json)
 ```
 $ cat request.json 

@@ -30,45 +30,45 @@ OUTPUT=result$RANDOM.json
 
 case $1 in
 vision-ocr-hand)
-	AUTH=1a6944a93e5f4bd5a22501aff861d411
+	AUTH=$COGNITIVE_SERVICE_KEY
 	URL="https://westus2.api.cognitive.microsoft.com/vision/v2.0/ocr?detectOrientation=true"
 	OCTETSTREAM=binary
 	file $REQ
 	;;
 vision-pdf) # first step to submit the specified PDF URL for OCR processing - Save the Operation-Location
-	AUTH=1a6944a93e5f4bd5a22501aff861d411
+	AUTH=$COGNITIVE_SERVICE_KEY
 	URL="https://westus2.api.cognitive.microsoft.com/vision/v2.0/read/core/asyncBatchAnalyze"
 	OCTETSTREAM=pdf1
 	;;
 vision-readop) # second step to get the OCR from the specified PDF URL - $3 ==>> Operation-Location such as "4db4671f-a382-447d-b43d-d6ff815cd4a6"
 	[[ -z "$3" ]] && { echo "***ENOARG"; exit 1; }
 	echo "***READOP Operation-Location: $3"
-	AUTH=1a6944a93e5f4bd5a22501aff861d411
+	AUTH=$COGNITIVE_SERVICE_KEY
 	URL="https://westus2.api.cognitive.microsoft.com/vision/v2.0/read/operations/$3"
 	OCTETSTREAM=pdf2
 	;;
 vision-ocr)
-	AUTH=1a6944a93e5f4bd5a22501aff861d411
+	AUTH=$COGNITIVE_SERVICE_KEY
 	URL="https://westus2.api.cognitive.microsoft.com/vision/v2.0/ocr"
 	OCTETSTREAM=binary
 	file $REQ
 	;;
 vision-tag)
-	AUTH=1a6944a93e5f4bd5a22501aff861d411
+	AUTH=$COGNITIVE_SERVICE_KEY
 	URL="https://westus2.api.cognitive.microsoft.com/vision/v2.0/tag"
 	OCTETSTREAM=binary
 	file $REQ
 	;;
 vision-objects)
-	AUTH=1a6944a93e5f4bd5a22501aff861d411
+	AUTH=$COGNITIVE_SERVICE_KEY
 	URL="https://westus2.api.cognitive.microsoft.com/vision/v2.0/analyze?visualFeatures=Objects"
 	;;
 vision-landmark)
-	AUTH=1a6944a93e5f4bd5a22501aff861d411
+	AUTH=$COGNITIVE_SERVICE_KEY
 	URL="https://westus2.api.cognitive.microsoft.com/vision/v2.0/analyze?details=Landmarks"
 	;;
 vision-face-analyze)
-	AUTH=1a6944a93e5f4bd5a22501aff861d411
+	AUTH=$COGNITIVE_SERVICE_KEY
 	URL="https://westus2.api.cognitive.microsoft.com/vision/v2.0/analyze?visualFeatures=Faces"
 	;;
 face-similar)
@@ -104,11 +104,11 @@ face-identify)
 	# https://westus2.api.cognitive.microsoft.com/face/v1.0/identify
 	;;
 face-detect)
-	AUTH=633853e0acc1441e95017bb2a43a96a7
+	AUTH=$COGNITIVE_SERVICE_KEY
 	URL="https://westus2.api.cognitive.microsoft.com/face/v1.0/detect"
 	;;
 face-detect-details)
-	AUTH=633853e0acc1441e95017bb2a43a96a7
+	AUTH=$COGNITIVE_SERVICE_KEY
 	URL="https://westus2.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise"
 	;;
 esac
